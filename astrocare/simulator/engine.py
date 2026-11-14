@@ -12,7 +12,7 @@ from datetime import datetime, timedelta, timezone
 import json
 import math
 from pathlib import Path
-from typing import Any, Dict, Generator, List, Optional
+from typing import Any, Dict, Generator, List, Optional, Tuple
 import numpy as np
 
 from astrocare.config import DATA_GEN_SEED, METRIC_REGISTRY
@@ -155,7 +155,7 @@ class VitalsSimulator:
         for astronaut in self.crew:
             cid = astronaut.crew_id
 
-            # Active hazard deltas
+            # Active hazard deltas (synthetic simulator assumptions)
             h_hr = hazard.hr_delta if hazard_active else 0.0
             h_sbp = hazard.sbp_delta if hazard_active else 0.0
             h_dbp = hazard.dbp_delta if hazard_active else 0.0
@@ -166,11 +166,15 @@ class VitalsSimulator:
             h_glucose = hazard.glucose_delta if hazard_active else 0.0
             h_sleep = hazard.sleep_delta if hazard_active else 0.0
 
-            synthetic_label = 1 if (hazard_active and scenario_name != "nominal") else 0
-            tag = scenario_name if synthetic_label == 1 else None
+            # Metric-specific anomaly labeling: only label 1 if this specific metric is perturbed
+            def get_metric_label(delta: float) -> Tuple[int, Optional[str]]:
+                if hazard_active and scenario_name != "nominal" and abs(delta) > 1e-4:
+                    return 1, scenario_name
+                return 0, None
 
             # 1. Heart rate (bpm)
             hr_val = astronaut.base_hr + circadian_hr + h_hr + self.rng.normal(0, 1.8)
+            lbl_hr, tag_hr = get_metric_label(h_hr)
             records.append(
                 TelemetryRecord(
                     ts=time_iso,
@@ -179,16 +183,18 @@ class VitalsSimulator:
                     value=None if self.rng.rand() < hazard.missingness_prob else round(float(hr_val), 1),
                     unit="bpm",
                     scenario=scenario_name,
-                    synthetic_label=synthetic_label,
-                    hazard_tag=tag,
+                    synthetic_label=lbl_hr,
+                    hazard_tag=tag_hr,
                     body_region="heart",
                 )
             )
 
-            # 2. Systolic & Diastolic BP (mmHg) - emitted intermittently (e.g. every 5 min)
+            # 2. Systolic & Diastolic BP (mmHg) - emitted intermittently (every 5 min)
             if step_idx % 5 == 0:
                 sbp_val = astronaut.base_sbp + 0.5 * circadian_hr + h_sbp + self.rng.normal(0, 2.5)
                 dbp_val = astronaut.base_dbp + 0.3 * circadian_hr + h_dbp + self.rng.normal(0, 1.8)
+                lbl_sbp, tag_sbp = get_metric_label(h_sbp)
+                lbl_dbp, tag_dbp = get_metric_label(h_dbp)
                 records.append(
                     TelemetryRecord(
                         ts=time_iso,
@@ -197,8 +203,8 @@ class VitalsSimulator:
                         value=None if self.rng.rand() < hazard.missingness_prob else round(float(sbp_val), 1),
                         unit="mmHg",
                         scenario=scenario_name,
-                        synthetic_label=synthetic_label,
-                        hazard_tag=tag,
+                        synthetic_label=lbl_sbp,
+                        hazard_tag=tag_sbp,
                         body_region="heart",
                     )
                 )
@@ -210,14 +216,15 @@ class VitalsSimulator:
                         value=None if self.rng.rand() < hazard.missingness_prob else round(float(dbp_val), 1),
                         unit="mmHg",
                         scenario=scenario_name,
-                        synthetic_label=synthetic_label,
-                        hazard_tag=tag,
+                        synthetic_label=lbl_dbp,
+                        hazard_tag=tag_dbp,
                         body_region="heart",
                     )
                 )
 
             # 3. SpO2 (%)
             spo2_val = min(100.0, max(80.0, astronaut.base_spo2 + h_spo2 + self.rng.normal(0, 0.4)))
+            lbl_spo2, tag_spo2 = get_metric_label(h_spo2)
             records.append(
                 TelemetryRecord(
                     ts=time_iso,
@@ -226,14 +233,15 @@ class VitalsSimulator:
                     value=None if self.rng.rand() < hazard.missingness_prob else round(float(spo2_val), 1),
                     unit="%",
                     scenario=scenario_name,
-                    synthetic_label=synthetic_label,
-                    hazard_tag=tag,
+                    synthetic_label=lbl_spo2,
+                    hazard_tag=tag_spo2,
                     body_region="lungs",
                 )
             )
 
             # 4. Body temperature (degC)
             temp_val = astronaut.base_temp + circadian_temp + h_temp + self.rng.normal(0, 0.08)
+            lbl_temp, tag_temp = get_metric_label(h_temp)
             records.append(
                 TelemetryRecord(
                     ts=time_iso,
@@ -242,14 +250,15 @@ class VitalsSimulator:
                     value=None if self.rng.rand() < hazard.missingness_prob else round(float(temp_val), 2),
                     unit="degC",
                     scenario=scenario_name,
-                    synthetic_label=synthetic_label,
-                    hazard_tag=tag,
+                    synthetic_label=lbl_temp,
+                    hazard_tag=tag_temp,
                     body_region="whole_body",
                 )
             )
 
             # 5. Respiration rate (breaths/min)
             resp_val = astronaut.base_resp + h_resp + self.rng.normal(0, 0.7)
+            lbl_resp, tag_resp = get_metric_label(h_resp)
             records.append(
                 TelemetryRecord(
                     ts=time_iso,
@@ -258,14 +267,15 @@ class VitalsSimulator:
                     value=None if self.rng.rand() < hazard.missingness_prob else round(float(resp_val), 1),
                     unit="breaths/min",
                     scenario=scenario_name,
-                    synthetic_label=synthetic_label,
-                    hazard_tag=tag,
+                    synthetic_label=lbl_resp,
+                    hazard_tag=tag_resp,
                     body_region="lungs",
                 )
             )
 
             # 6. HRV RMSSD (ms)
             hrv_val = max(5.0, astronaut.base_hrv + h_hrv + self.rng.normal(0, 3.5))
+            lbl_hrv, tag_hrv = get_metric_label(h_hrv)
             records.append(
                 TelemetryRecord(
                     ts=time_iso,
@@ -274,16 +284,16 @@ class VitalsSimulator:
                     value=None if self.rng.rand() < hazard.missingness_prob else round(float(hrv_val), 1),
                     unit="ms",
                     scenario=scenario_name,
-                    synthetic_label=synthetic_label,
-                    hazard_tag=tag,
+                    synthetic_label=lbl_hrv,
+                    hazard_tag=tag_hrv,
                     body_region="heart",
                 )
             )
 
-            # 7. Glucose (mg/dL) [N14 requirement]
-            # Emitted every 5 steps or continuously
+            # 7. Glucose (mg/dL) [N14 requirement: 5-minute CGM cadence]
             if step_idx % 5 == 0:
                 gluc_val = astronaut.base_glucose + circadian_glucose + h_glucose + self.rng.normal(0, 4.0)
+                lbl_gluc, tag_gluc = get_metric_label(h_glucose)
                 records.append(
                     TelemetryRecord(
                         ts=time_iso,
@@ -292,16 +302,17 @@ class VitalsSimulator:
                         value=None if self.rng.rand() < hazard.missingness_prob else round(float(gluc_val), 1),
                         unit="mg/dL",
                         scenario=scenario_name,
-                        synthetic_label=synthetic_label,
-                        hazard_tag=tag,
+                        synthetic_label=lbl_gluc,
+                        hazard_tag=tag_gluc,
                         body_region="gut",
                     )
                 )
 
-            # 8. Sleep hours (hours) [N14 requirement]
-            # Emitted once per diurnal cycle (e.g., at morning step where time_of_day == 7.0 or step_idx % 1440 == 420)
-            if step_idx % 60 == 0:  # Hourly sleep tracker update
+            # 8. Sleep hours (hours) [N14 requirement: Daily morning sleep-log check-in]
+            # Emitted at diurnal waking step (7:00 AM or step 0 for day 1, then every 1440 min)
+            if step_idx == 0 or (step_idx % 1440 == 420):
                 sleep_val = max(1.0, min(14.0, astronaut.base_sleep + h_sleep + self.rng.normal(0, 0.3)))
+                lbl_sleep, tag_sleep = get_metric_label(h_sleep)
                 records.append(
                     TelemetryRecord(
                         ts=time_iso,
@@ -310,8 +321,8 @@ class VitalsSimulator:
                         value=None if self.rng.rand() < hazard.missingness_prob else round(float(sleep_val), 2),
                         unit="hours",
                         scenario=scenario_name,
-                        synthetic_label=synthetic_label,
-                        hazard_tag=tag,
+                        synthetic_label=lbl_sleep,
+                        hazard_tag=tag_sleep,
                         body_region="brain",
                     )
                 )

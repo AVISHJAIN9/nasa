@@ -2,6 +2,12 @@
 
 Decision-support prototype on synthetic and public data.
 Synthetic proxy labels; NOT clinical ground truth.
+
+DISCLAIMER & SIMULATOR ASSUMPTIONS:
+All delta parameters (hr_delta, glucose_delta, sleep_delta, etc.) are synthetic simulator
+assumptions designed to stress-test anomaly detection and decision algorithms under controlled
+conditions. They are NOT clinically validated medical effects and must not be interpreted as
+clinical findings.
 """
 from dataclasses import dataclass
 from typing import Dict, Optional

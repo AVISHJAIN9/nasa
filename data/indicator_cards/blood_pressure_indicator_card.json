@@ -2,20 +2,21 @@
   "card_id": "CARD-02",
   "indicator_name": "Blood Pressure",
   "body_region_or_system": "Cardiovascular",
-  "measurement_in_spaceflight": "Measured via automated pneumatic upper-arm cuffs, continuous finger-cuff volume-clamp plethysmography, or pulse transit time estimations.",
-  "why_it_matters": "Arterial pressure regulates cerebral perfusion and systemic organ vascular resistance. Crucial for assessing orthostatic tolerance and fluid redistributions.",
-  "hazard_effects": "Microgravity eliminates hydrostatic pressure gradients, causing facial edema and vascular remodeling. Deconditioning reduces vasoconstrictive reflex upon gravity transitions.",
-  "when_to_pay_attention": "Pay attention if systolic blood pressure exceeds 140 mmHg (hypertensive watch) or drops below 90 mmHg (hypotensive watch with orthostatic vulnerability).",
-  "safe_next_steps": "Rest in a comfortable position for 5 minutes; repeat cuff measurement on left arm at heart level; check hydration and fluid intake; notify crew medical officer.",
+  "measurement_in_spaceflight": "Measured using automated pneumatic upper-arm cuffs or finger-cuff plethysmography during routine clinical monitoring protocols.",
+  "why_it_matters": "Arterial pressure regulates cerebral and systemic organ perfusion, serving as a critical indicator of cardiovascular adaptation and orthostatic tolerance.",
+  "hazard_effects": "Microgravity removes hydrostatic arterial columns, causing headward fluid shifting. Subsequent hypovolemia and vascular remodeling increase post-flight orthostatic presyncope risk.",
+  "when_to_pay_attention": "Attention warranted if resting systolic pressure exceeds 140 mmHg (hypertensive watch) or falls below 90 mmHg (hypotensive watch). Ref: NASA-STD-3001 Vol 1.",
+  "safe_next_steps": "Simulation recommendation (pending flight surgeon review): Rest quietly for 5 minutes; re-measure cuff pressure at heart level; verify recent fluid/salt intake; notify Crew Medical Officer.",
   "sourced_thresholds": {
     "nominal_range": "95-135 / 60-85 mmHg",
     "watch_threshold": "SBP > 135 mmHg or SBP < 92 mmHg",
     "alert_threshold": "SBP > 155 mmHg or SBP < 82 mmHg",
-    "unit": "mmHg"
+    "unit": "mmHg",
+    "clinical_status": "Simulation guideline based on NASA-STD-3001 Vol 1; pending clinical review"
   },
   "action_lines": [
-    "Rest quietly for 5 minutes before taking a confirmatory reading at heart level.",
-    "Review fluid and electrolyte consumption over the preceding 12 hours."
+    "Simulation recommendation: Rest for 5 minutes before confirmatory measurement at heart level.",
+    "Simulation recommendation: Check hydration log and record any postural lightheadedness."
   ],
   "sources": [
     {
@@ -23,10 +24,10 @@
       "organization": "NASA",
       "url": "https://www.nasa.gov/offices/ochmo/human-standards/",
       "date_accessed": "2026-11-14",
-      "licence": "Public Domain (US Government Work)"
+      "licence": "Public Domain (U.S. Government Work)"
     }
   ],
-  "licence_terms": "NASA Public Domain / US Government Work",
-  "review_status": "PENDING_REVIEW",
-  "version": "2.0.0"
+  "licence_terms": "NASA Public Domain / U.S. Government Work",
+  "review_status": "PENDING_MEDICAL_REVIEW",
+  "version": "2.1.0-audited"
 }

@@ -2,20 +2,21 @@
   "card_id": "CARD-08",
   "indicator_name": "Cabin Carbon Dioxide (CO2)",
   "body_region_or_system": "Life Support / Habitat Environmental",
-  "measurement_in_spaceflight": "Measured with non-dispersive infrared (NDIR) spectroscopic gas sensors and Major Constituent Analyzers across habitat modules.",
-  "why_it_matters": "Elevated ambient CO2 induces hypercapnia, headaches, cognitive impairment, visual changes (associated with SANS), and respiratory acidosis.",
-  "hazard_effects": "Without convective air mixing in microgravity, localized CO2 pockets accumulate around sleeping astronauts unless mechanical ventilation is optimal.",
-  "when_to_pay_attention": "Pay attention if partial pressure of CO2 (PCO2) exceeds 3.0 mmHg (NASA-STD-3001 target limit is < 2.0 mmHg in crew sleep quarters).",
-  "safe_next_steps": "Check module cabin air diffuser and circulation fans; switch Carbon Dioxide Removal Assembly (CDRA) or amine beds to high-scrub mode; verify suit status if active.",
+  "measurement_in_spaceflight": "Monitored with non-dispersive infrared (NDIR) gas sensors and mass spectrometers across habitat modules and crew quarters.",
+  "why_it_matters": "Elevated carbon dioxide induces hypercapnia, neurovascular headaches, visual disturbances, lethargy, and mild respiratory acidosis.",
+  "hazard_effects": "Without convective air mixing in microgravity, exhaled CO2 forms stagnant pockets around sleeping crew members unless ventilation fans maintain adequate airflow.",
+  "when_to_pay_attention": "Attention warranted if partial pressure of CO2 (PCO2) exceeds 2.5 mmHg. NASA-STD-3001 Vol 2 specifies a 24h average target below 2.0 mmHg in sleep quarters.",
+  "safe_next_steps": "Simulation recommendation (pending flight surgeon review): Inspect module air diffusers for blockages; verify cabin circulation fan operation; notify ground control of elevated PCO2 readings.",
   "sourced_thresholds": {
     "nominal_range": "< 2.0 mmHg",
     "watch_threshold": ">= 2.5 mmHg",
     "alert_threshold": ">= 4.0 mmHg",
-    "unit": "mmHg"
+    "unit": "mmHg",
+    "clinical_status": "Simulation limit based on NASA-STD-3001 Vol 2; pending clinical review"
   },
   "action_lines": [
-    "Verify module ventilation fans are operating and clear any obstructions around air diffusers.",
-    "Switch the Environmental Control and Life Support System (ECLSS) CO2 scrubber to maximum scrub."
+    "Simulation recommendation: Verify habitat module ventilation fans are operating normally.",
+    "Simulation recommendation: Check that sleeping quarters air diffusers are unobstructed."
   ],
   "sources": [
     {
@@ -23,10 +24,10 @@
       "organization": "NASA",
       "url": "https://www.nasa.gov/offices/ochmo/human-standards/",
       "date_accessed": "2026-11-14",
-      "licence": "Public Domain (US Government Work)"
+      "licence": "Public Domain (U.S. Government Work)"
     }
   ],
-  "licence_terms": "NASA Public Domain / US Government Work",
-  "review_status": "PENDING_REVIEW",
-  "version": "2.0.0"
+  "licence_terms": "NASA Public Domain / U.S. Government Work",
+  "review_status": "PENDING_MEDICAL_REVIEW",
+  "version": "2.1.0-audited"
 }

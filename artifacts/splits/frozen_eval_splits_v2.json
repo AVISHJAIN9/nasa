@@ -119,6 +119,7 @@
       ]
     }
   ],
-  "hash_sha256": "038cec348d1d9ee5f69d75af0ed83382cbceda56f1deed1c298885429ffd0aae",
+  "hash_sha256": "a7ed3df13cdbd4023bf43d61f5026759108286d15645c85418063c4b2bef8bd3",
+  "dataset_manifest_hash": "6cbb7391fd17bb88c8f38127384764c6c6aa80a9f33be98fe876ec5629fffed8",
   "notes": "Strict frozen split design: LOPO holds out astronauts; LOSO holds out entire scenario families. No row-level leakage."
 }

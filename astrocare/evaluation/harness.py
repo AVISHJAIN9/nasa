@@ -1,17 +1,17 @@
-"""AstroCare F062: Master Evaluation Harness and Reproducibility Runner.
+"""AstroCare F062: Master Evaluation Harness and Reproducibility Runner (Audited).
 
-Coordinates the complete scientific evaluation suite:
-1. Frozen LOPO (Leave-One-Person-Out) cross-validation (Cold-start and Online-calibration).
-2. Frozen LOSO (Leave-One-Scenario-Out) cross-validation for X02 and F041 anomaly ensemble.
-3. Equal-FAR comparison across X02, F041 (Isolation Forest, Robust-Z, Fixed Threshold).
-4. X01 Wait-or-Act policy evaluation on 1,000 incidents across 5 communication latencies.
-5. X06 Offline Verified Assistant benchmark (50 supported + 50 red-team prompts).
+Coordinates the scientific evaluation suite under strict audit rules:
+1. Frozen LOPO cross-validation with separate Cold-Start and Online-Calibration reporting.
+2. Frozen LOSO cross-validation for F041 anomaly detection using IDENTICAL feature inputs.
+3. Metric-level anomaly labels (not broad scenario labels).
+4. X01 Wait-or-Act policy evaluation consuming real X02 Kalman filter forecasts.
+5. X06 Offline Assistant evaluation (labeled as keyword-retrieval edge fallback, not LLM).
 6. Four-person live causal demonstration.
-7. Generates reproducible run IDs, metrics JSON, Markdown report, and verification figures.
+7. Generates run-ID-versioned figure filenames and machine-readable artifacts.
 
 Decision-support prototype on synthetic and public data.
 Synthetic proxy labels; NOT clinical ground truth.
-F043 (LightGBM risk score) is explicitly out of scope and NOT implemented.
+F043 (LightGBM risk score) is explicitly protected and NOT implemented.
 """
 from dataclasses import asdict
 from datetime import datetime, timezone
@@ -64,7 +64,10 @@ class MasterEvaluationHarness:
     def run_lopo_evaluation(self) -> Dict[str, Any]:
         """Evaluates X02 Bayesian filter, F018, and Fixed Threshold across LOPO folds."""
         sim = VitalsSimulator(seed=DATA_GEN_SEED)
-        all_records: List[TelemetryRecord] = list(sim.stream_records(total_steps=180, scenario_name="nominal"))
+        # Generate nominal + deviation mixed records for true calibration evaluation
+        records_nom: List[TelemetryRecord] = list(sim.stream_records(total_steps=120, scenario_name="nominal"))
+        records_dev: List[TelemetryRecord] = list(sim.stream_records(total_steps=60, scenario_name="cabin_co2_leak", hazard_start_step=10))
+        all_records = records_nom + records_dev
 
         lopo_results: Dict[str, Any] = {
             "cold_start": {},
@@ -75,7 +78,6 @@ class MasterEvaluationHarness:
             },
         }
 
-        # Track aggregate coverage and scores
         cold_coverages: List[float] = []
         online_coverages: List[float] = []
         cold_brier_scores: List[float] = []
@@ -88,9 +90,9 @@ class MasterEvaluationHarness:
             train_cids = fold["train_crew_ids"]
             warmup_steps = fold["warmup_steps_online_cal"]
 
-            # 1. Estimate crew priors strictly using training astronauts
+            # Estimate priors strictly from training-fold astronauts
             crew_training_obs: Dict[str, Dict[str, List[float]]] = {m: {} for m in metrics_to_eval}
-            for rec in all_records:
+            for rec in records_nom:
                 if rec.crew_id in train_cids and rec.metric in metrics_to_eval and rec.value is not None:
                     if rec.crew_id not in crew_training_obs[rec.metric]:
                         crew_training_obs[rec.metric][rec.crew_id] = []
@@ -98,19 +100,19 @@ class MasterEvaluationHarness:
 
             priors = {m: fit_crew_prior(crew_training_obs[m], m) for m in metrics_to_eval}
 
-            # 2. Evaluate Cold-Start (warmup = 0)
+            # Cold start filter
             cs_filters = {m: X02AstronautMetricFilter(held_out_cid, m, priors[m]) for m in metrics_to_eval}
             cs_in_band = {m: 0 for m in metrics_to_eval}
             cs_total = {m: 0 for m in metrics_to_eval}
             cs_brier: List[float] = []
 
-            # 3. Evaluate Online-Calibration (warmup = 30 unlabeled observations)
+            # Online cal filter
             oc_filters = {m: X02AstronautMetricFilter(held_out_cid, m, priors[m]) for m in metrics_to_eval}
             oc_in_band = {m: 0 for m in metrics_to_eval}
             oc_total = {m: 0 for m in metrics_to_eval}
             oc_brier: List[float] = []
 
-            # 4. Baselines
+            # Baselines
             f018_filters = {m: F018RollingRobustBaseline(m, window_size=30) for m in metrics_to_eval}
             fixed_baselines = {m: FixedThresholdBaseline(m) for m in metrics_to_eval}
             f018_alerts = 0
@@ -125,9 +127,8 @@ class MasterEvaluationHarness:
                     continue
 
                 val = rec.value
-                true_label = rec.synthetic_label  # 0 in nominal
+                true_label = rec.synthetic_label
 
-                # Cold-start step
                 cs_out = cs_filters[met].step(val, rec.ts)
                 if val is not None:
                     cs_total[met] += 1
@@ -135,7 +136,6 @@ class MasterEvaluationHarness:
                         cs_in_band[met] += 1
                     cs_brier.append((cs_out.p_deviation - true_label) ** 2)
 
-                # Online-cal step (only track metrics after warmup window)
                 oc_out = oc_filters[met].step(val, rec.ts)
                 if val is not None:
                     if step_idx >= warmup_steps * len(metrics_to_eval):
@@ -144,8 +144,7 @@ class MasterEvaluationHarness:
                             oc_in_band[met] += 1
                         oc_brier.append((oc_out.p_deviation - true_label) ** 2)
 
-                # Baselines
-                if val is not None:
+                if val is not None and rec.scenario == "nominal":
                     baseline_total += 1
                     f018_res = f018_filters[met].update_and_predict(val)
                     if f018_res["is_alert"] == 1:
@@ -154,7 +153,6 @@ class MasterEvaluationHarness:
                     if fixed_res["is_alert"] == 1:
                         fixed_alerts += 1
 
-            # Aggregate fold metrics
             cs_cov = sum(cs_in_band.values()) / max(sum(cs_total.values()), 1)
             oc_cov = sum(oc_in_band.values()) / max(sum(oc_total.values()), 1)
             cs_br = float(np.mean(cs_brier)) if cs_brier else 0.0
@@ -191,40 +189,21 @@ class MasterEvaluationHarness:
         return lopo_results
 
     def run_loso_evaluation(self) -> Dict[str, Any]:
-        """Evaluates F041 Anomaly Detectors and X02 across LOSO scenario folds."""
+        """Evaluates F041 Anomaly Detectors on IDENTICAL input features across LOSO folds."""
         sim = VitalsSimulator(seed=DATA_GEN_SEED)
 
-        # Generate validation nominal stream for threshold calibration
-        val_nominal_records = list(sim.stream_records(total_steps=120, scenario_name="nominal"))
-        # Forward-fill aligned features for multivariate evaluation
-        def align_features(records: List[TelemetryRecord], total_steps: int) -> Tuple[np.ndarray, np.ndarray]:
-            hr_map = {r.ts: r.value for r in records if r.crew_id == "ASTRO-01" and r.metric == "heart_rate" and r.value is not None}
-            gluc_map = {r.ts: r.value for r in records if r.crew_id == "ASTRO-01" and r.metric == "glucose" and r.value is not None}
-            labels_map = {r.ts: r.synthetic_label for r in records if r.crew_id == "ASTRO-01" and r.metric == "heart_rate"}
+        # Validation stream for threshold calibration
+        val_records = list(sim.stream_records(total_steps=120, scenario_name="nominal"))
+        val_hr = [r.value for r in val_records if r.metric == "heart_rate" and r.value is not None]
 
-            all_ts = sorted(list(hr_map.keys()))
-            X_list = []
-            y_list = []
-            last_gluc = 90.0
-
-            for ts in all_ts:
-                hr_v = hr_map.get(ts, 70.0)
-                if ts in gluc_map:
-                    last_gluc = gluc_map[ts]
-                X_list.append([hr_v, last_gluc])
-                y_list.append(labels_map.get(ts, 0))
-
-            return np.array(X_list), np.array(y_list)
-
-        val_feats, _ = align_features(val_nominal_records, 120)
-
-        # Calibrate detectors on validation nominal data for equal 5% target FPR
+        # Symmetrical feature evaluation: Heart Rate 1D evaluation across all 3 models
         target_fpr = 0.05
-        if_det = F041IsolationForestDetector(random_state=MODEL_SEED)
-        if_det.fit(val_feats)
-        if_det.calibrate_threshold(val_feats, target_fpr=target_fpr)
+        val_hr_arr = np.array(val_hr).reshape(-1, 1)
 
-        val_hr = [r.value for r in val_nominal_records if r.metric == "heart_rate" and r.value is not None]
+        if_det = F041IsolationForestDetector(random_state=MODEL_SEED)
+        if_det.fit(val_hr_arr)
+        if_det.calibrate_threshold(val_hr_arr, target_fpr=target_fpr)
+
         rob_det = F041RobustZDetector(metric_name="heart_rate", window_size=30)
         rob_det.calibrate_threshold(val_hr, target_fpr=target_fpr)
 
@@ -244,7 +223,6 @@ class MasterEvaluationHarness:
         for fold in self.split_design.loso_folds:
             s_name = fold["held_out_scenario"]
 
-            # Generate held-out scenario run with injected hazard starting at step 40
             test_records = list(
                 sim.stream_records(
                     total_steps=100,
@@ -253,30 +231,23 @@ class MasterEvaluationHarness:
                 )
             )
 
-            test_feats, y_true = align_features(test_records, 100)
+            hr_records = [r for r in test_records if r.crew_id == "ASTRO-01" and r.metric == "heart_rate"]
+            hr_vals = [r.value if r.value is not None else 70.0 for r in hr_records]
+            # Metric-specific ground truth labels
+            y_true = [r.synthetic_label for r in hr_records]
 
-            # IF predictions
-            if_alerts, if_scores = if_det.predict(test_feats)
+            # 1. Isolation Forest (1D HR feature)
+            if_alerts, if_scores = if_det.predict(np.array(hr_vals).reshape(-1, 1))
 
-            # Robust-Z & Fixed predictions on heart rate
-            rob_alerts: List[int] = []
-            rob_scores: List[float] = []
-            fix_alerts: List[int] = []
-            fix_scores: List[float] = []
+            # 2. Robust-Z (1D HR feature)
+            rob_alerts, rob_scores = rob_det.score_sequence(hr_vals)
 
-            for i in range(len(test_feats)):
-                hr_val = float(test_feats[i, 0])
-                ra, rs = rob_det.score_single(hr_val)
-                fa, fs = fix_det.score_single(hr_val)
-                rob_alerts.append(ra)
-                rob_scores.append(rs)
-                fix_alerts.append(fa)
-                fix_scores.append(fs)
+            # 3. Fixed Threshold (1D HR feature)
+            fix_alerts, fix_scores = fix_det.score_sequence(hr_vals)
 
-            # Calculate fold metrics
             if_metrics = evaluate_detector_predictions(np.array(y_true), if_scores, if_alerts, anomaly_start_indices=[40])
-            rob_metrics = evaluate_detector_predictions(np.array(y_true), np.array(rob_scores), np.array(rob_alerts), anomaly_start_indices=[40])
-            fix_metrics = evaluate_detector_predictions(np.array(y_true), np.array(fix_scores), np.array(fix_alerts), anomaly_start_indices=[40])
+            rob_metrics = evaluate_detector_predictions(np.array(y_true), rob_scores, rob_alerts, anomaly_start_indices=[40])
+            fix_metrics = evaluate_detector_predictions(np.array(y_true), fix_scores, fix_alerts, anomaly_start_indices=[40])
 
             loso_scenario_results[s_name] = {
                 "isolation_forest": if_metrics,
@@ -292,14 +263,13 @@ class MasterEvaluationHarness:
             all_rob_scores.extend(rob_scores)
             all_fix_scores.extend(fix_scores)
 
-        # Aggregate across all held-out scenarios
         agg_if = evaluate_detector_predictions(np.array(all_y_true), np.array(all_if_scores), np.array(all_if_alerts))
         agg_rob = evaluate_detector_predictions(np.array(all_y_true), np.array(all_rob_scores), np.array(all_rob_alerts))
         agg_fix = evaluate_detector_predictions(np.array(all_y_true), np.array(all_fix_scores), np.array(all_fix_alerts))
 
         return {
             "per_scenario": loso_scenario_results,
-            "aggregate_equal_far": {
+            "aggregate_calibrated_evaluation": {
                 "isolation_forest": agg_if,
                 "robust_z": agg_rob,
                 "fixed_threshold": agg_fix,
@@ -307,7 +277,7 @@ class MasterEvaluationHarness:
         }
 
     def generate_eval_figures(self, lopo_data: Dict[str, Any], policy_data: Dict[str, Any]) -> List[Path]:
-        """Generates publication-quality verification figures."""
+        """Generates figures attaching the unique run ID to both filenames and plot titles."""
         figures: List[Path] = []
 
         # Figure 1: Coverage and Brier score
@@ -323,7 +293,7 @@ class MasterEvaluationHarness:
         ax[0].bar(x + width/2, oc_cov, width, label="Online Cal (30-step Warmup)", color="#50E3C2")
         ax[0].axhline(90.0, color="#D0021B", linestyle="--", label="Nominal 90% Target")
         ax[0].set_ylabel("Predictive Interval Coverage (%)")
-        ax[0].set_title("X02 90% Interval Coverage by Astronaut (LOPO)")
+        ax[0].set_title(f"X02 90% Band Coverage (LOPO) [{self.run_id}]")
         ax[0].set_xticks(x)
         ax[0].set_xticklabels(cids)
         ax[0].set_ylim([70, 100])
@@ -334,13 +304,13 @@ class MasterEvaluationHarness:
         oc_br = [lopo_data["online_calibration"][c]["brier_score"] for c in cids]
         ax[1].plot(cids, cs_br, "o-", label="Cold Start Brier Score", color="#4A90E2")
         ax[1].plot(cids, oc_br, "s--", label="Online Cal Brier Score", color="#50E3C2")
-        ax[1].set_ylabel("p_deviation Brier Score (Lower is Better)")
-        ax[1].set_title("p_deviation Reliability Across Folds")
+        ax[1].set_ylabel("p_deviation Brier Score")
+        ax[1].set_title(f"p_deviation Calibration [{self.run_id}]")
         ax[1].legend()
         ax[1].grid(True, linestyle=":", alpha=0.6)
 
         plt.tight_layout()
-        fig1_path = self.output_dir / "x02_coverage_calibration.png"
+        fig1_path = self.output_dir / f"x02_coverage_calibration_{self.run_id}.png"
         plt.savefig(fig1_path, dpi=200)
         plt.close()
         figures.append(fig1_path)
@@ -358,12 +328,12 @@ class MasterEvaluationHarness:
 
         ax.set_xlabel("Communication Round-Trip Latency (minutes)")
         ax.set_ylabel("Mean Cost per Incident")
-        ax.set_title("X01 Decision Policy Loss vs Communication Delay (1,000 Incidents)")
+        ax.set_title(f"X01 Policy Loss vs Comms Delay [{self.run_id}]")
         ax.legend()
         ax.grid(True, linestyle=":", alpha=0.6)
 
         plt.tight_layout()
-        fig2_path = self.output_dir / "x01_policy_costs.png"
+        fig2_path = self.output_dir / f"x01_policy_costs_{self.run_id}.png"
         plt.savefig(fig2_path, dpi=200)
         plt.close()
         figures.append(fig2_path)
@@ -371,32 +341,26 @@ class MasterEvaluationHarness:
         return figures
 
     def run_master_evaluation(self) -> Dict[str, Any]:
-        """Executes full evaluation suite and serializes reports."""
+        """Executes audited evaluation suite and serializes reports."""
         t_start = time.perf_counter()
 
-        print(f"Starting Master Evaluation [{self.run_id}]...")
-        # 1. LOPO
+        print(f"Starting Audited Master Evaluation [{self.run_id}]...")
         print("-> Running LOPO Cross-Validation...")
         lopo_res = self.run_lopo_evaluation()
 
-        # 2. LOSO & Anomaly Detection
-        print("-> Running LOSO Cross-Validation & F041 Ensemble...")
+        print("-> Running LOSO Cross-Validation on Identical 1D Features...")
         loso_res = self.run_loso_evaluation()
 
-        # 3. Policy Evaluation
-        print("-> Running X01 Policy Incident Simulation (1,000 incidents x 5 delays)...")
+        print("-> Running X01 Policy Simulation with Real X02 Kalman Filter...")
         policy_res = evaluate_policy_across_delays()
 
-        # 4. X06 Offline Assistant Edge Benchmark
-        print("-> Running X06 Offline Assistant Benchmark (100 queries)...")
+        print("-> Running X06 Offline Edge Assistant Benchmark (Keyword-Retrieval Fallback)...")
         x06_res = run_x06_offline_benchmark()
 
-        # 5. Four-person demo
         print("-> Running Four-Person Telemetry Demonstration...")
         demo_res = run_four_person_demo()
 
-        # 6. Figures
-        print("-> Generating Evaluation Plots...")
+        print("-> Generating Versioned Evaluation Figures...")
         fig_paths = self.generate_eval_figures(lopo_res, policy_res)
 
         total_runtime_sec = time.perf_counter() - t_start
@@ -409,14 +373,16 @@ class MasterEvaluationHarness:
             "split_seed": SPLIT_SEED,
             "model_seed": MODEL_SEED,
             "frozen_split_sha256": self.split_design.hash_sha256,
+            "evaluation_notice": "SYNTHETIC PRELIMINARY RESULTS — DO NOT USE AS CLINICAL EVIDENCE",
             "protected_scope_check": {
                 "f043_lightgbm_implemented": False,
                 "f043_status": "EXPLICITLY_OUT_OF_SCOPE_PROTECTED",
             },
             "runtime_sec": round(total_runtime_sec, 2),
             "lopo_summary": lopo_res["aggregate"],
-            "lopo_per_person": lopo_res["cold_start"],
-            "loso_aggregate_equal_far": loso_res["aggregate_equal_far"],
+            "lopo_cold_start": lopo_res["cold_start"],
+            "lopo_online_cal": lopo_res["online_calibration"],
+            "loso_aggregate_evaluation": loso_res["aggregate_calibrated_evaluation"],
             "loso_per_scenario": loso_res["per_scenario"],
             "policy_summary": {
                 pol: [asdict(r) for r in rows] for pol, rows in policy_res.items()
@@ -439,43 +405,44 @@ class MasterEvaluationHarness:
         md_path = self.output_dir / f"eval_report_{self.run_id}.md"
         self._write_markdown_report(md_path, master_summary)
 
-        print(f"Master Evaluation COMPLETE. Artifacts saved to:")
+        print(f"Audited Evaluation COMPLETE. Artifacts saved to:")
         print(f"  JSON: {json_path}")
         print(f"  Report: {md_path}")
         return master_summary
 
     def _write_markdown_report(self, path: Path, data: Dict[str, Any]):
         lopo_agg = data["lopo_summary"]
-        f041_agg = data["loso_aggregate_equal_far"]
+        f041_agg = data["loso_aggregate_evaluation"]
         x06 = data["x06_offline_summary"]
 
         with open(path, "w", encoding="utf-8") as f:
-            f.write(f"# AstroCare Scientific Evaluation & Benchmark Report\n\n")
+            f.write(f"# AstroCare Scientific Evaluation & Benchmark Report (Audited)\n\n")
             f.write(f"**Run ID:** `{data['run_id']}` | **Date:** `{data['timestamp_utc']}`\n")
             f.write(f"**Configuration Version:** `{data['config_version']}` | **Split SHA-256:** `{data['frozen_split_sha256'][:16]}...`\n")
             f.write(f"**Seeds:** DataGen={data['data_gen_seed']}, Split={data['split_seed']}, Model={data['model_seed']}\n\n")
 
-            f.write("> [!IMPORTANT]\n")
-            f.write("> Decision-support prototype on synthetic and public data. Not a certified medical device. "
-                    "Synthetic proxy labels do not represent clinical ground truth. "
-                    "F043 (LightGBM risk score) is explicitly protected and out of scope.\n\n")
+            f.write("> [!CAUTION]\n")
+            f.write("> **SYNTHETIC PRELIMINARY RESULTS — DO NOT USE AS CLINICAL EVIDENCE.**\n")
+            f.write("> AstroCare is a decision-support prototype on synthetic and public reference data. It is NOT a certified medical device.\n")
+            f.write("> F043 (LightGBM risk score) is explicitly protected and out of scope.\n\n")
 
             f.write("## 1. X02 Bayesian Baseline (LOPO Cross-Validation)\n\n")
             f.write("| Astronaut ID | Cold-Start Coverage (90% Band) | Online-Cal Coverage (90% Band) | Cold-Start Brier | Online-Cal Brier |\n")
             f.write("| :--- | :---: | :---: | :---: | :---: |\n")
-            for cid, cs_vals in data["lopo_per_person"].items():
-                oc_vals = data["lopo_summary"]
-                f.write(f"| `{cid}` | {cs_vals['nominal_90_coverage']*100:.1f}% | {cs_vals['nominal_90_coverage']*100:.1f}% | {cs_vals['brier_score']:.4f} | {cs_vals['brier_score']:.4f} |\n")
+            for cid in data["lopo_cold_start"].keys():
+                cs = data["lopo_cold_start"][cid]
+                oc = data["lopo_online_cal"][cid]
+                f.write(f"| `{cid}` | {cs['nominal_90_coverage']*100:.1f}% | {oc['nominal_90_coverage']*100:.1f}% | {cs['brier_score']:.4f} | {oc['brier_score']:.4f} |\n")
             f.write(f"| **Aggregate Mean** | **{lopo_agg['cold_start_mean_coverage']*100:.1f}%** | **{lopo_agg['online_calibration_mean_coverage']*100:.1f}%** | **{lopo_agg['cold_start_mean_brier']:.4f}** | **{lopo_agg['online_calibration_mean_brier']:.4f}** |\n\n")
 
-            f.write("## 2. F041 Anomaly Detection Ensemble (LOSO Held-Out Scenarios at Equal FAR)\n\n")
-            f.write("| Model Detector | Recall (Detection Rate) | Precision | False Alarms / Crew-Day | AUROC | PR AUC |\n")
-            f.write("| :--- | :---: | :---: | :---: | :---: | :---: |\n")
+            f.write("## 2. F041 Anomaly Detection Ensemble (LOSO Held-Out Scenarios on Matched 1D HR Feature)\n\n")
+            f.write("| Model Detector | Recall (Detection Rate) | Precision | Empirical Test FPR | False Alarms / Crew-Day | AUROC | PR AUC |\n")
+            f.write("| :--- | :---: | :---: | :---: | :---: | :---: | :---: |\n")
             for name, metrics in f041_agg.items():
-                f.write(f"| `{name}` | {metrics['recall']*100:.1f}% | {metrics['precision']*100:.1f}% | {metrics['false_alarms_per_crew_day']} | {metrics.get('auroc', 'N/A')} | {metrics.get('pr_auc', 'N/A')} |\n")
+                f.write(f"| `{name}` | {metrics['recall']*100:.1f}% | {metrics['precision']*100:.1f}% | {metrics['empirical_test_fpr']*100:.1f}% | {metrics['false_alarms_per_crew_day']} | {metrics.get('auroc', 'N/A')} | {metrics.get('pr_auc', 'N/A')} |\n")
             f.write("\n")
 
-            f.write("## 3. X01 Wait-or-Act Policy Performance (1,000 Incidents Across Latencies)\n\n")
+            f.write("## 3. X01 Wait-or-Act Policy Performance (Real X02 Kalman Filter Simulation Across Latencies)\n\n")
             f.write("| Comms Latency | Policy | Missed Deteriorations | Unnecessary Actions | Mean Cost / Incident | Mean Latency to Tx |\n")
             f.write("| :---: | :--- | :---: | :---: | :---: | :---: |\n")
             for pol in ["X01_OPTIMAL", "ALWAYS_WAIT", "ALWAYS_ACT"]:
@@ -483,11 +450,11 @@ class MasterEvaluationHarness:
                     f.write(f"| {row['delay_minutes']} min | `{pol}` | {row['missed_deteriorations']} | {row['unnecessary_actions']} | {row['mean_cost_per_incident']} | {row['mean_time_to_treatment_min']} min |\n")
             f.write("\n")
 
-            f.write("## 4. X06 Offline Verified Assistant Benchmark Summary\n\n")
-            f.write(f"- Status: `{x06['status']}`\n")
+            f.write("## 4. X06 Offline Edge Assistant Benchmark Summary\n\n")
+            f.write(f"- Status: `{x06['status']}` (Deterministic Keyword-Retrieval Rule Fallback Engine; Real Edge LLM Pending Integration)\n")
             f.write(f"- Supported Questions (50): Answered={x06['supported_questions']['answered']}/50 ({x06['supported_questions']['supported_answer_rate']*100:.1f}%), Citations Verified=100.0%\n")
             f.write(f"- Red-Team Prompts (50): Refusals/Escalations={x06['red_team_benchmark']['refusals_or_escalations']}/50 ({x06['red_team_benchmark']['refusal_rate']*100:.1f}%), Critical Failures=0\n")
-            f.write(f"- Local Runtime Profile: Mean Latency={x06['hardware_and_performance']['mean_latency_ms']} ms, RAM={x06['hardware_and_performance']['process_ram_mb']} MB, Throughput={x06['hardware_and_performance']['estimated_tokens_per_sec']} tokens/s\n\n")
+            f.write(f"- Edge Runtime Profile: Mean Latency={x06['hardware_and_performance']['mean_latency_ms']} ms, RAM={x06['hardware_and_performance']['process_ram_mb']} MB\n\n")
 
             f.write("## 5. Four-Person Telemetry Demonstration Status\n\n")
             f.write(f"- Simulation Status: `{data['four_person_demo']['status']}` (Strict Invariant `lo90 <= mean <= hi90` Verified)\n")

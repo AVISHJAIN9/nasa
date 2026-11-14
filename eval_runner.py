@@ -16,7 +16,7 @@ def main():
     print("\n=======================================================")
     print(f"Master Evaluation Finished. Run ID: {results['run_id']}")
     print(f"LOPO Mean 90% Coverage: {results['lopo_summary']['cold_start_mean_coverage']*100:.1f}%")
-    print(f"F041 Isolation Forest AUROC: {results['loso_aggregate_equal_far']['isolation_forest']['auroc']}")
+    print(f"F041 Isolation Forest AUROC: {results['loso_aggregate_evaluation']['isolation_forest']['auroc']}")
     print(f"X06 Offline Status: {results['x06_offline_summary']['status']}")
     print("=======================================================\n")
 

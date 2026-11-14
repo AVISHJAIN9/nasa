@@ -2,31 +2,32 @@
   "card_id": "CARD-04",
   "indicator_name": "Body Temperature",
   "body_region_or_system": "Thermoregulation",
-  "measurement_in_spaceflight": "Measured with infrared tympanic thermometers, ingestible telemetry sensor pills, or forehead temporal artery thermal sensors.",
-  "why_it_matters": "Core temperature reflects the balance between metabolic heat production and dissipation. Impaired thermoregulation or infection alters core setpoints.",
-  "hazard_effects": "Spaceflight-associated core body temperature elevation ('space fever') occurs due to impaired convective and evaporative heat loss in weightlessness.",
-  "when_to_pay_attention": "Pay attention if core body temperature at rest exceeds 37.8 degC (subfebrile/fever watch) or falls below 35.5 degC (hypothermia risk during EVA).",
-  "safe_next_steps": "Remove excess thermal layers; verify cabin ventilation airflow; increase cool fluid intake; re-measure temperature after 20 minutes; log potential infection symptoms.",
+  "measurement_in_spaceflight": "Measured via infrared tympanic thermometers, ingestible telemetry sensor pills, or forehead temporal artery temperature sensors.",
+  "why_it_matters": "Core temperature reflects metabolic heat balance and systemic inflammatory status. Weightlessness impairs natural convective and evaporative heat loss.",
+  "hazard_effects": "Spaceflight-associated core temperature elevation ('space fever') can arise from reduced heat dissipation and mild systemic inflammatory shifts.",
+  "when_to_pay_attention": "Attention warranted if core temperature exceeds 37.8 degC (febrile watch) or falls below 35.5 degC. Sourced from NASA-STD-3001 Vol 1.",
+  "safe_next_steps": "Simulation recommendation (pending flight surgeon review): Confirm cabin ventilation diffuser airflow; adjust garment layers; increase cool fluid intake; re-measure temperature after 20 minutes.",
   "sourced_thresholds": {
     "nominal_range": "36.2 - 37.5 degC",
     "watch_threshold": "> 37.6 degC or < 35.8 degC",
     "alert_threshold": "> 38.3 degC or < 35.2 degC",
-    "unit": "degC"
+    "unit": "degC",
+    "clinical_status": "Simulation threshold based on NASA-STD-3001 Vol 1; pending clinical review"
   },
   "action_lines": [
-    "Ensure cabin airflow diffuser is clear and reduce thermal garment layers.",
-    "Drink 250 mL of cool water and repeat core temperature measurement in 20 minutes."
+    "Simulation recommendation: Verify cabin air diffuser is unblocked and ventilating properly.",
+    "Simulation recommendation: Re-measure temperature after 20 minutes and log thermal comfort."
   ],
   "sources": [
     {
-      "title": "Thermoregulation in Microgravity and Space Fever Phenomenon",
-      "organization": "NASA HRP / ESA",
-      "url": "https://humanresearchroadmap.nasa.gov/evidence/reports/Hypothermia.pdf",
+      "title": "NASA-STD-3001 Vol 1: Crew Health and Medical Operations",
+      "organization": "NASA",
+      "url": "https://www.nasa.gov/offices/ochmo/human-standards/",
       "date_accessed": "2026-11-14",
-      "licence": "Public Domain (US Government Work)"
+      "licence": "Public Domain (U.S. Government Work)"
     }
   ],
-  "licence_terms": "NASA Public Domain / US Government Work",
-  "review_status": "PENDING_REVIEW",
-  "version": "2.0.0"
+  "licence_terms": "NASA Public Domain / U.S. Government Work",
+  "review_status": "PENDING_MEDICAL_REVIEW",
+  "version": "2.1.0-audited"
 }

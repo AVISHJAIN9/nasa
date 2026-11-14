@@ -2,31 +2,32 @@
   "card_id": "CARD-06",
   "indicator_name": "Mood & Behavioral Wellness",
   "body_region_or_system": "Behavioral Health",
-  "measurement_in_spaceflight": "Evaluated through standardized daily 60-second micro check-ins, validated visual analog scales, voice acoustic analysis, and journal sentiment.",
-  "why_it_matters": "Crew cohesion, morale, and mental resilience are critical barriers against mission failure, interpersonal conflict, and cognitive error in isolated confinement.",
-  "hazard_effects": "Sensory monotony, long communication latency to Earth, family separation, and high workload increase vulnerability to depression and fatigue.",
-  "when_to_pay_attention": "Pay attention if subjective mood score drops to 3 or below (on 1-10 scale) for three consecutive days or if withdrawal or distress is self-reported.",
-  "safe_next_steps": "Engage in scheduled relaxation or leisure protocol (music, family asynchronous messages, exercise); conduct peer support check-in; queue private consultation.",
+  "measurement_in_spaceflight": "Evaluated through standardized daily 60-second micro check-ins, validated visual analog scales, voice acoustic features, and journal entries.",
+  "why_it_matters": "Crew cohesion, morale, and interpersonal resilience are essential barriers against mission degradation in isolated confined environments (ICE).",
+  "hazard_effects": "Extended isolation, communication latency with family, sensory monotony, and high operational stress elevate risks of fatigue, anxiety, and interpersonal friction.",
+  "when_to_pay_attention": "Attention warranted if subjective wellness score drops to 4 or below (on 1-10 scale) across consecutive days. Sourced from CSA Health Beyond literature.",
+  "safe_next_steps": "Simulation recommendation (pending flight surgeon review): Schedule restorative downtime; engage in peer support or personal audio/visual relaxation; prepare asynchronous message to ground support.",
   "sourced_thresholds": {
-    "nominal_range": "6.0 - 10.0 (1-10 Likert scale)",
-    "watch_threshold": "<= 4.0 or persistent 3-day decline",
-    "alert_threshold": "<= 2.0 or crisis keyword detected",
-    "unit": "score (1-10)"
+    "nominal_range": "6.0 - 10.0 (1-10 scale)",
+    "watch_threshold": "<= 4.0",
+    "alert_threshold": "<= 2.0 or crisis phrase detected",
+    "unit": "score (1-10)",
+    "clinical_status": "Simulation guideline based on CSA exploration health literature; pending clinical review"
   },
   "action_lines": [
-    "Schedule a 30-minute restorative downtime session with personal audio or visual media.",
-    "Request a private asynchronous message exchange with the flight surgeon or family support."
+    "Simulation recommendation: Allocate 30 minutes of scheduled downtime for personal media.",
+    "Simulation recommendation: Queue an asynchronous support message to ground medical teams."
   ],
   "sources": [
     {
-      "title": "Canadian Space Agency: Health Beyond and Behavioral Support for Deep Space Missions",
-      "organization": "Canadian Space Agency (CSA)",
+      "title": "Canadian Space Agency: Health Beyond and Behavioral Support for Exploration Missions",
+      "organization": "Canadian Space Agency",
       "url": "https://www.asc-csa.gc.ca/eng/sciences/health-beyond.asp",
       "date_accessed": "2026-11-14",
-      "licence": "Open Government Licence - Canada (OGL-Canada v2.0)"
+      "licence": "Government of Canada Terms and Conditions / Crown Copyright. Educational non-commercial use with attribution."
     }
   ],
-  "licence_terms": "Canadian Space Agency Open Government Licence - Canada v2.0 (Verified: non-commercial and commercial reproduction permitted with attribution)",
-  "review_status": "PENDING_REVIEW",
-  "version": "2.0.0"
+  "licence_terms": "Canadian Space Agency Crown Copyright. Non-commercial reproduction permitted with attribution to CSA. Commercial redistribution requires prior written authorization.",
+  "review_status": "PENDING_MEDICAL_REVIEW",
+  "version": "2.1.0-audited"
 }
