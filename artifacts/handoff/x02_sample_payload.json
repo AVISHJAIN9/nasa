@@ -1,0 +1,14 @@
+{
+  "crew_id": "ASTRO-01",
+  "metric": "glucose",
+  "ts": "2026-11-14T08:00:00Z",
+  "mean": 94.2,
+  "lo90": 82.5,
+  "hi90": 105.9,
+  "p_deviation": 0.0421,
+  "time_to_critical_min": {
+    "p10": 42.0,
+    "p50": 68.5,
+    "p90": 95.0
+  }
+}

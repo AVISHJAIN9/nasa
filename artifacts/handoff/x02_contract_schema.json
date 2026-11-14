@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AstroCare_X02_BaselineOutput",
+  "description": "Frozen X02 per-astronaut Bayesian baseline output contract for ML2 and BE1 consumers.",
+  "type": "object",
+  "required": [
+    "crew_id",
+    "metric",
+    "ts",
+    "mean",
+    "lo90",
+    "hi90",
+    "p_deviation",
+    "time_to_critical_min"
+  ],
+  "properties": {
+    "crew_id": {
+      "type": "string",
+      "description": "Astronaut identifier (e.g. ASTRO-01)"
+    },
+    "metric": {
+      "type": "string",
+      "description": "Metric registry identifier (e.g. heart_rate, glucose, sleep_hours)"
+    },
+    "ts": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 UTC observation timestamp"
+    },
+    "mean": {
+      "type": "number",
+      "description": "Predictive state mean in metric native units"
+    },
+    "lo90": {
+      "type": "number",
+      "description": "Lower bound of nominal 90% predictive interval in native units"
+    },
+    "hi90": {
+      "type": "number",
+      "description": "Upper bound of nominal 90% predictive interval in native units"
+    },
+    "p_deviation": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Predictive probability that metric is outside personal tolerance bounds"
+    },
+    "time_to_critical_min": {
+      "type": "object",
+      "required": ["p10", "p50", "p90"],
+      "properties": {
+        "p10": {
+          "type": ["number", "null"],
+          "minimum": 0.0,
+          "description": "10th percentile minutes until critical threshold crossing"
+        },
+        "p50": {
+          "type": ["number", "null"],
+          "minimum": 0.0,
+          "description": "50th percentile (median) minutes until critical crossing"
+        },
+        "p90": {
+          "type": ["number", "null"],
+          "minimum": 0.0,
+          "description": "90th percentile minutes until critical crossing"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "card_id": "CARD-01",
+  "indicator_name": "Heart Rate",
+  "body_region_or_system": "Cardiovascular",
+  "measurement_in_spaceflight": "Measured continuously using wearable chest straps, optical PPG sensors embedded in flight garments, or smart watch telemetry.",
+  "why_it_matters": "Heart rate reflects autonomic nervous system balance, cardiac workload, aerobic conditioning, and systemic stress response during space missions.",
+  "hazard_effects": "Cephalad fluid shifts in microgravity cause acute central blood volume redistribution. Cabin stressors (hypercapnia, physical exertion, anxiety) elevate resting rates.",
+  "when_to_pay_attention": "Pay attention if resting heart rate persistently exceeds 100 bpm (tachycardia) or falls below 45 bpm (bradycardia) outside scheduled sleep or exercise.",
+  "safe_next_steps": "Verify sensor contact and signal quality; transition to a seated or relaxed posture; conduct scheduled hydration protocol; record symptoms in check-in log; queue consult for flight surgeon.",
+  "sourced_thresholds": {
+    "nominal_range": "55 - 95 bpm",
+    "watch_threshold": "> 95 bpm resting or < 50 bpm resting",
+    "alert_threshold": "> 115 bpm resting or < 42 bpm resting",
+    "unit": "bpm"
+  },
+  "action_lines": [
+    "Verify sensor fit and sit in a supported, neutral body posture.",
+    "Complete scheduled fluid intake (hydration countermeasure) and log symptoms."
+  ],
+  "sources": [
+    {
+      "title": "NASA Human Research Program Evidence Book: Risk of Cardiac Rhythm Problems in Spaceflight",
+      "organization": "NASA HRP",
+      "url": "https://humanresearchroadmap.nasa.gov/evidence/reports/Arrhythmia.pdf",
+      "date_accessed": "2026-11-14",
+      "licence": "Public Domain (US Government Work)"
+    }
+  ],
+  "licence_terms": "NASA Public Domain / US Government Work (17 U.S.C. 105)",
+  "review_status": "PENDING_REVIEW",
+  "version": "2.0.0"
+}

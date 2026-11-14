@@ -1,0 +1,32 @@
+{
+  "card_id": "CARD-03",
+  "indicator_name": "Blood Glucose",
+  "body_region_or_system": "Endocrine / Metabolic",
+  "measurement_in_spaceflight": "Monitored using minimally invasive continuous glucose monitoring (CGM) sensors or fingerstick capillary glucometers with mission-adapted test strips.",
+  "why_it_matters": "Glycemic control ensures cellular energy supply to brain and muscle. Spaceflight can induce subclinical insulin resistance and altered carbohydrate metabolism.",
+  "hazard_effects": "Microgravity-induced muscle unloading and dietary shifts alter glucose uptake kinetics. High operational stress or circadian disruption triggers stress hyperglycemia.",
+  "when_to_pay_attention": "Pay attention if fasting glucose exceeds 126 mg/dL or random readings exceed 160 mg/dL, or if any reading drops below 65 mg/dL (hypoglycemia risk).",
+  "safe_next_steps": "If glucose < 70 mg/dL: consume 15 grams of fast-acting carbohydrate (mission juice pack or glucose tab) and re-check in 15 minutes. If elevated: check hydration status and log meal composition.",
+  "sourced_thresholds": {
+    "nominal_range": "70 - 140 mg/dL",
+    "watch_threshold": "< 70 mg/dL (hypoglycemia risk) or > 150 mg/dL",
+    "alert_threshold": "< 55 mg/dL (urgent low) or > 200 mg/dL",
+    "unit": "mg/dL"
+  },
+  "action_lines": [
+    "If glucose < 70 mg/dL, consume 15 g of rapid-acting carbohydrate and re-measure in 15 minutes.",
+    "Ensure adequate hydration and log meal timing and contents in the daily journal."
+  ],
+  "sources": [
+    {
+      "title": "NASA HRP Evidence Book: Risk of Impaired Glucose Metabolism in Spaceflight",
+      "organization": "NASA HRP",
+      "url": "https://humanresearchroadmap.nasa.gov/evidence/reports/Nutrition.pdf",
+      "date_accessed": "2026-11-14",
+      "licence": "Public Domain (US Government Work)"
+    }
+  ],
+  "licence_terms": "NASA Public Domain / US Government Work",
+  "review_status": "PENDING_REVIEW",
+  "version": "2.0.0"
+}

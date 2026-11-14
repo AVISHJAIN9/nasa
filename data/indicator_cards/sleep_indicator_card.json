@@ -1,0 +1,32 @@
+{
+  "card_id": "CARD-05",
+  "indicator_name": "Sleep Duration & Quality",
+  "body_region_or_system": "Neurobehavioral",
+  "measurement_in_spaceflight": "Quantified via actigraphy sleep-watch wristbands, PSG electrophysiological sleep headbands, and daily subjective sleep logs.",
+  "why_it_matters": "Restorative sleep maintains cognitive vigilance, situational awareness, emotional regulation, and immunological health during extended isolation.",
+  "hazard_effects": "Lack of 24h natural solar cycle, microgravity posture discomfort, habitat acoustic noise, and mission scheduling conflicts induce chronic sleep deprivation.",
+  "when_to_pay_attention": "Pay attention if cumulative sleep falls below 6.0 hours per 24-hour cycle for two consecutive nights or if subjective sleep latency exceeds 60 minutes.",
+  "safe_next_steps": "Practice sleep hygiene protocols: dim crew quarters lighting 60 min before sleep; wear earplugs/noise attenuators; avoid high caffeine; review cognitive workload.",
+  "sourced_thresholds": {
+    "nominal_range": "7.0 - 8.5 hours/night",
+    "watch_threshold": "< 6.0 hours/night",
+    "alert_threshold": "< 4.5 hours/night or 2 consecutive nights < 5.5 h",
+    "unit": "hours"
+  },
+  "action_lines": [
+    "Initiate pre-sleep wind-down: dim crew-quarter lighting and reduce screen brightness.",
+    "Verify sleep-station acoustic damping and avoid caffeine within 6 hours of sleep."
+  ],
+  "sources": [
+    {
+      "title": "NASA HRP Evidence Book: Risk of Performance Decrements and Disorders Associated with Sleep Loss and Circadian Desynchronization",
+      "organization": "NASA HRP",
+      "url": "https://humanresearchroadmap.nasa.gov/evidence/reports/Sleep.pdf",
+      "date_accessed": "2026-11-14",
+      "licence": "Public Domain (US Government Work)"
+    }
+  ],
+  "licence_terms": "NASA Public Domain / US Government Work",
+  "review_status": "PENDING_REVIEW",
+  "version": "2.0.0"
+}

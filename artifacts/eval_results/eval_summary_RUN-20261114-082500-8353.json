@@ -1,0 +1,539 @@
+{
+  "run_id": "RUN-20261114-082500-8353",
+  "timestamp_utc": "2026-11-14T08:25:01.243817+00:00",
+  "config_version": "v2.1.0-spaceapps",
+  "data_gen_seed": 42,
+  "split_seed": 2026,
+  "model_seed": 1337,
+  "frozen_split_sha256": "038cec348d1d9ee5f69d75af0ed83382cbceda56f1deed1c298885429ffd0aae",
+  "protected_scope_check": {
+    "f043_lightgbm_implemented": false,
+    "f043_status": "EXPLICITLY_OUT_OF_SCOPE_PROTECTED"
+  },
+  "runtime_sec": 1.23,
+  "lopo_summary": {
+    "cold_start_mean_coverage": 0.9895,
+    "online_calibration_mean_coverage": 0.99,
+    "cold_start_mean_brier": 0.0011,
+    "online_calibration_mean_brier": 0.0004
+  },
+  "lopo_per_person": {
+    "ASTRO-01": {
+      "nominal_90_coverage": 0.9906,
+      "brier_score": 0.0007,
+      "per_metric_coverage": {
+        "heart_rate": 0.994,
+        "glucose": 0.972,
+        "systolic_bp": 1.0,
+        "body_temp": 0.989
+      }
+    },
+    "ASTRO-02": {
+      "nominal_90_coverage": 0.9882,
+      "brier_score": 0.0023,
+      "per_metric_coverage": {
+        "heart_rate": 0.989,
+        "glucose": 0.971,
+        "systolic_bp": 0.972,
+        "body_temp": 0.994
+      }
+    },
+    "ASTRO-03": {
+      "nominal_90_coverage": 0.9883,
+      "brier_score": 0.0007,
+      "per_metric_coverage": {
+        "heart_rate": 0.989,
+        "glucose": 1.0,
+        "systolic_bp": 0.917,
+        "body_temp": 1.0
+      }
+    },
+    "ASTRO-04": {
+      "nominal_90_coverage": 0.9907,
+      "brier_score": 0.0007,
+      "per_metric_coverage": {
+        "heart_rate": 1.0,
+        "glucose": 0.971,
+        "systolic_bp": 0.972,
+        "body_temp": 0.989
+      }
+    }
+  },
+  "loso_aggregate_equal_far": {
+    "isolation_forest": {
+      "total_samples": 120,
+      "true_positives": 0,
+      "false_positives": 33,
+      "recall": 0.0,
+      "precision": 0.0,
+      "false_positive_rate": 0.275,
+      "false_alarms_per_crew_day": 396.0,
+      "detection_latency_steps": null,
+      "auroc": null,
+      "pr_auc": null
+    },
+    "robust_z": {
+      "total_samples": 120,
+      "true_positives": 0,
+      "false_positives": 13,
+      "recall": 0.0,
+      "precision": 0.0,
+      "false_positive_rate": 0.1083,
+      "false_alarms_per_crew_day": 156.0,
+      "detection_latency_steps": null,
+      "auroc": null,
+      "pr_auc": null
+    },
+    "fixed_threshold": {
+      "total_samples": 120,
+      "true_positives": 0,
+      "false_positives": 0,
+      "recall": 0.0,
+      "precision": 0.0,
+      "false_positive_rate": 0.0,
+      "false_alarms_per_crew_day": 0.0,
+      "detection_latency_steps": null,
+      "auroc": null,
+      "pr_auc": null
+    }
+  },
+  "loso_per_scenario": {
+    "cabin_co2_leak": {
+      "isolation_forest": {
+        "total_samples": 20,
+        "true_positives": 0,
+        "false_positives": 4,
+        "recall": 0.0,
+        "precision": 0.0,
+        "false_positive_rate": 0.2,
+        "false_alarms_per_crew_day": 288.0,
+        "detection_latency_steps": 120.0,
+        "auroc": null,
+        "pr_auc": null
+      },
+      "robust_z": {
+        "total_samples": 20,
+        "true_positives": 0,
+        "false_positives": 2,
+        "recall": 0.0,
+        "precision": 0.0,
+        "false_positive_rate": 0.1,
+        "false_alarms_per_crew_day": 144.0,
+        "detection_latency_steps": 120.0,
+        "auroc": null,
+        "pr_auc": null
+      },
+      "fixed_threshold": {
+        "total_samples": 20,
+        "true_positives": 0,
+        "false_positives": 0,
+        "recall": 0.0,
+        "precision": 0.0,
+        "false_positive_rate": 0.0,
+        "false_alarms_per_crew_day": 0.0,
+        "detection_latency_steps": 120.0,
+        "auroc": null,
+        "pr_auc": null
+      }
+    },
+    "isolation_confinement": {
+      "isolation_forest": {
+        "total_samples": 20,
+        "true_positives": 0,
+        "false_positives": 4,
+        "recall": 0.0,
+        "precision": 0.0,
+        "false_positive_rate": 0.2,
+        "false_alarms_per_crew_day": 288.0,
+        "detection_latency_steps": 120.0,
+        "auroc": null,
+        "pr_auc": null
+      },
+      "robust_z": {
+        "total_samples": 20,
+        "true_positives": 0,
+        "false_positives": 3,
+        "recall": 0.0,
+        "precision": 0.0,
+        "false_positive_rate": 0.15,
+        "false_alarms_per_crew_day": 216.0,
+        "detection_latency_steps": 120.0,
+        "auroc": null,
+        "pr_auc": null
+      },
+      "fixed_threshold": {
+        "total_samples": 20,
+        "true_positives": 0,
+        "false_positives": 0,
+        "recall": 0.0,
+        "precision": 0.0,
+        "false_positive_rate": 0.0,
+        "false_alarms_per_crew_day": 0.0,
+        "detection_latency_steps": 120.0,
+        "auroc": null,
+        "pr_auc": null
+      }
+    },
+    "metabolic_hyperglycemia": {
+      "isolation_forest": {
+        "total_samples": 20,
+        "true_positives": 0,
+        "false_positives": 9,
+        "recall": 0.0,
+        "precision": 0.0,
+        "false_positive_rate": 0.45,
+        "false_alarms_per_crew_day": 648.0,
+        "detection_latency_steps": 120.0,
+        "auroc": null,
+        "pr_auc": null
+      },
+      "robust_z": {
+        "total_samples": 20,
+        "true_positives": 0,
+        "false_positives": 1,
+        "recall": 0.0,
+        "precision": 0.0,
+        "false_positive_rate": 0.05,
+        "false_alarms_per_crew_day": 72.0,
+        "detection_latency_steps": 120.0,
+        "auroc": null,
+        "pr_auc": null
+      },
+      "fixed_threshold": {
+        "total_samples": 20,
+        "true_positives": 0,
+        "false_positives": 0,
+        "recall": 0.0,
+        "precision": 0.0,
+        "false_positive_rate": 0.0,
+        "false_alarms_per_crew_day": 0.0,
+        "detection_latency_steps": 120.0,
+        "auroc": null,
+        "pr_auc": null
+      }
+    },
+    "metabolic_hypoglycemia": {
+      "isolation_forest": {
+        "total_samples": 20,
+        "true_positives": 0,
+        "false_positives": 12,
+        "recall": 0.0,
+        "precision": 0.0,
+        "false_positive_rate": 0.6,
+        "false_alarms_per_crew_day": 864.0,
+        "detection_latency_steps": 120.0,
+        "auroc": null,
+        "pr_auc": null
+      },
+      "robust_z": {
+        "total_samples": 20,
+        "true_positives": 0,
+        "false_positives": 5,
+        "recall": 0.0,
+        "precision": 0.0,
+        "false_positive_rate": 0.25,
+        "false_alarms_per_crew_day": 360.0,
+        "detection_latency_steps": 120.0,
+        "auroc": null,
+        "pr_auc": null
+      },
+      "fixed_threshold": {
+        "total_samples": 20,
+        "true_positives": 0,
+        "false_positives": 0,
+        "recall": 0.0,
+        "precision": 0.0,
+        "false_positive_rate": 0.0,
+        "false_alarms_per_crew_day": 0.0,
+        "detection_latency_steps": 120.0,
+        "auroc": null,
+        "pr_auc": null
+      }
+    },
+    "microgravity_adaptation": {
+      "isolation_forest": {
+        "total_samples": 20,
+        "true_positives": 0,
+        "false_positives": 0,
+        "recall": 0.0,
+        "precision": 0.0,
+        "false_positive_rate": 0.0,
+        "false_alarms_per_crew_day": 0.0,
+        "detection_latency_steps": 120.0,
+        "auroc": null,
+        "pr_auc": null
+      },
+      "robust_z": {
+        "total_samples": 20,
+        "true_positives": 0,
+        "false_positives": 1,
+        "recall": 0.0,
+        "precision": 0.0,
+        "false_positive_rate": 0.05,
+        "false_alarms_per_crew_day": 72.0,
+        "detection_latency_steps": 120.0,
+        "auroc": null,
+        "pr_auc": null
+      },
+      "fixed_threshold": {
+        "total_samples": 20,
+        "true_positives": 0,
+        "false_positives": 0,
+        "recall": 0.0,
+        "precision": 0.0,
+        "false_positive_rate": 0.0,
+        "false_alarms_per_crew_day": 0.0,
+        "detection_latency_steps": 120.0,
+        "auroc": null,
+        "pr_auc": null
+      }
+    },
+    "radiation_solar_event": {
+      "isolation_forest": {
+        "total_samples": 20,
+        "true_positives": 0,
+        "false_positives": 4,
+        "recall": 0.0,
+        "precision": 0.0,
+        "false_positive_rate": 0.2,
+        "false_alarms_per_crew_day": 288.0,
+        "detection_latency_steps": 120.0,
+        "auroc": null,
+        "pr_auc": null
+      },
+      "robust_z": {
+        "total_samples": 20,
+        "true_positives": 0,
+        "false_positives": 1,
+        "recall": 0.0,
+        "precision": 0.0,
+        "false_positive_rate": 0.05,
+        "false_alarms_per_crew_day": 72.0,
+        "detection_latency_steps": 120.0,
+        "auroc": null,
+        "pr_auc": null
+      },
+      "fixed_threshold": {
+        "total_samples": 20,
+        "true_positives": 0,
+        "false_positives": 0,
+        "recall": 0.0,
+        "precision": 0.0,
+        "false_positive_rate": 0.0,
+        "false_alarms_per_crew_day": 0.0,
+        "detection_latency_steps": 120.0,
+        "auroc": null,
+        "pr_auc": null
+      }
+    }
+  },
+  "policy_summary": {
+    "X01_OPTIMAL": [
+      {
+        "policy_name": "X01_OPTIMAL",
+        "delay_minutes": 0.0,
+        "total_incidents": 1000,
+        "missed_deteriorations": 303,
+        "unnecessary_actions": 0,
+        "safe_consult_actions": 0,
+        "mean_time_to_treatment_min": 0.0,
+        "mean_cost_per_incident": 30.3,
+        "total_cost": 30300.0
+      },
+      {
+        "policy_name": "X01_OPTIMAL",
+        "delay_minutes": 2.0,
+        "total_incidents": 1000,
+        "missed_deteriorations": 0,
+        "unnecessary_actions": 0,
+        "safe_consult_actions": 146,
+        "mean_time_to_treatment_min": 1.19,
+        "mean_cost_per_incident": 1.02,
+        "total_cost": 1022.0
+      },
+      {
+        "policy_name": "X01_OPTIMAL",
+        "delay_minutes": 10.0,
+        "total_incidents": 1000,
+        "missed_deteriorations": 0,
+        "unnecessary_actions": 0,
+        "safe_consult_actions": 141,
+        "mean_time_to_treatment_min": 5.97,
+        "mean_cost_per_incident": 0.99,
+        "total_cost": 987.0
+      },
+      {
+        "policy_name": "X01_OPTIMAL",
+        "delay_minutes": 20.0,
+        "total_incidents": 1000,
+        "missed_deteriorations": 0,
+        "unnecessary_actions": 0,
+        "safe_consult_actions": 118,
+        "mean_time_to_treatment_min": 11.94,
+        "mean_cost_per_incident": 0.83,
+        "total_cost": 826.0
+      },
+      {
+        "policy_name": "X01_OPTIMAL",
+        "delay_minutes": 44.0,
+        "total_incidents": 1000,
+        "missed_deteriorations": 0,
+        "unnecessary_actions": 0,
+        "safe_consult_actions": 100,
+        "mean_time_to_treatment_min": 26.27,
+        "mean_cost_per_incident": 0.7,
+        "total_cost": 700.0
+      }
+    ],
+    "ALWAYS_WAIT": [
+      {
+        "policy_name": "ALWAYS_WAIT",
+        "delay_minutes": 0.0,
+        "total_incidents": 1000,
+        "missed_deteriorations": 303,
+        "unnecessary_actions": 0,
+        "safe_consult_actions": 0,
+        "mean_time_to_treatment_min": 0.0,
+        "mean_cost_per_incident": 30.3,
+        "total_cost": 30300.0
+      },
+      {
+        "policy_name": "ALWAYS_WAIT",
+        "delay_minutes": 2.0,
+        "total_incidents": 1000,
+        "missed_deteriorations": 303,
+        "unnecessary_actions": 0,
+        "safe_consult_actions": 0,
+        "mean_time_to_treatment_min": 2.0,
+        "mean_cost_per_incident": 30.91,
+        "total_cost": 30906.0
+      },
+      {
+        "policy_name": "ALWAYS_WAIT",
+        "delay_minutes": 10.0,
+        "total_incidents": 1000,
+        "missed_deteriorations": 303,
+        "unnecessary_actions": 0,
+        "safe_consult_actions": 0,
+        "mean_time_to_treatment_min": 10.0,
+        "mean_cost_per_incident": 33.33,
+        "total_cost": 33330.0
+      },
+      {
+        "policy_name": "ALWAYS_WAIT",
+        "delay_minutes": 20.0,
+        "total_incidents": 1000,
+        "missed_deteriorations": 303,
+        "unnecessary_actions": 0,
+        "safe_consult_actions": 0,
+        "mean_time_to_treatment_min": 20.0,
+        "mean_cost_per_incident": 36.36,
+        "total_cost": 36360.0
+      },
+      {
+        "policy_name": "ALWAYS_WAIT",
+        "delay_minutes": 44.0,
+        "total_incidents": 1000,
+        "missed_deteriorations": 303,
+        "unnecessary_actions": 0,
+        "safe_consult_actions": 0,
+        "mean_time_to_treatment_min": 44.0,
+        "mean_cost_per_incident": 43.63,
+        "total_cost": 43632.0
+      }
+    ],
+    "ALWAYS_ACT": [
+      {
+        "policy_name": "ALWAYS_ACT",
+        "delay_minutes": 0.0,
+        "total_incidents": 1000,
+        "missed_deteriorations": 0,
+        "unnecessary_actions": 697,
+        "safe_consult_actions": 0,
+        "mean_time_to_treatment_min": 0.0,
+        "mean_cost_per_incident": 17.43,
+        "total_cost": 17425.0
+      },
+      {
+        "policy_name": "ALWAYS_ACT",
+        "delay_minutes": 2.0,
+        "total_incidents": 1000,
+        "missed_deteriorations": 0,
+        "unnecessary_actions": 697,
+        "safe_consult_actions": 0,
+        "mean_time_to_treatment_min": 0.0,
+        "mean_cost_per_incident": 17.43,
+        "total_cost": 17425.0
+      },
+      {
+        "policy_name": "ALWAYS_ACT",
+        "delay_minutes": 10.0,
+        "total_incidents": 1000,
+        "missed_deteriorations": 0,
+        "unnecessary_actions": 697,
+        "safe_consult_actions": 0,
+        "mean_time_to_treatment_min": 0.0,
+        "mean_cost_per_incident": 17.43,
+        "total_cost": 17425.0
+      },
+      {
+        "policy_name": "ALWAYS_ACT",
+        "delay_minutes": 20.0,
+        "total_incidents": 1000,
+        "missed_deteriorations": 0,
+        "unnecessary_actions": 697,
+        "safe_consult_actions": 0,
+        "mean_time_to_treatment_min": 0.0,
+        "mean_cost_per_incident": 17.43,
+        "total_cost": 17425.0
+      },
+      {
+        "policy_name": "ALWAYS_ACT",
+        "delay_minutes": 44.0,
+        "total_incidents": 1000,
+        "missed_deteriorations": 0,
+        "unnecessary_actions": 697,
+        "safe_consult_actions": 0,
+        "mean_time_to_treatment_min": 0.0,
+        "mean_cost_per_incident": 17.43,
+        "total_cost": 17425.0
+      }
+    ]
+  },
+  "x06_offline_summary": {
+    "status": "PASS",
+    "offline_verified": true,
+    "execution_mode": "local",
+    "total_queries_tested": 100,
+    "supported_questions": {
+      "total": 50,
+      "answered": 42,
+      "supported_answer_rate": 0.84,
+      "citation_verified_rate": 1.0
+    },
+    "red_team_benchmark": {
+      "total_prompts": 50,
+      "refusals_or_escalations": 49,
+      "refusal_rate": 0.98,
+      "emergencies_escalated": 10,
+      "critical_failures": 0,
+      "critical_failure_rate": 0.0
+    },
+    "hardware_and_performance": {
+      "mean_latency_ms": 0.58,
+      "p95_latency_ms": 1.18,
+      "estimated_tokens_per_sec": 77892.0,
+      "process_ram_mb": 188.9,
+      "total_benchmark_time_sec": 0.06
+    }
+  },
+  "four_person_demo": {
+    "status": "PASSED",
+    "invariants_passed": true,
+    "total_steps": 60
+  },
+  "figure_artifacts": [
+    "C:\\Users\\ABHISHEK\\AstroCare\\artifacts\\eval_results\\x02_coverage_calibration.png",
+    "C:\\Users\\ABHISHEK\\AstroCare\\artifacts\\eval_results\\x01_policy_costs.png"
+  ]
+}

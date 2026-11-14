@@ -1,0 +1,124 @@
+{
+  "config_version": "v2.1.0-spaceapps",
+  "data_gen_seed": 42,
+  "split_seed": 2026,
+  "model_seed": 1337,
+  "lopo_folds": [
+    {
+      "fold_id": "LOPO_ASTRO-01",
+      "held_out_crew_id": "ASTRO-01",
+      "train_crew_ids": [
+        "ASTRO-02",
+        "ASTRO-03",
+        "ASTRO-04"
+      ],
+      "warmup_steps_online_cal": 30
+    },
+    {
+      "fold_id": "LOPO_ASTRO-02",
+      "held_out_crew_id": "ASTRO-02",
+      "train_crew_ids": [
+        "ASTRO-01",
+        "ASTRO-03",
+        "ASTRO-04"
+      ],
+      "warmup_steps_online_cal": 30
+    },
+    {
+      "fold_id": "LOPO_ASTRO-03",
+      "held_out_crew_id": "ASTRO-03",
+      "train_crew_ids": [
+        "ASTRO-01",
+        "ASTRO-02",
+        "ASTRO-04"
+      ],
+      "warmup_steps_online_cal": 30
+    },
+    {
+      "fold_id": "LOPO_ASTRO-04",
+      "held_out_crew_id": "ASTRO-04",
+      "train_crew_ids": [
+        "ASTRO-01",
+        "ASTRO-02",
+        "ASTRO-03"
+      ],
+      "warmup_steps_online_cal": 30
+    }
+  ],
+  "loso_folds": [
+    {
+      "fold_id": "LOSO_cabin_co2_leak",
+      "held_out_scenario": "cabin_co2_leak",
+      "train_scenarios": [
+        "nominal",
+        "isolation_confinement",
+        "radiation_solar_event",
+        "metabolic_hypoglycemia",
+        "metabolic_hyperglycemia",
+        "microgravity_adaptation"
+      ]
+    },
+    {
+      "fold_id": "LOSO_isolation_confinement",
+      "held_out_scenario": "isolation_confinement",
+      "train_scenarios": [
+        "nominal",
+        "cabin_co2_leak",
+        "radiation_solar_event",
+        "metabolic_hypoglycemia",
+        "metabolic_hyperglycemia",
+        "microgravity_adaptation"
+      ]
+    },
+    {
+      "fold_id": "LOSO_metabolic_hyperglycemia",
+      "held_out_scenario": "metabolic_hyperglycemia",
+      "train_scenarios": [
+        "nominal",
+        "isolation_confinement",
+        "cabin_co2_leak",
+        "radiation_solar_event",
+        "metabolic_hypoglycemia",
+        "microgravity_adaptation"
+      ]
+    },
+    {
+      "fold_id": "LOSO_metabolic_hypoglycemia",
+      "held_out_scenario": "metabolic_hypoglycemia",
+      "train_scenarios": [
+        "nominal",
+        "isolation_confinement",
+        "cabin_co2_leak",
+        "radiation_solar_event",
+        "metabolic_hyperglycemia",
+        "microgravity_adaptation"
+      ]
+    },
+    {
+      "fold_id": "LOSO_microgravity_adaptation",
+      "held_out_scenario": "microgravity_adaptation",
+      "train_scenarios": [
+        "nominal",
+        "isolation_confinement",
+        "cabin_co2_leak",
+        "radiation_solar_event",
+        "metabolic_hypoglycemia",
+        "metabolic_hyperglycemia"
+      ]
+    },
+    {
+      "fold_id": "LOSO_radiation_solar_event",
+      "held_out_scenario": "radiation_solar_event",
+      "train_scenarios": [
+        "nominal",
+        "isolation_confinement",
+        "cabin_co2_leak",
+        "metabolic_hypoglycemia",
+        "metabolic_hyperglycemia",
+        "microgravity_adaptation"
+      ]
+    }
+  ],
+  "hash_sha256": "038cec348d1d9ee5f69d75af0ed83382cbceda56f1deed1c298885429ffd0aae",
+  "notes": "Strict frozen split design: LOPO holds out astronauts; LOSO holds out entire scenario families. No row-level leakage."
+}

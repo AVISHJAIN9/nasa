@@ -1,0 +1,32 @@
+{
+  "card_id": "CARD-06",
+  "indicator_name": "Mood & Behavioral Wellness",
+  "body_region_or_system": "Behavioral Health",
+  "measurement_in_spaceflight": "Evaluated through standardized daily 60-second micro check-ins, validated visual analog scales, voice acoustic analysis, and journal sentiment.",
+  "why_it_matters": "Crew cohesion, morale, and mental resilience are critical barriers against mission failure, interpersonal conflict, and cognitive error in isolated confinement.",
+  "hazard_effects": "Sensory monotony, long communication latency to Earth, family separation, and high workload increase vulnerability to depression and fatigue.",
+  "when_to_pay_attention": "Pay attention if subjective mood score drops to 3 or below (on 1-10 scale) for three consecutive days or if withdrawal or distress is self-reported.",
+  "safe_next_steps": "Engage in scheduled relaxation or leisure protocol (music, family asynchronous messages, exercise); conduct peer support check-in; queue private consultation.",
+  "sourced_thresholds": {
+    "nominal_range": "6.0 - 10.0 (1-10 Likert scale)",
+    "watch_threshold": "<= 4.0 or persistent 3-day decline",
+    "alert_threshold": "<= 2.0 or crisis keyword detected",
+    "unit": "score (1-10)"
+  },
+  "action_lines": [
+    "Schedule a 30-minute restorative downtime session with personal audio or visual media.",
+    "Request a private asynchronous message exchange with the flight surgeon or family support."
+  ],
+  "sources": [
+    {
+      "title": "Canadian Space Agency: Health Beyond and Behavioral Support for Deep Space Missions",
+      "organization": "Canadian Space Agency (CSA)",
+      "url": "https://www.asc-csa.gc.ca/eng/sciences/health-beyond.asp",
+      "date_accessed": "2026-11-14",
+      "licence": "Open Government Licence - Canada (OGL-Canada v2.0)"
+    }
+  ],
+  "licence_terms": "Canadian Space Agency Open Government Licence - Canada v2.0 (Verified: non-commercial and commercial reproduction permitted with attribution)",
+  "review_status": "PENDING_REVIEW",
+  "version": "2.0.0"
+}
