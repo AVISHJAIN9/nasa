@@ -34,6 +34,7 @@ const Forecast = lazy(() => import('./pages/Forecast').then((m) => ({default: m.
 const TeleSession = lazy(() => import('./pages/TeleSession').then((m) => ({default: m.TeleSession})));
 const Broadcast = lazy(() => import('./pages/Broadcast').then((m) => ({default: m.Broadcast})));
 const Roadmap = lazy(() => import('./pages/Roadmap').then((m) => ({default: m.Roadmap})));
+const Integration = lazy(() => import('./pages/Integration').then((m) => ({default: m.Integration})));
 
 interface NavItem {
   id: AppPage;
@@ -77,6 +78,18 @@ export function AppShell() {
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [page, role]);
+
+  // Listen for #integration route
+  useEffect(() => {
+    const handleHash = () => {
+      if (window.location.hash === '#integration') {
+        setPage('integration');
+      }
+    };
+    handleHash();
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, [setPage]);
 
   // Set default role if null
   useEffect(() => {
@@ -212,6 +225,7 @@ export function AppShell() {
         {id: 'limits', label: 'Limits', icon: '🛡️'},
         {id: 'audit', label: 'Audit', icon: '🔐'},
         {id: 'roadmap', label: 'Roadmap', icon: '🗺️'},
+        {id: 'integration', label: 'Integration', icon: '⚡'},
       ],
     });
 
@@ -663,6 +677,7 @@ export function AppShell() {
                 {page === 'telesession' && <TeleSession />}
                 {page === 'broadcast' && <Broadcast />}
                 {page === 'roadmap' && <Roadmap />}
+                {page === 'integration' && <Integration />}
               </Suspense>
             </ErrorBoundary>
 

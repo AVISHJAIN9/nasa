@@ -38,7 +38,8 @@ export type AppPage =
   | 'forecast'
   | 'telesession'
   | 'broadcast'
-  | 'roadmap';
+  | 'roadmap'
+  | 'integration';
 
 export type AlertSeverity = 'info' | 'watch' | 'critical';
 export type AlertSource = 'RULE' | 'AI' | 'CABIN';
