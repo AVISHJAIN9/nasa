@@ -1,0 +1,604 @@
+[
+  {
+    "name": "setPainMapMode",
+    "params": "mode: '2d' | '3d'",
+    "returnType": "void",
+    "category": "pure UI",
+    "description": "Store action setPainMapMode categorized as pure UI"
+  },
+  {
+    "name": "setNarrationCaption",
+    "params": "caption: string | null",
+    "returnType": "void",
+    "category": "pure UI",
+    "description": "Store action setNarrationCaption categorized as pure UI"
+  },
+  {
+    "name": "setAssistantOffline",
+    "params": "val: boolean",
+    "returnType": "void",
+    "category": "pure UI",
+    "description": "Store action setAssistantOffline categorized as pure UI"
+  },
+  {
+    "name": "setAssistantInitialQuery",
+    "params": "q: string | null",
+    "returnType": "void",
+    "category": "pure UI",
+    "description": "Store action setAssistantInitialQuery categorized as pure UI"
+  },
+  {
+    "name": "startMarsStory",
+    "params": "",
+    "returnType": "void",
+    "category": "simulated",
+    "description": "Store action startMarsStory categorized as simulated"
+  },
+  {
+    "name": "pauseMarsStory",
+    "params": "",
+    "returnType": "void",
+    "category": "simulated",
+    "description": "Store action pauseMarsStory categorized as simulated"
+  },
+  {
+    "name": "resumeMarsStory",
+    "params": "",
+    "returnType": "void",
+    "category": "simulated",
+    "description": "Store action resumeMarsStory categorized as simulated"
+  },
+  {
+    "name": "skipMarsStoryStep",
+    "params": "",
+    "returnType": "void",
+    "category": "simulated",
+    "description": "Store action skipMarsStoryStep categorized as simulated"
+  },
+  {
+    "name": "stopMarsStory",
+    "params": "",
+    "returnType": "void",
+    "category": "simulated",
+    "description": "Store action stopMarsStory categorized as simulated"
+  },
+  {
+    "name": "runMoment1LivePulse",
+    "params": "",
+    "returnType": "void",
+    "category": "simulated",
+    "description": "Store action runMoment1LivePulse categorized as simulated"
+  },
+  {
+    "name": "runMoment2PullTheCable",
+    "params": "",
+    "returnType": "void",
+    "category": "simulated",
+    "description": "Store action runMoment2PullTheCable categorized as simulated"
+  },
+  {
+    "name": "runMoment3InjectFailure",
+    "params": "",
+    "returnType": "void",
+    "category": "simulated",
+    "description": "Store action runMoment3InjectFailure categorized as simulated"
+  },
+  {
+    "name": "runMoment4TodayBandWidens",
+    "params": "personId?: string",
+    "returnType": "void",
+    "category": "simulated",
+    "description": "Store action runMoment4TodayBandWidens categorized as simulated"
+  },
+  {
+    "name": "stopMoment4TodayScenario",
+    "params": "",
+    "returnType": "void",
+    "category": "simulated",
+    "description": "Store action stopMoment4TodayScenario categorized as simulated"
+  },
+  {
+    "name": "resetDemoState",
+    "params": "",
+    "returnType": "void",
+    "category": "simulated",
+    "description": "Store action resetDemoState categorized as simulated"
+  },
+  {
+    "name": "setMode",
+    "params": "mode: MissionMode",
+    "returnType": "void",
+    "category": "pure UI",
+    "description": "Store action setMode categorized as pure UI"
+  },
+  {
+    "name": "setRole",
+    "params": "role: UserRole",
+    "returnType": "void",
+    "category": "pure UI",
+    "description": "Store action setRole categorized as pure UI"
+  },
+  {
+    "name": "setView",
+    "params": "view: AppView",
+    "returnType": "void",
+    "category": "pure UI",
+    "description": "Store action setView categorized as pure UI"
+  },
+  {
+    "name": "setPage",
+    "params": "page: AppPage",
+    "returnType": "void",
+    "category": "pure UI",
+    "description": "Store action setPage categorized as pure UI"
+  },
+  {
+    "name": "setAstronautHomeTab",
+    "params": "tab: 'live' | 'environment' | 'checkin' | 'orders'",
+    "returnType": "void",
+    "category": "pure UI",
+    "description": "Store action setAstronautHomeTab categorized as pure UI"
+  },
+  {
+    "name": "setSurgeonHomeTab",
+    "params": "tab: 'roster' | 'alerts' | 'priors'",
+    "returnType": "void",
+    "category": "pure UI",
+    "description": "Store action setSurgeonHomeTab categorized as pure UI"
+  },
+  {
+    "name": "setControlHomeTab",
+    "params": "tab: 'overview' | 'cabin' | 'comms'",
+    "returnType": "void",
+    "category": "pure UI",
+    "description": "Store action setControlHomeTab categorized as pure UI"
+  },
+  {
+    "name": "setSelectedCrewId",
+    "params": "id: string",
+    "returnType": "void",
+    "category": "pure UI",
+    "description": "Store action setSelectedCrewId categorized as pure UI"
+  },
+  {
+    "name": "setAiDegraded",
+    "params": "degraded: boolean, reason?: string | null",
+    "returnType": "void",
+    "category": "simulated",
+    "description": "Store action setAiDegraded categorized as simulated"
+  },
+  {
+    "name": "setTimeScale",
+    "params": "scale: 1 | 5 | 20",
+    "returnType": "void",
+    "category": "pure UI",
+    "description": "Store action setTimeScale categorized as pure UI"
+  },
+  {
+    "name": "setEmergency",
+    "params": "emergency: {active: boolean; time?: string} | null",
+    "returnType": "void",
+    "category": "simulated",
+    "description": "Store action setEmergency categorized as simulated"
+  },
+  {
+    "name": "ackAlert",
+    "params": "id: string",
+    "returnType": "void",
+    "category": "synced",
+    "description": "Store action ackAlert categorized as synced"
+  },
+  {
+    "name": "resolveAlert",
+    "params": "id: string, note?: string",
+    "returnType": "void",
+    "category": "synced",
+    "description": "Store action resolveAlert categorized as synced"
+  },
+  {
+    "name": "addCheckIn",
+    "params": "checkIn: Omit<CheckIn, 'id' | 'time' | 'timestamp'>",
+    "returnType": "void",
+    "category": "synced",
+    "description": "Store action addCheckIn categorized as synced"
+  },
+  {
+    "name": "sendMessage",
+    "params": "from: 'crew' | 'ground', text: string, kind: 'consult' | 'order' | 'report'",
+    "returnType": "void",
+    "category": "synced",
+    "description": "Store action sendMessage categorized as synced"
+  },
+  {
+    "name": "toggleCommsBlackout",
+    "params": "",
+    "returnType": "void",
+    "category": "synced",
+    "description": "Store action toggleCommsBlackout categorized as synced"
+  },
+  {
+    "name": "addIncident",
+    "params": "incident: Omit<Incident, 'id' | 'createdAt' | 'status'>",
+    "returnType": "void",
+    "category": "synced",
+    "description": "Store action addIncident categorized as synced"
+  },
+  {
+    "name": "resolveIncident",
+    "params": "id: string",
+    "returnType": "void",
+    "category": "synced",
+    "description": "Store action resolveIncident categorized as synced"
+  },
+  {
+    "name": "startProtocol",
+    "params": "protocolId: string",
+    "returnType": "void",
+    "category": "synced",
+    "description": "Store action startProtocol categorized as synced"
+  },
+  {
+    "name": "advanceProtocolStep",
+    "params": "nextStepIndex: number",
+    "returnType": "void",
+    "category": "synced",
+    "description": "Store action advanceProtocolStep categorized as synced"
+  },
+  {
+    "name": "abortProtocol",
+    "params": "",
+    "returnType": "void",
+    "category": "synced",
+    "description": "Store action abortProtocol categorized as synced"
+  },
+  {
+    "name": "logEvent",
+    "params": "payload: string, actor?: string, category?: EventLogEntry['category']",
+    "returnType": "void",
+    "category": "synced",
+    "description": "Store action logEvent categorized as synced"
+  },
+  {
+    "name": "tamperEventLog",
+    "params": "",
+    "returnType": "void",
+    "category": "simulated",
+    "description": "Store action tamperEventLog categorized as simulated"
+  },
+  {
+    "name": "verifyEventLogChain",
+    "params": "",
+    "returnType": "{valid: boolean",
+    "category": "simulated",
+    "description": "Store action verifyEventLogChain categorized as simulated"
+  },
+  {
+    "name": "setCameraPulseActive",
+    "params": "active: boolean",
+    "returnType": "void",
+    "category": "synced",
+    "description": "Store action setCameraPulseActive categorized as synced"
+  },
+  {
+    "name": "updateVegaLivePulse",
+    "params": "bpm: number",
+    "returnType": "void",
+    "category": "synced",
+    "description": "Store action updateVegaLivePulse categorized as synced"
+  },
+  {
+    "name": "addToast",
+    "params": "message: string, type?: 'info' | 'warn' | 'success'",
+    "returnType": "void",
+    "category": "pure UI",
+    "description": "Store action addToast categorized as pure UI"
+  },
+  {
+    "name": "removeToast",
+    "params": "id: string",
+    "returnType": "void",
+    "category": "pure UI",
+    "description": "Store action removeToast categorized as pure UI"
+  },
+  {
+    "name": "acceptConsent",
+    "params": "user: string",
+    "returnType": "void",
+    "category": "synced",
+    "description": "Store action acceptConsent categorized as synced"
+  },
+  {
+    "name": "bumpConsentVersion",
+    "params": "",
+    "returnType": "void",
+    "category": "synced",
+    "description": "Store action bumpConsentVersion categorized as synced"
+  },
+  {
+    "name": "setOnboardingStep",
+    "params": "step: number",
+    "returnType": "void",
+    "category": "pure UI",
+    "description": "Store action setOnboardingStep categorized as pure UI"
+  },
+  {
+    "name": "completeOnboarding",
+    "params": "profile: {age: number; sex: 'M' | 'F' | 'O'; height: number; weight: number}, device?: 'simulated' | 'camera'",
+    "returnType": "void",
+    "category": "synced",
+    "description": "Store action completeOnboarding categorized as synced"
+  },
+  {
+    "name": "toggleA11yMode",
+    "params": "",
+    "returnType": "void",
+    "category": "pure UI",
+    "description": "Store action toggleA11yMode categorized as pure UI"
+  },
+  {
+    "name": "toggleLinkUp",
+    "params": "",
+    "returnType": "void",
+    "category": "pure UI",
+    "description": "Store action toggleLinkUp categorized as pure UI"
+  },
+  {
+    "name": "setMissedCheckInHours",
+    "params": "hours: number",
+    "returnType": "void",
+    "category": "pure UI",
+    "description": "Store action setMissedCheckInHours categorized as pure UI"
+  },
+  {
+    "name": "logMood",
+    "params": "crewId: string, phqScore: number, gadScore: number, notes?: string",
+    "returnType": "void",
+    "category": "synced",
+    "description": "Store action logMood categorized as synced"
+  },
+  {
+    "name": "logPain",
+    "params": "crewId: string, areas: PainArea[]",
+    "returnType": "void",
+    "category": "synced",
+    "description": "Store action logPain categorized as synced"
+  },
+  {
+    "name": "logVision",
+    "params": "crewId: string, acuityScore: number, amslerDistortions: number",
+    "returnType": "void",
+    "category": "synced",
+    "description": "Store action logVision categorized as synced"
+  },
+  {
+    "name": "logDose",
+    "params": "crewId: string, medName: string, dose: string",
+    "returnType": "{success: boolean",
+    "category": "synced",
+    "description": "Store action logDose categorized as synced"
+  },
+  {
+    "name": "importKitCSV",
+    "params": "csvText: string",
+    "returnType": "{success: boolean",
+    "category": "synced",
+    "description": "Store action importKitCSV categorized as synced"
+  },
+  {
+    "name": "syncOfflineQueue",
+    "params": "",
+    "returnType": "Promise<number>",
+    "category": "synced",
+    "description": "Store action syncOfflineQueue categorized as synced"
+  },
+  {
+    "name": "draftSoapTemplate",
+    "params": "crewId: string",
+    "returnType": "{subjective: string",
+    "category": "simulated",
+    "description": "Store action draftSoapTemplate categorized as simulated"
+  },
+  {
+    "name": "saveNote",
+    "params": "crewId: string, author: string, s: string, o: string, a: string, p: string",
+    "returnType": "void",
+    "category": "synced",
+    "description": "Store action saveNote categorized as synced"
+  },
+  {
+    "name": "restoreNoteVersion",
+    "params": "crewId: string, version: number",
+    "returnType": "NoteVersion | null",
+    "category": "synced",
+    "description": "Store action restoreNoteVersion categorized as synced"
+  },
+  {
+    "name": "composeOrder",
+    "params": "targetCrewId: string, type: CrewOrder['type'], text: string, composedBy: string",
+    "returnType": "void",
+    "category": "synced",
+    "description": "Store action composeOrder categorized as synced"
+  },
+  {
+    "name": "acknowledgeOrder",
+    "params": "orderId: string, astronautName: string",
+    "returnType": "void",
+    "category": "synced",
+    "description": "Store action acknowledgeOrder categorized as synced"
+  },
+  {
+    "name": "sendBroadcast",
+    "params": "title: string, message: string, priority: BroadcastMessage['priority'], sentBy: string",
+    "returnType": "void",
+    "category": "synced",
+    "description": "Store action sendBroadcast categorized as synced"
+  },
+  {
+    "name": "markBroadcastRead",
+    "params": "broadcastId: string, crewId: string, crewName: string",
+    "returnType": "void",
+    "category": "synced",
+    "description": "Store action markBroadcastRead categorized as synced"
+  },
+  {
+    "name": "recordFeedback",
+    "params": "alertId: string, isTrueAlert: boolean",
+    "returnType": "void",
+    "category": "synced",
+    "description": "Store action recordFeedback categorized as synced"
+  },
+  {
+    "name": "replayLastHour",
+    "params": "crewId: string",
+    "returnType": "{nowFires: number",
+    "category": "simulated",
+    "description": "Store action replayLastHour categorized as simulated"
+  },
+  {
+    "name": "designateMedicalOfficer",
+    "params": "crewId: string",
+    "returnType": "void",
+    "category": "synced",
+    "description": "Store action designateMedicalOfficer categorized as synced"
+  },
+  {
+    "name": "revokeMedicalOfficer",
+    "params": "",
+    "returnType": "void",
+    "category": "synced",
+    "description": "Store action revokeMedicalOfficer categorized as synced"
+  },
+  {
+    "name": "toggleMlAlerts",
+    "params": "",
+    "returnType": "void",
+    "category": "synced",
+    "description": "Store action toggleMlAlerts categorized as synced"
+  },
+  {
+    "name": "setAssistantMode",
+    "params": "mode: 'cloud' | 'offline'",
+    "returnType": "void",
+    "category": "synced",
+    "description": "Store action setAssistantMode categorized as synced"
+  },
+  {
+    "name": "toggleWaitOrAct",
+    "params": "",
+    "returnType": "void",
+    "category": "synced",
+    "description": "Store action toggleWaitOrAct categorized as synced"
+  },
+  {
+    "name": "exportStateJson",
+    "params": "",
+    "returnType": "string",
+    "category": "synced",
+    "description": "Store action exportStateJson categorized as synced"
+  },
+  {
+    "name": "importStateJson",
+    "params": "jsonStr: string",
+    "returnType": "{success: boolean",
+    "category": "synced",
+    "description": "Store action importStateJson categorized as synced"
+  },
+  {
+    "name": "logWorkout",
+    "params": "entry: Omit<WorkoutLogEntry, 'id' | 'timestamp' | 'timeStr'>",
+    "returnType": "void",
+    "category": "synced",
+    "description": "Store action logWorkout categorized as synced"
+  },
+  {
+    "name": "logFood",
+    "params": "entry: Omit<FoodLogEntry, 'id' | 'timestamp' | 'timeStr'>",
+    "returnType": "void",
+    "category": "synced",
+    "description": "Store action logFood categorized as synced"
+  },
+  {
+    "name": "sendCompanionMessage",
+    "params": "text: string",
+    "returnType": "void",
+    "category": "synced",
+    "description": "Store action sendCompanionMessage categorized as synced"
+  },
+  {
+    "name": "toggleWeeklyGoal",
+    "params": "id: string",
+    "returnType": "void",
+    "category": "synced",
+    "description": "Store action toggleWeeklyGoal categorized as synced"
+  },
+  {
+    "name": "updateWeeklyGoalText",
+    "params": "id: string, text: string",
+    "returnType": "void",
+    "category": "synced",
+    "description": "Store action updateWeeklyGoalText categorized as synced"
+  },
+  {
+    "name": "startCO2Leak",
+    "params": "",
+    "returnType": "void",
+    "category": "simulated",
+    "description": "Store action startCO2Leak categorized as simulated"
+  },
+  {
+    "name": "startSolarEvent",
+    "params": "",
+    "returnType": "void",
+    "category": "simulated",
+    "description": "Store action startSolarEvent categorized as simulated"
+  },
+  {
+    "name": "startIllness",
+    "params": "crewId?: string",
+    "returnType": "void",
+    "category": "simulated",
+    "description": "Store action startIllness categorized as simulated"
+  },
+  {
+    "name": "clearScenarios",
+    "params": "",
+    "returnType": "void",
+    "category": "simulated",
+    "description": "Store action clearScenarios categorized as simulated"
+  },
+  {
+    "name": "injectSensorFailure",
+    "params": "",
+    "returnType": "void",
+    "category": "simulated",
+    "description": "Store action injectSensorFailure categorized as simulated"
+  },
+  {
+    "name": "injectDrift",
+    "params": "",
+    "returnType": "void",
+    "category": "simulated",
+    "description": "Store action injectDrift categorized as simulated"
+  },
+  {
+    "name": "tick",
+    "params": "",
+    "returnType": "void",
+    "category": "simulated",
+    "description": "Store action tick categorized as simulated"
+  },
+  {
+    "name": "computeRiskScore",
+    "params": "member: CrewMember",
+    "returnType": "number",
+    "category": "simulated",
+    "description": "Store action computeRiskScore categorized as simulated"
+  },
+  {
+    "name": "run",
+    "params": "s: AppStore",
+    "returnType": "void",
+    "category": "synced",
+    "description": "Store action run categorized as synced"
+  }
+]

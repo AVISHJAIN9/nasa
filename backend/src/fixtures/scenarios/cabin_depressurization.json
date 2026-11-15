@@ -1,0 +1,28 @@
+{
+  "scenario_id": "SCENARIO_CABIN_DEPRESS",
+  "title": "Micrometeoroid Hull Impact & Pressure Decay",
+  "category": "ENVIRONMENT",
+  "severity": "CRITICAL",
+  "description": "Slow cabin depressurization event from 101.3 kPa down to 88.5 kPa across Hab Module Alpha.",
+  "duration_seconds": 60,
+  "injects": [
+    {
+      "time_seconds": 0,
+      "type": "CABIN_TELEMETRY",
+      "target": "hab_module_alpha",
+      "payload": { "co2_percent": 0.40, "o2_percent": 21.0, "cabin_pressure_kpa": 101.3, "temperature_c": 21.5, "humidity_percent": 45.0 }
+    },
+    {
+      "time_seconds": 30,
+      "type": "CABIN_TELEMETRY",
+      "target": "hab_module_alpha",
+      "payload": { "co2_percent": 0.40, "o2_percent": 20.8, "cabin_pressure_kpa": 94.2, "temperature_c": 20.8, "humidity_percent": 42.0 }
+    },
+    {
+      "time_seconds": 60,
+      "type": "CABIN_TELEMETRY",
+      "target": "hab_module_alpha",
+      "payload": { "co2_percent": 0.40, "o2_percent": 20.1, "cabin_pressure_kpa": 88.5, "temperature_c": 19.4, "humidity_percent": 38.0 }
+    }
+  ]
+}

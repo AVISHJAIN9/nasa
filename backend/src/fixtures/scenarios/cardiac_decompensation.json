@@ -1,0 +1,34 @@
+{
+  "scenario_id": "SCENARIO_CARDIAC_ILLNESS",
+  "title": "Acute Supraventricular Tachycardia (Illness)",
+  "category": "MEDICAL",
+  "severity": "CRITICAL",
+  "description": "Astronaut CREW-03 develops sudden symptomatic arrhythmia with HR surge to 165 bpm, SpO2 reduction, and medical intervention log entry.",
+  "duration_seconds": 60,
+  "injects": [
+    {
+      "time_seconds": 0,
+      "type": "VITALS_READING",
+      "target": "CREW-03",
+      "payload": { "heart_rate": 68, "spo2": 98.6, "sys_bp": 116, "dia_bp": 75 }
+    },
+    {
+      "time_seconds": 30,
+      "type": "VITALS_READING",
+      "target": "CREW-03",
+      "payload": { "heart_rate": 165, "spo2": 93.8, "sys_bp": 148, "dia_bp": 96 }
+    },
+    {
+      "time_seconds": 45,
+      "type": "EVENT_ALERT",
+      "target": "flight_surgeon",
+      "payload": { "title": "Arrhythmia Alert: CREW-03", "severity": "critical", "message": "Sustained tachycardia > 160 bpm detected" }
+    },
+    {
+      "time_seconds": 60,
+      "type": "MEDICAL_EVENT",
+      "target": "CREW-03",
+      "payload": { "action": "Vagal maneuver instruction & Adenosine standby", "actor": "cmo_sarah" }
+    }
+  ]
+}
