@@ -20,3 +20,8 @@ backend/.env
 .idea/
 .vscode/
 .pytest_cache/
+
+**/.env
+ls-files | grep -E .env
+git log --all --oneline -- .env*/.env.example
+.pytest_cache/
