@@ -35,6 +35,8 @@ const TeleSession = lazy(() => import('./pages/TeleSession').then((m) => ({defau
 const Broadcast = lazy(() => import('./pages/Broadcast').then((m) => ({default: m.Broadcast})));
 const Roadmap = lazy(() => import('./pages/Roadmap').then((m) => ({default: m.Roadmap})));
 const Integration = lazy(() => import('./pages/Integration').then((m) => ({default: m.Integration})));
+const TypingPointer = lazy(() => import('./pages/TypingPointer').then((m) => ({default: m.TypingPointer})));
+const SensorsConsent = lazy(() => import('./pages/SensorsConsent').then((m) => ({default: m.SensorsConsent})));
 
 interface NavItem {
   id: AppPage;
@@ -196,6 +198,7 @@ export function AppShell() {
         title: 'Health',
         items: [
           {id: 'wellness', label: 'Wellness', icon: '❤️'},
+          {id: 'typing', label: 'Typing & Pointer', icon: '⌨️'},
           {id: 'assistant', label: 'Assistant', icon: '🤖'},
           {id: 'protocols', label: 'Protocols', icon: '📋'},
         ],
@@ -253,6 +256,8 @@ export function AppShell() {
       title: 'System',
       items: [
         {id: 'assistant', label: 'Assistant', icon: '🤖'},
+        {id: 'typing', label: 'Typing & Pointer', icon: '⌨️'},
+        {id: 'sensors', label: 'Sensors & Consent', icon: '🛡️'},
         {id: 'proof', label: 'Proof', icon: '🔬'},
         {id: 'limits', label: 'Limits', icon: '🛡️'},
         {id: 'audit', label: 'Audit', icon: '🔐'},
@@ -735,6 +740,8 @@ export function AppShell() {
                 {page === 'broadcast' && <Broadcast />}
                 {page === 'roadmap' && <Roadmap />}
                 {page === 'integration' && <Integration />}
+                {page === 'typing' && <TypingPointer />}
+                {page === 'sensors' && <SensorsConsent />}
               </Suspense>
             </ErrorBoundary>
 

@@ -21,7 +21,7 @@ export default function App() {
         'home', 'woa', 'assistant', 'protocols', 'proof', 'limits',
         'wellness', 'notes', 'orders', 'brief', 'whatif', 'audit',
         'supplies', 'syndromes', 'forecast', 'telesession', 'broadcast',
-        'roadmap', 'integration'
+        'roadmap', 'integration', 'typing', 'sensors'
       ];
       if (consolePages.includes(h)) {
         setView('app');
