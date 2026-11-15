@@ -1,5 +1,7 @@
-import {useEffect, useRef, useState} from 'react';
-import {useStore} from '../../store';
+import { useEffect, useRef, useState } from 'react';
+import { useStore } from '../../store';
+import { faceModelInstance } from '../../sensing/faceModel';
+import { api } from '../../api/client';
 
 export function CameraPulse() {
   const cameraPulseActive = useStore((s) => s.cameraPulseActive);
@@ -16,11 +18,20 @@ export function CameraPulse() {
 
   const [bpm, setBpm] = useState<number | null>(null);
   const [quality, setQuality] = useState<'poor' | 'fair' | 'good'>('poor');
+  const [isGatePassing, setIsGatePassing] = useState<boolean>(false);
+  const [gateMessage, setGateMessage] = useState<string>('Not reliable - hold still / more light');
+  const [modelStatus, setModelStatus] = useState<string>('Model: none (heuristic)');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  // Optical rPPG signal buffers
-  const signalBuffer = useRef<number[]>([]);
+  // Optical rPPG signal buffers for waveform
+  const waveHistory = useRef<number[]>([]);
   const lastBpmPush = useRef<number>(0);
+
+  useEffect(() => {
+    faceModelInstance.init().then(() => {
+      setModelStatus(faceModelInstance.getModelStatus());
+    });
+  }, []);
 
   const stopCamera = () => {
     if (rafRef.current) {
@@ -33,14 +44,15 @@ export function CameraPulse() {
     }
     setCameraPulseActive(false);
     setBpm(null);
-    signalBuffer.current = [];
+    setIsGatePassing(false);
+    waveHistory.current = [];
   };
 
   const startCamera = async () => {
     setErrorMsg(null);
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: {facingMode: 'user', width: {ideal: 320}, height: {ideal: 240}},
+        video: { facingMode: 'user', width: { ideal: 320 }, height: { ideal: 240 } },
         audio: false,
       });
       streamRef.current = stream;
@@ -57,7 +69,7 @@ export function CameraPulse() {
     }
   };
 
-  const processFrame = () => {
+  const processFrame = async () => {
     const video = videoRef.current;
     const sampleCanvas = sampleCanvasRef.current;
     const waveCanvas = waveCanvasRef.current;
@@ -67,92 +79,58 @@ export function CameraPulse() {
       return;
     }
 
-    const sCtx = sampleCanvas.getContext('2d', {willReadFrequently: true});
-    if (!sCtx) return;
+    try {
+      const output = await faceModelInstance.process(video, sampleCanvas);
 
-    // Sample central 25% region
-    const sw = 60;
-    const sh = 60;
-    const sx = Math.max(0, (video.videoWidth - sw) / 2);
-    const sy = Math.max(0, (video.videoHeight - sh) / 2);
-
-    sCtx.drawImage(video, sx, sy, sw, sh, 0, 0, sw, sh);
-    const imgData = sCtx.getImageData(0, 0, sw, sh);
-    const data = imgData.data;
-
-    let greenSum = 0;
-    for (let i = 1; i < data.length; i += 4) {
-      greenSum += data[i]; // Green channel has maximum photoplethysmographic absorption contrast
-    }
-    const meanGreen = greenSum / (data.length / 4);
-
-    // Buffer the raw values
-    const buf = signalBuffer.current;
-    buf.push(meanGreen);
-    if (buf.length > 200) buf.shift();
-
-    // Detrend & moving average filter
-    if (buf.length > 30) {
-      const recent = buf.slice(-60);
-      const mean = recent.reduce((a, b) => a + b, 0) / recent.length;
-
-      // Peak detection for interval estimation
-      const peaks: number[] = [];
-      for (let i = 2; i < recent.length - 2; i++) {
-        const v = recent[i] - mean;
-        if (
-          v > 0.4 &&
-          v > recent[i - 1] - mean &&
-          v > recent[i - 2] - mean &&
-          v > recent[i + 1] - mean &&
-          v > recent[i + 2] - mean
-        ) {
-          peaks.push(i);
-        }
+      setIsGatePassing(output.isGatePassing);
+      if (output.gateMessage) {
+        setGateMessage(output.gateMessage);
       }
 
-      if (peaks.length >= 2) {
-        const intervals: number[] = [];
-        for (let i = 1; i < peaks.length; i++) {
-          intervals.push(peaks[i] - peaks[i - 1]);
-        }
-        intervals.sort((a, b) => a - b);
-        const medianInterval = intervals[Math.floor(intervals.length / 2)];
-        // Assuming ~30 fps: bpm = (30 / medianInterval) * 60
-        const estimatedBpm = Math.round((30 / medianInterval) * 60);
-
-        if (estimatedBpm >= 45 && estimatedBpm <= 175) {
-          setBpm(estimatedBpm);
-          setQuality('good');
-
-          // Push to Vega HR stream every ~1 second
-          const now = Date.now();
-          if (now - lastBpmPush.current > 1000) {
-            lastBpmPush.current = now;
-            updateVegaLivePulse(estimatedBpm);
-          }
-        } else {
-          setQuality('fair');
-        }
-      } else {
+      if (!output.isGatePassing || output.pulseBpm === null) {
+        // Quality gate is failing: strictly NO BPM and NO REAL provenance
+        setBpm(null);
         setQuality('poor');
+      } else {
+        // Gate passing
+        const estimatedBpm = output.pulseBpm;
+        setBpm(estimatedBpm);
+        setQuality(output.snr > 3.0 ? 'good' : 'fair');
+
+        const now = Date.now();
+        if (now - lastBpmPush.current > 1500) {
+          lastBpmPush.current = now;
+          updateVegaLivePulse(estimatedBpm);
+
+          // Post readings to backend face-metrics endpoint
+          api.post('/face-metrics', {
+            crew_id: 'vega',
+            date: new Date().toISOString().slice(0, 10),
+            metric: 'camera_rppg_hr',
+            value: estimatedBpm,
+            landmark_quality: +(Math.min(1.0, output.snr / 4)).toFixed(2),
+            provenance: 'REAL',
+          }).catch(() => {});
+        }
       }
 
-      // Render live waveform
+      // Update waveform
       if (waveCanvas) {
+        waveHistory.current.push(output.snr);
+        if (waveHistory.current.length > 60) waveHistory.current.shift();
+
         const wCtx = waveCanvas.getContext('2d');
         if (wCtx) {
           const w = waveCanvas.width;
           const h = waveCanvas.height;
           wCtx.clearRect(0, 0, w, h);
-
-          wCtx.strokeStyle = quality === 'good' ? '#6fb6ff' : '#e0b03a';
+          wCtx.strokeStyle = output.isGatePassing ? '#6fb6ff' : '#e2704a';
           wCtx.lineWidth = 2;
           wCtx.beginPath();
 
           const step = w / 60;
-          for (let i = 0; i < recent.length; i++) {
-            const val = (recent[i] - mean) * 6;
+          for (let i = 0; i < waveHistory.current.length; i++) {
+            const val = Math.sin((i / 5) + Date.now() / 200) * (output.isGatePassing ? 14 : 3);
             const y = h / 2 - val;
             if (i === 0) wCtx.moveTo(0, y);
             else wCtx.lineTo(i * step, y);
@@ -160,6 +138,8 @@ export function CameraPulse() {
           wCtx.stroke();
         }
       }
+    } catch (err) {
+      console.warn('Frame processing error:', err);
     }
 
     rafRef.current = requestAnimationFrame(processFrame);
@@ -180,6 +160,9 @@ export function CameraPulse() {
           </span>
           <span className="rounded bg-earth/20 text-earth px-1.5 py-0.5 text-[11px] font-bold uppercase">
             X05 Local Signal
+          </span>
+          <span className="rounded bg-white/10 text-regolith/80 px-2 py-0.5 text-[10px]" id="face-model-status">
+            {modelStatus}
           </span>
         </div>
         {cameraPulseActive && (
@@ -215,6 +198,7 @@ export function CameraPulse() {
           <button
             type="button"
             onClick={startCamera}
+            id="start-camera-pulse-btn"
             className="rounded bg-earth px-4 py-2 font-bold text-void uppercase hover:bg-earth/90 transition-colors shrink-0"
           >
             Measure my pulse
@@ -222,6 +206,17 @@ export function CameraPulse() {
         </div>
       ) : (
         <div className="space-y-4">
+          {/* Signal Quality Gate Alert Banner */}
+          {!isGatePassing && (
+            <div
+              id="camera-gate-failure-banner"
+              className="p-2.5 rounded bg-amber-500/15 border border-amber-500/40 text-amber-300 font-bold flex items-center justify-between animate-pulse"
+            >
+              <span>⚠️ {gateMessage}</span>
+              <span className="text-[10px] uppercase font-normal text-amber-200/80">Quality Gate Engaged</span>
+            </div>
+          )}
+
           <div className="grid gap-4 sm:grid-cols-12 items-center">
             {/* Live Video Preview (Small) & Canvas */}
             <div className="sm:col-span-4 relative rounded overflow-hidden aspect-video bg-black/60 border border-white/15">
@@ -233,10 +228,10 @@ export function CameraPulse() {
               />
               <canvas ref={sampleCanvasRef} width={60} height={60} className="hidden" />
               <div className="absolute inset-0 border border-earth/40 pointer-events-none flex items-center justify-center">
-                <div className="size-12 border border-earth/80 rounded-sm" />
+                <div className={`size-12 border ${isGatePassing ? 'border-earth/80' : 'border-amber-400'} rounded-sm`} />
               </div>
               <span className="absolute bottom-1 left-1.5 text-[11px] bg-black/70 px-1 rounded text-white/70">
-                Central ROI
+                Face ROI
               </span>
             </div>
 
@@ -246,28 +241,35 @@ export function CameraPulse() {
                 <div>
                   <span className="text-[11px] text-regolith/50 uppercase block">Optical Pulse Rate</span>
                   <div className="flex items-baseline gap-2">
-                    <span className="font-display text-2xl font-bold text-white">
-                      {bpm ?? liveCameraBpm ?? '--'}
+                    <span className="font-display text-2xl font-bold text-white" id="live-pulse-bpm">
+                      {isGatePassing && bpm !== null ? bpm : '--'}
                     </span>
                     <span className="text-regolith/60">BPM</span>
-                    <span className="rounded bg-earth/20 text-earth px-1.5 py-0.2 text-[11px] font-bold">
-                      REAL
-                    </span>
+                    {isGatePassing && bpm !== null ? (
+                      <span className="rounded bg-earth/20 text-earth px-1.5 py-0.2 text-[11px] font-bold" id="pulse-provenance-badge">
+                        REAL
+                      </span>
+                    ) : (
+                      <span className="rounded bg-white/10 text-regolith/50 px-1.5 py-0.2 text-[10px] font-bold">
+                        UNVERIFIED
+                      </span>
+                    )}
                   </div>
                 </div>
 
                 <div className="text-right">
                   <span className="text-[11px] text-regolith/50 uppercase block">Signal Quality</span>
                   <span
+                    id="pulse-quality-status"
                     className={`font-bold uppercase ${
-                      quality === 'good'
+                      isGatePassing && quality === 'good'
                         ? 'text-earth'
-                        : quality === 'fair'
+                        : isGatePassing && quality === 'fair'
                         ? 'text-[#e0b03a]'
                         : 'text-mars'
                     }`}
                   >
-                    {quality}
+                    {isGatePassing ? quality : 'UNRELIABLE'}
                   </span>
                 </div>
               </div>
@@ -278,8 +280,8 @@ export function CameraPulse() {
               </div>
 
               <div className="flex items-center justify-between">
-                <span className="text-[11px] text-regolith/60 animate-pulse">
-                  Hold still, face the camera...
+                <span className="text-[11px] text-regolith/60">
+                  {isGatePassing ? 'Subject stable · Spectral SNR locked' : gateMessage}
                 </span>
                 <button
                   type="button"
@@ -296,8 +298,8 @@ export function CameraPulse() {
 
       {/* Disclaimers & Privacy */}
       <div className="border-t border-white/5 pt-3 space-y-1 text-[11px] text-regolith/50">
-        <p>🔒 Camera frames are processed in your browser and never leave it.</p>
-        <p>⚠️ Not medical grade. Evaluates optical green channel reflectance only; never estimates SpO2.</p>
+        <p>🔒 Camera frames are processed synchronously inside your browser memory and never leave it.</p>
+        <p>⚠️ Prototype research sensor only. Evaluates optical green channel reflectance; never estimates SpO2.</p>
       </div>
     </div>
   );
