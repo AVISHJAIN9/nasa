@@ -1,5 +1,6 @@
 import {useState, useEffect, useRef, useCallback} from 'react';
 import {useStore} from '../store';
+import {apiUrl} from './client';
 
 export type TodayResponse = {
   state: 'normal' | 'off_today' | 'unsure';
@@ -148,7 +149,7 @@ export async function fetchToday(personId: string): Promise<TodayResponse> {
     return Promise.resolve(getMockToday(personId));
   }
 
-  const response = await fetch(`/v1/today?person_id=${encodeURIComponent(personId)}`);
+  const response = await fetch(apiUrl(`/v1/today?person_id=${encodeURIComponent(personId)}`));
   if (!response.ok) {
     throw new Error(`fetchToday failed: ${response.status} ${response.statusText}`);
   }

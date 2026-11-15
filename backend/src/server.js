@@ -10,7 +10,7 @@ import { initializeDefaultFlags } from './services/flagService.js';
 
 async function startServer() {
   try {
-    logger.info(`Connecting to MongoDB at ${config.mongodbUri}...`);
+    logger.info('Connecting to MongoDB...');
     await mongoose.connect(config.mongodbUri);
     logger.info('MongoDB connected successfully.');
 
@@ -30,7 +30,7 @@ async function startServer() {
     });
     eventBus.setSocketIO(io);
 
-    server.listen(config.port, () => {
+    server.listen(config.port, '0.0.0.0', () => {
       logger.info(`AstroCare v2 MERN backend listening on port ${config.port} (${config.env})`);
     });
 

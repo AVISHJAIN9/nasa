@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { PageHeader } from '../ui';
-import { getStoredToken } from '../../api/client';
+import { apiUrl, getStoredToken } from '../../api/client';
 
 export interface IntegrationTestItem {
   id: string;
@@ -31,7 +31,7 @@ export function Integration() {
       service: 'Fused',
       provenance: 'REAL',
       testFn: async () => {
-        const res = await fetch('/v1/today?person_id=okoye');
+        const res = await fetch(apiUrl('/v1/today?person_id=okoye'));
         if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
         return res.json();
       },
@@ -49,7 +49,7 @@ export function Integration() {
       provenance: 'REAL',
       testFn: async () => {
         const token = getStoredToken();
-        const res = await fetch('/api/v1/auth/me', {
+        const res = await fetch(apiUrl('/api/v1/auth/me'), {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
         });
         if (!res.ok && res.status !== 401) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
@@ -68,7 +68,7 @@ export function Integration() {
       service: 'Node.js',
       provenance: 'REAL',
       testFn: async () => {
-        const res = await fetch('/api/v1/telemetry/ingest', {
+        const res = await fetch(apiUrl('/api/v1/telemetry/ingest'), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -99,7 +99,7 @@ export function Integration() {
       service: 'Node.js',
       provenance: 'REAL',
       testFn: async () => {
-        const res = await fetch('/api/v1/telemetry/timeseries-range?crew_id=okoye&metric=heart_rate');
+        const res = await fetch(apiUrl('/api/v1/telemetry/timeseries-range?crew_id=okoye&metric=heart_rate'));
         if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
         return res.json();
       },
@@ -116,7 +116,7 @@ export function Integration() {
       service: 'Node.js',
       provenance: 'SIMULATED',
       testFn: async () => {
-        const res = await fetch('/api/v1/baselines/okoye');
+        const res = await fetch(apiUrl('/api/v1/baselines/okoye'));
         if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
         return res.json();
       },
@@ -133,7 +133,7 @@ export function Integration() {
       service: 'Node.js',
       provenance: 'REAL',
       testFn: async () => {
-        const res = await fetch('/api/v1/alerts?crew_id=okoye');
+        const res = await fetch(apiUrl('/api/v1/alerts?crew_id=okoye'));
         if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
         return res.json();
       },
@@ -150,7 +150,7 @@ export function Integration() {
       service: 'Node.js',
       provenance: 'REAL',
       testFn: async () => {
-        const res = await fetch('/api/v1/notes?crew_id=okoye');
+        const res = await fetch(apiUrl('/api/v1/notes?crew_id=okoye'));
         if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
         return res.json();
       },
@@ -168,7 +168,7 @@ export function Integration() {
       provenance: 'REAL',
       testFn: async () => {
         const token = getStoredToken();
-        const res = await fetch('/api/v1/checkins?crew_id=okoye', {
+        const res = await fetch(apiUrl('/api/v1/checkins?crew_id=okoye'), {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
         });
         if (!res.ok && res.status !== 401 && res.status !== 403) {
@@ -190,7 +190,7 @@ export function Integration() {
       provenance: 'REAL',
       testFn: async () => {
         const token = getStoredToken();
-        const res = await fetch('/api/v1/orders/crew/okoye', {
+        const res = await fetch(apiUrl('/api/v1/orders/crew/okoye'), {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
         });
         if (!res.ok && res.status !== 401 && res.status !== 403) {
@@ -211,7 +211,7 @@ export function Integration() {
       service: 'Node.js',
       provenance: 'REAL',
       testFn: async () => {
-        const res = await fetch('/api/v1/broadcasts');
+        const res = await fetch(apiUrl('/api/v1/broadcasts'));
         if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
         return res.json();
       },
@@ -228,7 +228,7 @@ export function Integration() {
       service: 'Node.js',
       provenance: 'REAL',
       testFn: async () => {
-        const res = await fetch('/api/v1/gateway/info');
+        const res = await fetch(apiUrl('/api/v1/gateway/info'));
         if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
         return res.json();
       },
@@ -245,7 +245,7 @@ export function Integration() {
       service: 'Node.js',
       provenance: 'REAL',
       testFn: async () => {
-        const res = await fetch('/health');
+        const res = await fetch(apiUrl('/health'));
         if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
         return res.json();
       },
@@ -262,7 +262,7 @@ export function Integration() {
       service: 'FastAPI',
       provenance: 'REAL',
       testFn: async () => {
-        const res = await fetch('/api/v1/sensors/state?crew_id=okoye');
+        const res = await fetch(apiUrl('/api/v1/sensors/state?crew_id=okoye'));
         if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
         return res.json();
       },
@@ -279,7 +279,7 @@ export function Integration() {
       service: 'FastAPI',
       provenance: 'REAL',
       testFn: async () => {
-        const res = await fetch('/api/v1/passive/metrics');
+        const res = await fetch(apiUrl('/api/v1/passive/metrics'));
         if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
         return res.json();
       },
@@ -296,7 +296,7 @@ export function Integration() {
       service: 'FastAPI',
       provenance: 'REAL',
       testFn: async () => {
-        const res = await fetch('/api/v1/face-metrics?crew_id=okoye');
+        const res = await fetch(apiUrl('/api/v1/face-metrics?crew_id=okoye'));
         if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
         return res.json();
       },
@@ -313,7 +313,7 @@ export function Integration() {
       service: 'FastAPI',
       provenance: 'REAL',
       testFn: async () => {
-        const res = await fetch('/api/v1/mission/phase');
+        const res = await fetch(apiUrl('/api/v1/mission/phase'));
         if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
         return res.json();
       },
@@ -330,7 +330,7 @@ export function Integration() {
       service: 'FastAPI',
       provenance: 'SIMULATED',
       testFn: async () => {
-        const res = await fetch('/api/v1/fed/global');
+        const res = await fetch(apiUrl('/api/v1/fed/global'));
         if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
         return res.json();
       },
@@ -347,7 +347,7 @@ export function Integration() {
       service: 'FastAPI',
       provenance: 'SIMULATED',
       testFn: async () => {
-        const res = await fetch('/api/v1/panel/history');
+        const res = await fetch(apiUrl('/api/v1/panel/history'));
         if (!res.ok && res.status !== 404) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
         return res.json();
       },
@@ -364,7 +364,7 @@ export function Integration() {
       service: 'FastAPI',
       provenance: 'REAL',
       testFn: async () => {
-        const res = await fetch('/api/v1/readings/quality-summary?crew_id=okoye');
+        const res = await fetch(apiUrl('/api/v1/readings/quality-summary?crew_id=okoye'));
         if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
         return res.json();
       },

@@ -7,23 +7,10 @@ const startTime = Date.now();
 
 router.get(['/health', '/api/v1/health'], async (req, res) => {
   const isMongoConnected = mongoose.connection.readyState === 1;
-  const fastApiUrl = process.env.FASTAPI_URL || 'http://localhost:8001';
-  let isFastApiUp = false;
+  // Liveness must stay available when optional Python/ML is not deployed.
+  const status = isMongoConnected ? 'healthy' : 'degraded';
 
-  try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 600);
-    const resp = await fetch(`${fastApiUrl}/health`, { signal: controller.signal });
-    clearTimeout(timeout);
-    isFastApiUp = resp.ok;
-  } catch {
-    isFastApiUp = false;
-  }
-
-  const status = isMongoConnected ? (isFastApiUp ? 'healthy' : 'degraded') : 'unhealthy';
-  const statusCode = isMongoConnected ? 200 : 503;
-
-  return res.status(statusCode).json({
+  return res.status(200).json({
     status,
     timestamp: new Date().toISOString(),
     uptime_seconds: Math.floor((Date.now() - startTime) / 1000),
@@ -31,7 +18,7 @@ router.get(['/health', '/api/v1/health'], async (req, res) => {
     version: '0.1.0',
     components: {
       mongodb: isMongoConnected ? 'connected' : 'disconnected',
-      fastapi: isFastApiUp ? 'connected' : 'disconnected'
+      ml: 'not_deployed'
     }
   });
 });

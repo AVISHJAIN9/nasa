@@ -31,6 +31,13 @@ interface RequestOptions extends RequestInit {
 
 const TOKEN_KEY = 'astrocare_token';
 const REFRESH_TOKEN_KEY = 'astrocare_refresh_token';
+const API_BASE_URL = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
+
+export function apiUrl(endpoint: string): string {
+  if (/^https?:\/\//i.test(endpoint)) return endpoint;
+  const path = endpoint.startsWith('/') ? endpoint : `/api/v1/${endpoint}`;
+  return `${API_BASE_URL}${path}`;
+}
 
 export function getStoredToken(): string | null {
   if (typeof window === 'undefined') return null;
@@ -69,7 +76,7 @@ async function tryRefreshToken(): Promise<string | null> {
   if (!refreshToken) return null;
 
   try {
-    const res = await fetch('/api/v1/auth/refresh', {
+    const res = await fetch(apiUrl('/api/v1/auth/refresh'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ refresh_token: refreshToken })
@@ -95,12 +102,7 @@ async function tryRefreshToken(): Promise<string | null> {
 export async function apiClient<T = unknown>(endpoint: string, options: RequestOptions = {}): Promise<T> {
   const { params, skipAuth = false, retryOn401 = true, headers: customHeaders, ...fetchOptions } = options;
 
-  let url = endpoint;
-  if (!url.startsWith('http://') && !url.startsWith('https://')) {
-    if (!url.startsWith('/')) {
-      url = `/api/v1/${url}`;
-    }
-  }
+  let url = apiUrl(endpoint);
 
   if (params) {
     const searchParams = new URLSearchParams();

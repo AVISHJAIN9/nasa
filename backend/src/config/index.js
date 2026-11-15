@@ -15,9 +15,13 @@ export const config = {
   fieldEncryptionKey: process.env.FIELD_ENCRYPTION_KEY || 'MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI=',
 
   // CORS
-  corsOrigins: (process.env.CORS_ORIGINS || 'http://localhost:3000,http://localhost:5173,http://localhost:8000')
-    .split(',')
-    .map((o) => o.trim()),
+  corsOrigins: [...new Set([
+    'http://localhost:3000',
+    'http://localhost:3006',
+    'http://localhost:5173',
+    ...(process.env.CORS_ORIGINS || '').split(','),
+    process.env.FRONTEND_URL || ''
+  ].map((origin) => origin.trim().replace(/\/$/, '')).filter(Boolean))],
 
   // Rate Limiting
   rateLimitMax: parseInt(process.env.RATE_LIMIT_REQUESTS_PER_MINUTE || '120', 10),

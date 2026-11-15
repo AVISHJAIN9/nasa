@@ -42,6 +42,19 @@ function evaluateState(band, abstained) {
   return 'normal';
 }
 
+async function fetchJsonWithTimeout(url, timeoutMs = 1200) {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const response = await fetch(url, { signal: controller.signal });
+    return response.ok ? await response.json() : null;
+  } catch {
+    return null;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
 router.get(['/v1/today', '/api/v1/today'], async (req, res, next) => {
   try {
     const personId = (req.query.person_id || req.query.crew_id || 'vega').toLowerCase();
@@ -71,41 +84,26 @@ router.get(['/v1/today', '/api/v1/today'], async (req, res, next) => {
     }
 
     // 2. Query FastAPI for multimodal scores (cross-service link)
-    const fastApiUrl = process.env.FASTAPI_URL || 'http://localhost:8001';
+    const fastApiUrl = (process.env.FASTAPI_URL || '').replace(/\/+$/, '');
     let multimodal = null;
-    let degraded = false;
-    let missingKeys = [];
+    const sensorsUrl = fastApiUrl
+      ? `${fastApiUrl}/api/v1/sensors/state?crew_id=${encodeURIComponent(personId)}`
+      : null;
+    const passiveUrl = fastApiUrl ? `${fastApiUrl}/api/v1/passive/metrics` : null;
+    const [sensorsRes, passiveRes] = fastApiUrl
+      ? await Promise.all([fetchJsonWithTimeout(sensorsUrl), fetchJsonWithTimeout(passiveUrl)])
+      : [null, null];
+    const degraded = !sensorsRes || !passiveRes;
+    const missingKeys = degraded
+      ? ['voice', 'behavior', ...(!sensorsRes ? ['sensors'] : []), ...(!passiveRes ? ['passive'] : [])]
+      : [];
 
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 1500);
-
-      const [sensorsRes, passiveRes] = await Promise.all([
-        fetch(`${fastApiUrl}/api/v1/sensors/state?crew_id=${encodeURIComponent(personId)}`, {
-          signal: controller.signal
-        }).then(r => r.ok ? r.json() : null).catch(() => null),
-        fetch(`${fastApiUrl}/api/v1/passive/metrics`, {
-          signal: controller.signal
-        }).then(r => r.ok ? r.json() : null).catch(() => null)
-      ]);
-
-      clearTimeout(timeoutId);
-
-      if (sensorsRes || passiveRes) {
-        multimodal = {
-          sensors: sensorsRes?.sensors || null,
-          consent_version: sensorsRes?.consent_version || 1,
-          passive_metrics: passiveRes || null
-        };
-        degraded = false;
-        missingKeys = [];
-      } else {
-        degraded = true;
-        missingKeys = ['voice', 'behavior', 'passive'];
-      }
-    } catch (err) {
-      degraded = true;
-      missingKeys = ['voice', 'behavior', 'passive'];
+    if (sensorsRes || passiveRes) {
+      multimodal = {
+        sensors: sensorsRes?.sensors || null,
+        consent_version: sensorsRes?.consent_version || 1,
+        passive_metrics: passiveRes || null
+      };
     }
 
     // 3. Synthesize point estimate and contributors based on clinical & multimodal state
@@ -141,6 +139,8 @@ router.get(['/v1/today', '/api/v1/today'], async (req, res, next) => {
       },
       multimodal,
       degraded,
+      ml_status: degraded ? 'not_available' : 'available',
+      ...(degraded ? { degraded_message: 'AI DEGRADED: RULES ONLY' } : {}),
       missing_keys: missingKeys
     });
   } catch (err) {

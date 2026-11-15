@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "description": "AstroCare v2 MERN Backend - Autonomous Medical Decision Support Platform",
   "type": "module",
-  "main": "backend/src/server.js",
+  "main": "src/server.js",
   "scripts": {
-    "dev": "node backend/src/server.js",
-    "start": "node backend/src/server.js",
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js",
     "test": "vitest run",
     "lint": "eslint backend/ tests/ scripts/",
     "seed": "node scripts/seed.js",
