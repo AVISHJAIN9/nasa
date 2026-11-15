@@ -33,7 +33,8 @@ const TriageSessionSchema = new mongoose.Schema(
     },
     mission_mode: {
       type: String,
-      enum: ['ISS', 'MOON', 'MARS'],
+      enum: ['ISS', 'MOON', 'MARS', 'Moon', 'Mars', 'iss', 'moon', 'mars'],
+      set: (v) => (v ? v.toUpperCase() : 'MARS'),
       default: 'MARS'
     },
     status: {

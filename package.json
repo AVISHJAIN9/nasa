@@ -8,6 +8,7 @@
     "dev": "node backend/src/server.js",
     "start": "node backend/src/server.js",
     "test": "vitest run",
+    "verify:tier1": "node scripts/verify/verify-tier1.mjs",
     "lint": "eslint backend/ tests/ scripts/",
     "seed": "node scripts/seed.js",
     "eval": "node scripts/eval.js",

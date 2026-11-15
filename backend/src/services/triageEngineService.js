@@ -271,7 +271,7 @@ export async function startTriageSession(options) {
     throw new Error(`Decision tree ${tree_id} not found. Available: ${Object.keys(TRIAGE_DECISION_TREES).join(', ')}`);
   }
 
-  const effectiveMissionMode = mission_mode || getMissionConfig()?.mode || 'MARS';
+  const effectiveMissionMode = (mission_mode || getMissionConfig()?.mode || 'MARS').toUpperCase();
   const sessionId = `trg-${crypto.randomBytes(6).toString('hex')}`;
   const rootNode = tree.nodes[tree.root_node_id];
 
