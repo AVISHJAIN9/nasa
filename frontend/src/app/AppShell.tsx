@@ -77,12 +77,14 @@ export function AppShell() {
   const [showExitTourModal, setShowExitTourModal] = useState(false);
   const [clock, setClock] = useState(() => new Date().toLocaleTimeString());
 
-  const handleBrandHomeClick = () => {
+  const handleBrandHomeClick = (e?: React.MouseEvent) => {
+    if (e) e.preventDefault();
     if (storyRunning) {
       setShowExitTourModal(true);
       return;
     }
     setPage('home');
+    window.location.hash = '#home';
     window.scrollTo({top: 0, behavior: 'smooth'});
   };
 
@@ -298,14 +300,14 @@ export function AppShell() {
       <div className="space-y-5">
         {/* Brand Wordmark & Home Navigation */}
         <div className="flex items-center justify-between">
-          <button
-            type="button"
+          <a
+            href="#home"
             onClick={handleBrandHomeClick}
             className="flex items-center gap-2.5 text-left group focus-visible:ring-2 focus-visible:ring-earth rounded-md p-1 -m-1 transition-transform duration-150 active:scale-95 cursor-pointer"
             aria-label="AstroCare — Return to Home"
           >
             <Logo size={26} glow />
-          </button>
+          </a>
           <button
             type="button"
             onClick={() => setMobileMenuOpen(false)}
@@ -559,14 +561,14 @@ export function AppShell() {
               </svg>
             </button>
 
-            <button
-              type="button"
+            <a
+              href="#home"
               onClick={handleBrandHomeClick}
-              className="md:hidden flex items-center p-1 rounded hover:bg-white/5 focus-visible:ring-2 focus-visible:ring-earth"
+              className="md:hidden flex items-center p-1 rounded hover:bg-white/5 focus-visible:ring-2 focus-visible:ring-earth cursor-pointer"
               aria-label="AstroCare — Return to Home"
             >
               <Logo size={20} showWordmark={false} />
-            </button>
+            </a>
 
             <span className="text-white font-bold tracking-wider hidden sm:inline">
               SOL 142 · {clock} UTC
@@ -749,18 +751,18 @@ export function AppShell() {
         >
           <div className="w-full max-w-sm rounded-xl bg-void-2 border border-white/20 p-5 font-mono text-xs shadow-2xl">
             <h4 id="exit-tour-title" className="font-display text-sm uppercase text-white font-bold mb-2">
-              Exit Demo Tour?
+              Leave Demo Tour?
             </h4>
-            <p className="text-regolith/70 mb-5 leading-relaxed">
-              The 8-minute Mars mission tour is currently active. Do you want to stop the tour and return to Home Console?
+            <p className="text-regolith/80 mb-5 leading-relaxed">
+              Leave the demo? Progress will be paused.
             </p>
             <div className="flex justify-end gap-2">
               <button
                 type="button"
                 onClick={() => setShowExitTourModal(false)}
-                className="rounded px-3 py-1.5 border border-white/10 text-regolith/80 hover:text-white uppercase font-bold focus-visible:ring-2 focus-visible:ring-earth"
+                className="rounded px-3 py-1.5 border border-white/10 text-regolith/80 hover:text-white uppercase font-bold focus-visible:ring-2 focus-visible:ring-earth min-h-[36px]"
               >
-                Cancel
+                Stay in Tour
               </button>
               <button
                 type="button"
@@ -768,11 +770,12 @@ export function AppShell() {
                   stopMarsStory();
                   setShowExitTourModal(false);
                   setPage('home');
+                  window.location.hash = '#home';
                   window.scrollTo({top: 0, behavior: 'smooth'});
                 }}
-                className="rounded bg-mars px-3 py-1.5 text-white uppercase font-bold hover:bg-mars/90 shadow-md focus-visible:ring-2 focus-visible:ring-mars"
+                className="rounded bg-mars px-3 py-1.5 text-white uppercase font-bold hover:bg-mars/90 shadow-md focus-visible:ring-2 focus-visible:ring-mars min-h-[36px]"
               >
-                Exit Tour & Go Home
+                Leave Demo
               </button>
             </div>
           </div>
