@@ -8,7 +8,7 @@ import {
   type MissionMode,
   type AppPage,
 } from '../store';
-import {ErrorBoundary, PageSkeleton} from './ui';
+import {ErrorBoundary, PageSkeleton, Logo, TourEngine} from './ui';
 import {DemoPanel} from './DemoPanel';
 import {ConsentModal} from './ui/ConsentModal';
 import {OnboardingWizard} from './ui/OnboardingWizard';
@@ -33,6 +33,9 @@ const Forecast = lazy(() => import('./pages/Forecast').then((m) => ({default: m.
 const TeleSession = lazy(() => import('./pages/TeleSession').then((m) => ({default: m.TeleSession})));
 const Broadcast = lazy(() => import('./pages/Broadcast').then((m) => ({default: m.Broadcast})));
 const Roadmap = lazy(() => import('./pages/Roadmap').then((m) => ({default: m.Roadmap})));
+const Integration = lazy(() => import('./pages/Integration').then((m) => ({default: m.Integration})));
+const TypingPointer = lazy(() => import('./pages/TypingPointer').then((m) => ({default: m.TypingPointer})));
+const SensorsConsent = lazy(() => import('./pages/SensorsConsent').then((m) => ({default: m.SensorsConsent})));
 
 interface NavItem {
   id: AppPage;
@@ -62,19 +65,67 @@ export function AppShell() {
   const toasts = useStore((s) => s.toasts);
   const removeToast = useStore((s) => s.removeToast);
   const linkUp = useStore((s) => s.linkUp);
+  const authUser = useStore((s) => s.authUser);
+  const logout = useStore((s) => s.logout);
+  const showLoginModal = useStore((s) => s.showLoginModal);
+  const setShowLoginModal = useStore((s) => s.setShowLoginModal);
   const pendingOfflineCount = useStore((s) => s.pendingOfflineCount);
   const a11yMode = useStore((s) => s.a11yMode);
   const toggleA11yMode = useStore((s) => s.toggleA11yMode);
   const mlAlertsEnabled = useStore((s) => s.mlAlertsEnabled);
   const narrationCaption = useStore((s) => s.narrationCaption);
+  const storyRunning = useStore((s) => s.storyRunning);
+  const startMarsStory = useStore((s) => s.startMarsStory);
+  const stopMarsStory = useStore((s) => s.stopMarsStory);
+  const resetDemoState = useStore((s) => s.resetDemoState);
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showExitTourModal, setShowExitTourModal] = useState(false);
   const [clock, setClock] = useState(() => new Date().toLocaleTimeString());
+
+  const handleBrandHomeClick = (e?: React.MouseEvent) => {
+    if (e) e.preventDefault();
+    if (storyRunning) {
+      setShowExitTourModal(true);
+      return;
+    }
+    setPage('home');
+    window.location.hash = '#home';
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  };
 
   // Close drawer on route or role change
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [page, role]);
+
+  // Synchronize hash routing bidirectionally
+  useEffect(() => {
+    const validPages: AppPage[] = [
+      'home', 'woa', 'assistant', 'protocols', 'proof', 'limits',
+      'wellness', 'notes', 'orders', 'brief', 'whatif', 'audit',
+      'supplies', 'syndromes', 'forecast', 'telesession', 'broadcast',
+      'roadmap', 'integration'
+    ];
+
+    const handleHash = () => {
+      const h = window.location.hash.replace('#', '').trim();
+      if (validPages.includes(h as AppPage)) {
+        setPage(h as AppPage);
+      }
+    };
+
+    handleHash();
+    window.addEventListener('hashchange', handleHash);
+    return () => window.removeEventListener('hashchange', handleHash);
+  }, [setPage]);
+
+  // Keep location hash in sync with page
+  useEffect(() => {
+    if (page && window.location.hash !== `#${page}`) {
+      window.location.hash = page;
+    }
+  }, [page]);
 
   // Set default role if null
   useEffect(() => {
@@ -149,6 +200,7 @@ export function AppShell() {
         title: 'Health',
         items: [
           {id: 'wellness', label: 'Wellness', icon: '❤️'},
+          {id: 'typing', label: 'Typing & Pointer', icon: '⌨️'},
           {id: 'assistant', label: 'Assistant', icon: '🤖'},
           {id: 'protocols', label: 'Protocols', icon: '📋'},
         ],
@@ -206,10 +258,13 @@ export function AppShell() {
       title: 'System',
       items: [
         {id: 'assistant', label: 'Assistant', icon: '🤖'},
+        {id: 'typing', label: 'Typing & Pointer', icon: '⌨️'},
+        {id: 'sensors', label: 'Sensors & Consent', icon: '🛡️'},
         {id: 'proof', label: 'Proof', icon: '🔬'},
         {id: 'limits', label: 'Limits', icon: '🛡️'},
         {id: 'audit', label: 'Audit', icon: '🔐'},
         {id: 'roadmap', label: 'Roadmap', icon: '🗺️'},
+        {id: 'integration', label: 'Integration', icon: '⚡'},
       ],
     });
 
@@ -252,16 +307,16 @@ export function AppShell() {
   const sidebarContent = (
     <div className="flex flex-col h-full justify-between p-4 space-y-6">
       <div className="space-y-5">
-        {/* Brand Wordmark */}
+        {/* Brand Wordmark & Home Navigation */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <svg viewBox="0 0 24 24" aria-hidden="true" className="size-5 text-white">
-              <path d="M15.5 3.2A9 9 0 1 0 20.8 16 7.2 7.2 0 0 1 15.5 3.2Z" fill="currentColor" />
-            </svg>
-            <span className="font-display text-[0.9375rem] tracking-[0.24em] text-white font-bold uppercase">
-              ASTROCARE
-            </span>
-          </div>
+          <a
+            href="#home"
+            onClick={handleBrandHomeClick}
+            className="flex items-center gap-2.5 text-left group focus-visible:ring-2 focus-visible:ring-earth rounded-md p-1 -m-1 transition-transform duration-150 active:scale-95 cursor-pointer"
+            aria-label="AstroCare — Return to Home"
+          >
+            <Logo size={26} glow />
+          </a>
           <button
             type="button"
             onClick={() => setMobileMenuOpen(false)}
@@ -299,6 +354,40 @@ export function AppShell() {
               );
             })}
           </div>
+          {authUser ? (
+            <div className="mt-2 p-2 rounded bg-void border border-white/10 space-y-1.5 font-mono">
+              <div className="flex items-center justify-between">
+                <span className="flex items-center gap-1.5 text-[11px] text-white font-medium truncate max-w-[150px]">
+                  <span className="size-2 rounded-full bg-earth" />
+                  {authUser.name || authUser.email.split('@')[0]}
+                </span>
+                <span className="px-1.5 py-0.2 text-[9px] rounded bg-white/10 text-earth font-bold uppercase">
+                  {authUser.role}
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-[10px] text-regolith/60">
+                <span className="truncate max-w-[130px]">{authUser.email}</span>
+                <button
+                  type="button"
+                  onClick={logout}
+                  className="text-red-400 hover:text-red-300 uppercase hover:underline ml-1 cursor-pointer active:scale-[0.97]"
+                >
+                  Sign out
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-center justify-between mt-1.5 px-0.5">
+              <span className="font-mono text-[10px] text-regolith/50">Unified Identity</span>
+              <button
+                type="button"
+                onClick={() => setShowLoginModal(true)}
+                className="text-[10px] font-mono text-earth hover:underline flex items-center gap-1 active:scale-[0.97] cursor-pointer"
+              >
+                <span>🔑</span> Sign In with Email
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Navigation list */}
@@ -505,6 +594,15 @@ export function AppShell() {
               </svg>
             </button>
 
+            <a
+              href="#home"
+              onClick={handleBrandHomeClick}
+              className="md:hidden flex items-center p-1 rounded hover:bg-white/5 focus-visible:ring-2 focus-visible:ring-earth cursor-pointer"
+              aria-label="AstroCare — Return to Home"
+            >
+              <Logo size={20} showWordmark={false} />
+            </a>
+
             <span className="text-white font-bold tracking-wider hidden sm:inline">
               SOL 142 · {clock} UTC
             </span>
@@ -580,13 +678,56 @@ export function AppShell() {
                   );
                 })}
               </div>
+
+              {!storyRunning && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    resetDemoState();
+                    startMarsStory();
+                  }}
+                  id="start-demo-tour-button"
+                  className="rounded-lg bg-earth px-3 py-1.5 font-mono text-xs font-bold text-void uppercase hover:bg-earth/90 transition-all shadow-[0_0_12px_rgba(111,182,255,0.3)] flex items-center gap-1.5 min-h-[36px] cursor-pointer active:scale-[0.97]"
+                  title="Launch 8-Minute Mars Demonstration Timeline"
+                >
+                  <span>⚡</span>
+                  <span className="hidden md:inline">Mars Demo (8:00)</span>
+                </button>
+              )}
+
+              {/* User Account / Sign In Status */}
+              <div className="hidden lg:flex items-center pl-2 border-l border-white/10 font-mono">
+                {authUser ? (
+                  <div className="flex items-center gap-2">
+                    <span className="flex items-center gap-1.5 px-2 py-1 rounded bg-white/5 border border-white/10 text-white text-[11px]">
+                      <span className="size-2 rounded-full bg-earth" />
+                      <span className="truncate max-w-[120px]">{authUser.email}</span>
+                    </span>
+                    <button
+                      type="button"
+                      onClick={logout}
+                      className="text-[10px] uppercase text-regolith/60 hover:text-white transition-colors cursor-pointer active:scale-[0.97]"
+                    >
+                      Sign out
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setShowLoginModal(true)}
+                    className="px-2.5 py-1 rounded border border-white/15 bg-white/5 text-white/90 hover:text-earth hover:border-earth/40 text-[11px] uppercase transition-all duration-150 active:scale-[0.97] cursor-pointer"
+                  >
+                    Sign In
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </header>
 
         {/* AI Degraded Watchdog Banner */}
         {aiDegraded && (
-          <div role="status" aria-live="assertive" className="bg-[#e0b03a]/15 border-b border-[#e0b03a]/40 px-4 py-2 font-mono text-xs text-[#e0b03a] flex items-center justify-between">
+          <div role="status" aria-live="assertive" data-tour="ch9-watchdog-banner" className="bg-[#e0b03a]/15 border-b border-[#e0b03a]/40 px-4 py-2 font-mono text-xs text-[#e0b03a] flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span>⚠️</span>
               <span className="font-bold">
@@ -651,6 +792,9 @@ export function AppShell() {
                 {page === 'telesession' && <TeleSession />}
                 {page === 'broadcast' && <Broadcast />}
                 {page === 'roadmap' && <Roadmap />}
+                {page === 'integration' && <Integration />}
+                {page === 'typing' && <TypingPointer />}
+                {page === 'sensors' && <SensorsConsent />}
               </Suspense>
             </ErrorBoundary>
 
@@ -675,8 +819,53 @@ export function AppShell() {
         </aside>
       )}
 
+      {/* Exit Demo Tour Confirmation Modal (A8) */}
+      {showExitTourModal && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="exit-tour-title"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in"
+        >
+          <div className="w-full max-w-sm rounded-xl bg-void-2 border border-white/20 p-5 font-mono text-xs shadow-2xl">
+            <h4 id="exit-tour-title" className="font-display text-sm uppercase text-white font-bold mb-2">
+              Leave Demo Tour?
+            </h4>
+            <p className="text-regolith/80 mb-5 leading-relaxed">
+              Leave the demo? Progress will be paused.
+            </p>
+            <div className="flex justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => setShowExitTourModal(false)}
+                className="rounded px-3 py-1.5 border border-white/10 text-regolith/80 hover:text-white uppercase font-bold focus-visible:ring-2 focus-visible:ring-earth min-h-[36px]"
+              >
+                Stay in Tour
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  stopMarsStory();
+                  setShowExitTourModal(false);
+                  setPage('home');
+                  window.location.hash = '#home';
+                  window.scrollTo({top: 0, behavior: 'smooth'});
+                }}
+                className="rounded bg-mars px-3 py-1.5 text-white uppercase font-bold hover:bg-mars/90 shadow-md focus-visible:ring-2 focus-visible:ring-mars min-h-[36px]"
+              >
+                Leave Demo
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 8-Minute Mars Demonstration Tour Engine */}
+      <TourEngine />
+
       {/* Floating Demo Simulation Lab Panel */}
       <DemoPanel />
+
     </div>
   );
 }

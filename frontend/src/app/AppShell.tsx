@@ -12,7 +12,6 @@ import {ErrorBoundary, PageSkeleton, Logo, TourEngine} from './ui';
 import {DemoPanel} from './DemoPanel';
 import {ConsentModal} from './ui/ConsentModal';
 import {OnboardingWizard} from './ui/OnboardingWizard';
-import {LoginModal} from './ui/LoginModal';
 
 const Astronaut = lazy(() => import('./pages/Astronaut').then((m) => ({default: m.Astronaut})));
 const Surgeon = lazy(() => import('./pages/Surgeon').then((m) => ({default: m.Surgeon})));
@@ -66,7 +65,10 @@ export function AppShell() {
   const toasts = useStore((s) => s.toasts);
   const removeToast = useStore((s) => s.removeToast);
   const linkUp = useStore((s) => s.linkUp);
-  const [showLoginModal, setShowLoginModal] = useState(false);
+  const authUser = useStore((s) => s.authUser);
+  const logout = useStore((s) => s.logout);
+  const showLoginModal = useStore((s) => s.showLoginModal);
+  const setShowLoginModal = useStore((s) => s.setShowLoginModal);
   const pendingOfflineCount = useStore((s) => s.pendingOfflineCount);
   const a11yMode = useStore((s) => s.a11yMode);
   const toggleA11yMode = useStore((s) => s.toggleA11yMode);
@@ -352,16 +354,40 @@ export function AppShell() {
               );
             })}
           </div>
-          <div className="flex items-center justify-between mt-1.5 px-0.5">
-            <span className="font-mono text-[10px] text-regolith/50">Unified Identity</span>
-            <button
-              type="button"
-              onClick={() => setShowLoginModal(true)}
-              className="text-[10px] font-mono text-earth hover:underline flex items-center gap-1"
-            >
-              <span>🔑</span> Sign In / Demo
-            </button>
-          </div>
+          {authUser ? (
+            <div className="mt-2 p-2 rounded bg-void border border-white/10 space-y-1.5 font-mono">
+              <div className="flex items-center justify-between">
+                <span className="flex items-center gap-1.5 text-[11px] text-white font-medium truncate max-w-[150px]">
+                  <span className="size-2 rounded-full bg-earth" />
+                  {authUser.name || authUser.email.split('@')[0]}
+                </span>
+                <span className="px-1.5 py-0.2 text-[9px] rounded bg-white/10 text-earth font-bold uppercase">
+                  {authUser.role}
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-[10px] text-regolith/60">
+                <span className="truncate max-w-[130px]">{authUser.email}</span>
+                <button
+                  type="button"
+                  onClick={logout}
+                  className="text-red-400 hover:text-red-300 uppercase hover:underline ml-1 cursor-pointer active:scale-[0.97]"
+                >
+                  Sign out
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-center justify-between mt-1.5 px-0.5">
+              <span className="font-mono text-[10px] text-regolith/50">Unified Identity</span>
+              <button
+                type="button"
+                onClick={() => setShowLoginModal(true)}
+                className="text-[10px] font-mono text-earth hover:underline flex items-center gap-1 active:scale-[0.97] cursor-pointer"
+              >
+                <span>🔑</span> Sign In with Email
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Navigation list */}
@@ -661,13 +687,40 @@ export function AppShell() {
                     startMarsStory();
                   }}
                   id="start-demo-tour-button"
-                  className="rounded-lg bg-earth px-3 py-1.5 font-mono text-xs font-bold text-void uppercase hover:bg-earth/90 transition-all shadow-[0_0_12px_rgba(111,182,255,0.3)] flex items-center gap-1.5 min-h-[36px] cursor-pointer"
+                  className="rounded-lg bg-earth px-3 py-1.5 font-mono text-xs font-bold text-void uppercase hover:bg-earth/90 transition-all shadow-[0_0_12px_rgba(111,182,255,0.3)] flex items-center gap-1.5 min-h-[36px] cursor-pointer active:scale-[0.97]"
                   title="Launch 8-Minute Mars Demonstration Timeline"
                 >
                   <span>⚡</span>
                   <span className="hidden md:inline">Mars Demo (8:00)</span>
                 </button>
               )}
+
+              {/* User Account / Sign In Status */}
+              <div className="hidden lg:flex items-center pl-2 border-l border-white/10 font-mono">
+                {authUser ? (
+                  <div className="flex items-center gap-2">
+                    <span className="flex items-center gap-1.5 px-2 py-1 rounded bg-white/5 border border-white/10 text-white text-[11px]">
+                      <span className="size-2 rounded-full bg-earth" />
+                      <span className="truncate max-w-[120px]">{authUser.email}</span>
+                    </span>
+                    <button
+                      type="button"
+                      onClick={logout}
+                      className="text-[10px] uppercase text-regolith/60 hover:text-white transition-colors cursor-pointer active:scale-[0.97]"
+                    >
+                      Sign out
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setShowLoginModal(true)}
+                    className="px-2.5 py-1 rounded border border-white/15 bg-white/5 text-white/90 hover:text-earth hover:border-earth/40 text-[11px] uppercase transition-all duration-150 active:scale-[0.97] cursor-pointer"
+                  >
+                    Sign In
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </header>
@@ -813,8 +866,6 @@ export function AppShell() {
       {/* Floating Demo Simulation Lab Panel */}
       <DemoPanel />
 
-      {/* Unified Identity Sign In Modal */}
-      <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
     </div>
   );
 }
