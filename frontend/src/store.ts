@@ -951,8 +951,8 @@ export const STORY_STEPS: StoryStepDef[] = [
     title: 'Ch. 10 · Verification Benchmarks, Physical Limits & Ethics',
     route: '#proof',
     targetSelector: '[data-tour="ch10-proof-limits"]',
-    narration: 'Validation benchmarks display synthetic digital twin proof curves, physical sensor boundaries, and explicit NASA operational disclaimers: decision-support prototype on synthetic and public data, not a medical device.',
-    presenterNotes: 'Walk through ROC curves, latency histograms, and the prominent prototype disclaimer.',
+    narration: 'Validation benchmarks display empirical verification status, physical sensor boundaries, and explicit NASA operational disclaimers: decision-support prototype on synthetic and public data, not a medical device. Hardcoded and unauthenticated benchmark numbers are suppressed pending verified runs.',
+    presenterNotes: 'Review benchmark execution status, physical sensor boundaries, and the prominent non-diagnostic prototype disclaimer.',
     run: (s) => {
       s.setRole('surgeon');
       s.setPage('proof');
