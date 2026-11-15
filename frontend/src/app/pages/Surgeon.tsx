@@ -13,11 +13,13 @@ export function Surgeon() {
   const ackAlert = useStore((s) => s.ackAlert);
   const resolveAlert = useStore((s) => s.resolveAlert);
   const checkIns = useStore((s) => s.checkIns);
-  const sendMessage = useStore((s) => s.sendMessage);
   const aiDegraded = useStore((s) => s.aiDegraded);
   const missedCheckInHours = useStore((s) => s.missedCheckInHours);
   const lastCheckInTimes = useStore((s) => s.lastCheckInTimes);
   const workoutLogs = useStore((s) => s.workoutLogs);
+  const orders = useStore((s) => s.orders);
+  const composeOrder = useStore((s) => s.composeOrder);
+  const linkUp = useStore((s) => s.linkUp);
 
   // Tab State in store
   const activeTab = useStore((s) => s.surgeonHomeTab);
@@ -53,14 +55,20 @@ export function Surgeon() {
   const [alertFilter, setAlertFilter] = useState<'all' | 'new' | 'ack' | 'resolved'>('new');
   const [selectedAlertId, setSelectedAlertId] = useState<string | null>(null);
 
-  // Consult directive text
+  // Consult directive text & category
   const [directiveText, setDirectiveText] = useState('');
+  const [directiveCategory, setDirectiveCategory] = useState<'medication' | 'exercise' | 'rest' | 'other'>('medication');
+  const [isSendingDirective, setIsSendingDirective] = useState(false);
+  const [directiveFeedback, setDirectiveFeedback] = useState<{type: 'success' | 'error'; text: string} | null>(null);
 
   // Sort crew by risk score descending
   const sortedCrew = [...crew].sort((a, b) => computeRiskScore(b) - computeRiskScore(a));
 
   const selectedMember: CrewMember = crew.find((c) => c.id === selectedCrewId) || crew[0];
   const patientRisk = computeRiskScore(selectedMember);
+
+  // Patient directives
+  const patientOrders = orders.filter((o) => o.targetCrewId === selectedMember.id);
 
   // Filtered alerts
   const filteredAlerts = alerts.filter((a) => {
@@ -87,11 +95,35 @@ export function Surgeon() {
   const patientCheckIns = checkIns.filter((ci) => ci.crewId === selectedMember.id);
   const patientAlerts = alerts.filter((a) => a.crewId === selectedMember.id);
 
-  const handleSendDirective = (e: React.FormEvent) => {
+  const handleSendDirective = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!directiveText.trim()) return;
-    sendMessage('ground', directiveText, 'order');
-    setDirectiveText('');
+    if (!directiveText.trim() || isSendingDirective) return;
+    setIsSendingDirective(true);
+    setDirectiveFeedback(null);
+
+    try {
+      composeOrder(
+        selectedMember.id,
+        directiveCategory,
+        directiveText.trim(),
+        'Dr. Priya Nair (Houston Flight Surgeon)'
+      );
+      setDirectiveText('');
+      setDirectiveFeedback({
+        type: 'success',
+        text: linkUp
+          ? `Directive successfully dispatched. Transmitting to ${selectedMember.name} across deep-space delay.`
+          : `Deep-space link down. Directive queued in buffer and will transmit immediately upon carrier link return.`,
+      });
+      setTimeout(() => setDirectiveFeedback(null), 6000);
+    } catch {
+      setDirectiveFeedback({
+        type: 'error',
+        text: 'Failed to inject directive into comms queue.',
+      });
+    } finally {
+      setIsSendingDirective(false);
+    }
   };
 
   const psiValue = aiDegraded ? 0.28 : 0.04;
@@ -400,27 +432,184 @@ export function Surgeon() {
               </Panel>
             </div>
 
-            {/* Right: Directive Transmit */}
+            {/* Right: Directive Transmit & Latency Queue */}
             <div className="lg:col-span-4 space-y-6">
-              <Panel title="Transmit clinical directive" subtitle="Uplinks through DSN store-and-forward queue">
+              <Panel
+                title="Transmit clinical directive"
+                subtitle={`Target: ${selectedMember.name} (${selectedMember.roleTitle})`}
+              >
                 <form onSubmit={handleSendDirective} className="space-y-3 font-mono text-xs">
+                  {/* Category Buttons */}
+                  <div>
+                    <label className="text-[10px] text-regolith/50 uppercase block mb-1">
+                      Directive Category
+                    </label>
+                    <div className="grid grid-cols-4 gap-1">
+                      {(['medication', 'exercise', 'rest', 'other'] as const).map((cat) => (
+                        <button
+                          key={cat}
+                          type="button"
+                          onClick={() => setDirectiveCategory(cat)}
+                          className={`rounded py-1 text-[10px] uppercase font-bold border transition-colors ${
+                            directiveCategory === cat
+                              ? 'bg-earth text-void border-earth'
+                              : 'bg-void text-regolith/70 border-white/10 hover:border-white/20'
+                          }`}
+                        >
+                          {cat}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Preset quick buttons */}
+                  <div className="flex flex-wrap gap-1 pt-0.5">
+                    {[
+                      'Admin 25mg Promethazine',
+                      'Hydrate +500mL electrolytes',
+                      'Cycle ergometer 30m',
+                      'Rest 4h in quarters',
+                    ].map((preset) => (
+                      <button
+                        key={preset}
+                        type="button"
+                        onClick={() => setDirectiveText(preset)}
+                        className="text-[10px] rounded bg-white/5 hover:bg-white/10 border border-white/10 px-2 py-0.5 text-regolith/70 hover:text-white"
+                      >
+                        + {preset}
+                      </button>
+                    ))}
+                  </div>
+
                   <textarea
-                    rows={4}
-                    placeholder="Enter clinical order for onboard crew (e.g., admin 25mg promethazine, hydrate 500mL)..."
+                    rows={3}
+                    placeholder={`Enter clinical directive for ${selectedMember.name}...`}
                     value={directiveText}
                     onChange={(e) => setDirectiveText(e.target.value)}
-                    className="w-full rounded bg-void p-2.5 text-white border border-white/15 focus:outline-none focus:border-earth text-xs focus-visible:ring-2 focus-visible:ring-earth"
+                    disabled={isSendingDirective}
+                    className="w-full rounded bg-void p-2.5 text-white border border-white/15 focus:outline-none focus:border-earth text-xs focus-visible:ring-2 focus-visible:ring-earth disabled:opacity-50"
                   />
-                  <div className="flex justify-between items-center">
-                    <span className="text-[11px] text-regolith/50">Delivered per mission latency</span>
+
+                  {directiveFeedback && (
+                    <div
+                      className={`p-2.5 rounded text-[11px] font-mono border ${
+                        directiveFeedback.type === 'success'
+                          ? 'bg-emerald-950/60 text-emerald-200 border-emerald-600/50'
+                          : 'bg-mars/20 text-mars border-mars/40'
+                      }`}
+                    >
+                      {directiveFeedback.text}
+                    </div>
+                  )}
+
+                  <div className="flex justify-between items-center pt-1">
+                    <span className="text-[10px] text-regolith/50">
+                      {linkUp ? 'Uplinks per DSN latency' : 'Link offline · Will queue'}
+                    </span>
                     <button
                       type="submit"
-                      className="rounded bg-earth px-4 py-1.5 font-bold text-void uppercase hover:bg-earth/90 transition-colors min-h-[44px] focus-visible:ring-2 focus-visible:ring-earth focus-visible:outline-none"
+                      disabled={!directiveText.trim() || isSendingDirective}
+                      className="rounded bg-earth px-4 py-2 font-bold text-void uppercase hover:bg-earth/90 transition-all min-h-[40px] focus-visible:ring-2 focus-visible:ring-earth focus-visible:outline-none disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer active:scale-95 shadow-md flex items-center gap-1.5"
                     >
-                      Uplink Directive
+                      {isSendingDirective ? (
+                        <>
+                          <span className="animate-spin text-xs">⟳</span>
+                          <span>Injecting...</span>
+                        </>
+                      ) : (
+                        <span>Uplink Directive 📡</span>
+                      )}
                     </button>
                   </div>
                 </form>
+
+                {/* Patient Directives Queue & Receipts */}
+                <div className="mt-5 pt-4 border-t border-white/10 space-y-3 font-mono">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] uppercase tracking-wider text-regolith/60 font-bold">
+                      Directives Log ({patientOrders.length})
+                    </span>
+                    <span className="text-[10px] text-regolith/40">DSN Transit Buffer</span>
+                  </div>
+
+                  {patientOrders.length === 0 ? (
+                    <p className="text-[11px] text-regolith/40 italic py-2">
+                      No directives issued to {selectedMember.name} yet.
+                    </p>
+                  ) : (
+                    <div className="space-y-2 max-h-[260px] overflow-y-auto pr-1">
+                      {patientOrders.map((ord) => {
+                        const now = Date.now();
+                        const remainingSec = Math.max(0, Math.ceil((ord.deliverAt - now) / 1000));
+
+                        return (
+                          <div
+                            key={ord.id}
+                            className="p-3 rounded-lg bg-void border border-white/10 space-y-1.5 text-xs"
+                          >
+                            <div className="flex items-center justify-between text-[11px]">
+                              <span className="font-bold uppercase text-white">
+                                [{ord.type}] {ord.timeStr}
+                              </span>
+                              {ord.status === 'queued' && (
+                                <span className="rounded bg-white/10 text-regolith/80 border border-white/20 px-2 py-0.5 text-[10px] font-bold uppercase">
+                                  Queued (Offline)
+                                </span>
+                              )}
+                              {ord.status === 'in-flight' && (
+                                <span className="rounded bg-earth/20 text-earth border border-earth/40 px-2 py-0.5 text-[10px] font-bold uppercase animate-pulse">
+                                  Transmitting · {remainingSec}s
+                                </span>
+                              )}
+                              {ord.status === 'delivered' && (
+                                <span className="rounded bg-[#e0b03a]/20 text-[#e0b03a] border border-[#e0b03a]/40 px-2 py-0.5 text-[10px] font-bold uppercase">
+                                  Delivered · Awaiting Ack
+                                </span>
+                              )}
+                              {ord.status === 'acknowledged' && (
+                                <span className="rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 text-[10px] font-bold uppercase">
+                                  ✓ Acknowledged
+                                </span>
+                              )}
+                              {ord.status === 'rejected' && (
+                                <span className="rounded bg-mars/20 text-mars border border-mars/40 px-2 py-0.5 text-[10px] font-bold uppercase">
+                                  ✕ Cannot Comply
+                                </span>
+                              )}
+                            </div>
+
+                            <p className="text-regolith/90 text-xs">
+                              "{ord.text}"
+                            </p>
+
+                            {ord.status === 'in-flight' && (
+                              <div className="w-full bg-void-2 rounded-full h-1.5 border border-white/10 overflow-hidden">
+                                <div
+                                  className="bg-earth h-full rounded-full transition-all duration-300 animate-pulse"
+                                  style={{
+                                    width: `${Math.max(5, Math.min(100, 100 - (remainingSec / 30) * 100))}%`,
+                                  }}
+                                />
+                              </div>
+                            )}
+
+                            {ord.status === 'acknowledged' && ord.ackTimeStr && (
+                              <div className="text-[10px] text-emerald-300/80 pt-0.5">
+                                Verified by {ord.ackAstronautName || selectedMember.name} at {ord.ackTimeStr}
+                              </div>
+                            )}
+
+                            {ord.status === 'rejected' && (
+                              <div className="text-[10px] text-mars pt-0.5">
+                                Reason: {ord.rejectReason || 'Operational constraint'} ({ord.rejectAstronautName || selectedMember.name})
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
               </Panel>
             </div>
           </div>

@@ -42,6 +42,7 @@ export function Astronaut() {
   const medicalOfficerCrewId = useStore((s) => s.medicalOfficerCrewId);
   const orders = useStore((s) => s.orders);
   const acknowledgeOrder = useStore((s) => s.acknowledgeOrder);
+  const rejectOrder = useStore((s) => s.rejectOrder);
   const broadcasts = useStore((s) => s.broadcasts);
   const markBroadcastRead = useStore((s) => s.markBroadcastRead);
 
@@ -56,6 +57,7 @@ export function Astronaut() {
 
   // Orders for Vega
   const vegaOrders = orders.filter((o) => o.targetCrewId === 'vega');
+  const pendingDirectives = orders.filter((o) => o.targetCrewId === 'vega' && o.status === 'delivered');
 
   // Overdue check-in calculation
   const lastCheckIn = lastCheckInTimes['vega'] || Date.now() - 86400000 * 2;
@@ -181,6 +183,64 @@ export function Astronaut() {
           ) : undefined
         }
       />
+
+      {/* Urgent Uplink Directives Banner from Flight Surgeon (Houston) */}
+      {pendingDirectives.length > 0 && (
+        <aside
+          role="region"
+          aria-label="Pending Flight Surgeon Directives"
+          className="rounded-xl border-2 border-earth bg-void-2/95 p-4 sm:p-5 shadow-2xl animate-fade-in font-mono text-xs space-y-3"
+        >
+          <div className="flex items-center justify-between border-b border-white/10 pb-2">
+            <div className="flex items-center gap-2">
+              <span className="flex h-2.5 w-2.5 rounded-full bg-earth animate-ping" />
+              <span className="font-display text-sm uppercase text-earth font-bold">
+                Clinical Directive Received From Flight Surgeon
+              </span>
+            </div>
+            <span className="rounded bg-earth/20 text-earth border border-earth/40 px-2 py-0.5 text-[11px] font-bold uppercase">
+              Action Required ({pendingDirectives.length})
+            </span>
+          </div>
+
+          <div className="space-y-3">
+            {pendingDirectives.map((directive) => (
+              <div
+                key={directive.id}
+                className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-lg bg-void border border-white/10"
+              >
+                <div>
+                  <div className="flex items-center gap-2 text-[11px] text-regolith/60 uppercase">
+                    <span className="font-bold text-white">[{directive.type.toUpperCase()}]</span>
+                    <span>Issued by {directive.composedBy}</span>
+                    <span>· {directive.timeStr}</span>
+                  </div>
+                  <p className="text-white text-sm font-semibold mt-1">
+                    "{directive.text}"
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2 shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => acknowledgeOrder(directive.id, vega.name)}
+                    className="rounded bg-emerald-500 hover:bg-emerald-400 text-void font-bold uppercase px-3.5 py-2 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-emerald-400 min-h-[40px] cursor-pointer shadow-md"
+                  >
+                    ✓ Acknowledge
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => rejectOrder(directive.id, vega.name, 'Local operational constraint')}
+                    className="rounded bg-white/10 hover:bg-white/20 text-regolith hover:text-white uppercase font-bold px-3 py-2 transition-all active:scale-95 focus-visible:ring-2 focus-visible:ring-mars min-h-[40px] cursor-pointer"
+                  >
+                    ✕ Cannot Comply
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </aside>
+      )}
 
       {/* Emergency banner across role view */}
       {emergency?.active && (

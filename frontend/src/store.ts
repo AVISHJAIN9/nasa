@@ -260,10 +260,13 @@ export interface CrewOrder {
   composedAt: number;
   timeStr: string;
   deliverAt: number;
-  status: 'queued' | 'in-flight' | 'delivered' | 'acknowledged';
+  status: 'queued' | 'in-flight' | 'delivered' | 'acknowledged' | 'rejected';
   ackAt?: number;
   ackTimeStr?: string;
   ackAstronautName?: string;
+  rejectReason?: string;
+  rejectAt?: number;
+  rejectAstronautName?: string;
 }
 
 export interface BroadcastReceipt {
@@ -720,6 +723,7 @@ export interface AppStore {
 
   composeOrder: (targetCrewId: string, type: CrewOrder['type'], text: string, composedBy: string) => void;
   acknowledgeOrder: (orderId: string, astronautName: string) => void;
+  rejectOrder: (orderId: string, astronautName: string, reason?: string) => void;
 
   sendBroadcast: (title: string, message: string, priority: BroadcastMessage['priority'], sentBy: string) => void;
   markBroadcastRead: (broadcastId: string, crewId: string, crewName: string) => void;
@@ -2109,6 +2113,29 @@ export const useStore = create<AppStore>((set, get) => ({
 
     get().logEvent(`ORDER_ACKNOWLEDGED: Order ${orderId} acknowledged by ${astronautName}`, astronautName, 'order');
     get().addToast(`Acknowledged directive ${orderId}. Confirmation transmitted to Flight Surgeon (${Math.round(oneWaySec / 60)}m delay)`, 'success');
+  },
+
+  rejectOrder: (orderId, astronautName, reason = 'Clinical or operational constraint') => {
+    const now = Date.now();
+    const state = get();
+    const oneWaySec = MODES[state.mode].delaySec;
+
+    set((s) => ({
+      orders: s.orders.map((o) =>
+        o.id === orderId
+          ? {
+              ...o,
+              status: 'rejected' as const,
+              rejectAt: now,
+              rejectAstronautName: astronautName,
+              rejectReason: reason,
+            }
+          : o
+      ),
+    }));
+
+    get().logEvent(`ORDER_DECLINED: Order ${orderId} marked cannot comply by ${astronautName}: ${reason}`, astronautName, 'order');
+    get().addToast(`Directive ${orderId} marked cannot comply (${reason}). Telemetry receipt dispatched to Flight Surgeon (${Math.round(oneWaySec / 60)}m delay)`, 'warn');
   },
 
   // --- Batch D Broadcasts (F115) ---
