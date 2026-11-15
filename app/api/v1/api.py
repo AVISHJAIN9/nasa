@@ -1,6 +1,7 @@
 """AstroCare v2 - API v1 Router Aggregator (F131)."""
 
 from backend.app.api.v1.endpoints import (
+    assess,
     behavior,
     consent,
     eye,
@@ -16,7 +17,9 @@ from backend.app.api.v1.endpoints import (
     phase,
     replay,
     security,
+    sources,
     telemetry,
+    today,
     twin,
     voice,
     watchdog,
@@ -27,12 +30,15 @@ api_router = APIRouter()
 
 # Register v1 routes
 api_router.include_router(health.router)
+api_router.include_router(assess.router)
+api_router.include_router(sources.router)
 api_router.include_router(gateway.router)
 api_router.include_router(flags.router)
 api_router.include_router(security.router)
 api_router.include_router(ml_status.router)
 api_router.include_router(consent.router)
 api_router.include_router(telemetry.router)
+api_router.include_router(today.router)
 api_router.include_router(voice.router)
 api_router.include_router(behavior.router)
 api_router.include_router(phase.router)

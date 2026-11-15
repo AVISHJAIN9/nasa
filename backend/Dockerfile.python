@@ -12,8 +12,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY backend/requirements.txt ./backend/requirements.txt
 RUN pip install --no-cache-dir -r ./backend/requirements.txt
 
-# Copy backend source
+# Copy backend and ML intelligence engine source
 COPY backend/ ./backend/
+COPY astrocare/ ./astrocare/
+COPY artifacts/ ./artifacts/
 COPY alembic.ini ./
 
 EXPOSE 8001

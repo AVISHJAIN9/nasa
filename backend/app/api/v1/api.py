@@ -19,6 +19,7 @@ from backend.app.api.v1.endpoints import (
     security,
     sources,
     telemetry,
+    today,
     twin,
     voice,
     watchdog,
@@ -37,6 +38,7 @@ api_router.include_router(security.router)
 api_router.include_router(ml_status.router)
 api_router.include_router(consent.router)
 api_router.include_router(telemetry.router)
+api_router.include_router(today.router)
 api_router.include_router(voice.router)
 api_router.include_router(behavior.router)
 api_router.include_router(phase.router)
