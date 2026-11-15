@@ -63,7 +63,7 @@ export function Astronaut() {
   const isCheckInMissed = elapsedHours > missedCheckInHours;
 
   // Selected vital for trend chart
-  const [selectedMetric, setSelectedMetric] = useState<'hr' | 'spo2' | 'temp' | 'resp' | 'hrv'>('hr');
+  const [selectedMetric, setSelectedMetric] = useState<'hr' | 'spo2' | 'bp' | 'temp' | 'resp' | 'hrv'>('hr');
   const [trendRange, setTrendRange] = useState<'1m' | '5m'>('1m');
 
   // Check-in form state
@@ -93,10 +93,20 @@ export function Astronaut() {
   const latestBpSys = bpSysArr[bpSysArr.length - 1]?.value ?? vega.baseline.bpSys;
   const latestBpDia = bpDiaArr[bpDiaArr.length - 1]?.value ?? vega.baseline.bpDia;
 
+  const bpSysDelta = latestBpSys - vega.baseline.bpSys;
+  const bpDiaDelta = latestBpDia - vega.baseline.bpDia;
+  const bpDeltaStr = `${bpSysDelta >= 0 ? `+${Math.round(bpSysDelta)}` : Math.round(bpSysDelta)}/${bpDiaDelta >= 0 ? `+${Math.round(bpDiaDelta)}` : Math.round(bpDiaDelta)}`;
+
   const hrStatus = latestHr > 110 ? 'critical' : latestHr > 90 ? 'watch' : 'normal';
   const spo2Status = latestSpo2 < 94 ? 'critical' : latestSpo2 < 96 ? 'watch' : 'normal';
   const tempStatus = latestTemp > 38 ? 'critical' : latestTemp > 37.5 ? 'watch' : 'normal';
   const hrvStatus = latestHrv < 30 ? 'critical' : latestHrv < 45 ? 'watch' : 'normal';
+  const bpStatus: 'normal' | 'watch' | 'critical' =
+    latestBpSys >= 140 || latestBpDia >= 90 || latestBpSys < 90 || latestBpDia < 60 || Math.abs(bpSysDelta) >= 22
+      ? 'critical'
+      : latestBpSys >= 130 || latestBpDia >= 85 || Math.abs(bpSysDelta) >= 12
+      ? 'watch'
+      : 'normal';
 
   // Personal alerts for Vega or cabin
   const personalAlerts = alerts.filter((a) => !a.crewId || a.crewId === vega.id);
@@ -106,6 +116,8 @@ export function Astronaut() {
       ? hrArr
       : selectedMetric === 'spo2'
       ? spo2Arr
+      : selectedMetric === 'bp'
+      ? bpSysArr
       : selectedMetric === 'temp'
       ? tempArr
       : selectedMetric === 'resp'
@@ -115,6 +127,7 @@ export function Astronaut() {
   const metricInfo = {
     hr: {title: 'Heart Rate', unit: 'bpm', baseline: vega.baseline.hr, color: '#6fb6ff'},
     spo2: {title: 'Blood Oxygen', unit: '%', baseline: vega.baseline.spo2, color: '#6fb6ff'},
+    bp: {title: 'Blood Pressure (Systolic)', unit: 'mmHg', baseline: vega.baseline.bpSys, color: '#e2704a'},
     temp: {title: 'Core Temperature', unit: '°C', baseline: vega.baseline.temp, color: '#f2e6c9'},
     resp: {title: 'Respiration Rate', unit: 'br/min', baseline: vega.baseline.resp, color: '#6fb6ff'},
     hrv: {title: 'Heart Rate Variability', unit: 'ms', baseline: vega.baseline.hrv, color: '#d8c3b4'},
@@ -227,7 +240,7 @@ export function Astronaut() {
         <div className="space-y-6">
           {/* Live Vitals Grid with HUD Corner Brackets (1 of 3 places) */}
           <Panel title="Continuous biometric streams" brackets>
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+            <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-6 min-w-0">
               <VitalTile
                 label="Heart Rate"
                 value={Math.round(latestHr)}
@@ -257,7 +270,12 @@ export function Astronaut() {
                 value={`${Math.round(latestBpSys)}/${Math.round(latestBpDia)}`}
                 unit="mmHg"
                 baseline={`${vega.baseline.bpSys}/${vega.baseline.bpDia}`}
+                delta={bpDeltaStr}
+                status={bpStatus}
+                sparklineData={bpSysArr.slice(-20).map((d) => ({v: d.value}))}
                 provenance="SIMULATED"
+                selected={selectedMetric === 'bp'}
+                onClick={() => setSelectedMetric('bp')}
               />
               <VitalTile
                 label="Core Temp"
@@ -300,11 +318,11 @@ export function Astronaut() {
           {/* Optical Camera rPPG Pulse Bridge */}
           <CameraPulse />
 
-          <div className="grid gap-6 lg:grid-cols-12">
+          <div className="grid gap-6 lg:grid-cols-12 min-w-0">
             {/* Trend Chart */}
-            <div className="lg:col-span-8">
+            <div className="lg:col-span-8 min-w-0 overflow-hidden">
               <Panel title={`${metricInfo.title} telemetry trendline`}>
-                <div className="h-[220px] sm:h-64">
+                <div className="h-[220px] sm:h-64 min-w-0 overflow-hidden">
                   <TrendChart
                     title={metricInfo.title}
                     unit={metricInfo.unit}

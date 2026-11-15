@@ -2966,3 +2966,7 @@ export const useStore = create<AppStore>((set, get) => ({
     });
   },
 }));
+
+if (typeof window !== 'undefined') {
+  (window as unknown as {__store: typeof useStore}).__store = useStore;
+}
