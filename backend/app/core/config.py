@@ -94,6 +94,19 @@ class Settings(BaseSettings):
     FLAG_ENABLE_LOCAL_LLM: bool = False
     FLAG_MISSION_MODE: str = "ISS"
 
+    # ML Fusion Settings (Model A & Model B)
+    ASTROCARE_STRESS_THRESHOLD: float = 0.5
+    ASTROCARE_SESSION_TTL_HOURS: int = 6
+    ASTROCARE_MAX_SESSIONS: int = 1000
+    ASTROCARE_MODEL_URL: str = "http://localhost:8001"
+
+    # External APIs & LLM Providers
+    NASA_API_KEY: str = "DEMO_KEY"
+    GROQ_API_KEY: str | None = None
+    GEMINI_API_KEY: str | None = None
+    GOOGLE_API_KEY: str | None = None
+    OLLAMA_BASE_URL: str = "http://localhost:11434"
+
     # Mission Phases (BE-14 / M05)
     MISSION_PHASE: str = "transit"
     VALID_MISSION_PHASES: list[str] = ["launch", "transit", "landing", "return"]
@@ -149,3 +162,6 @@ class Settings(BaseSettings):
 def get_settings() -> Settings:
     """Return cached application settings singleton."""
     return Settings()
+
+
+settings = get_settings()

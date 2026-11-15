@@ -1,0 +1,8 @@
+component,type,source,status
+Fusion early-warning (A05/X02),"trained, MMASH + injected events",AVISH09/biotech,"done, CV'd"
+Camera pulse POS/CHROM + gate (C01/C05),classical DSP,-,UBFC check: Cell 23
+Face landmarks / blink / puffy proxy (C03/C02),pretrained: MediaPipe FaceLandmarker,face_landmarker.task,unvalidated
+Gesture (C04),pretrained: MediaPipe GestureRecognizer,gesture_recognizer.task,unvalidated; custom classes need team data
+Voice (A01),pretrained: wav2vec2-base-superb-er + prosody,superb/wav2vec2-base-superb-er,unvalidated
+Typing (A02),timing features vs own baseline,-,unvalidated
+NASA/CSA assistant,pretrained: all-MiniLM-L6-v2 retrieval,sentence-transformers/all-MiniLM-L6-v2,extractive only

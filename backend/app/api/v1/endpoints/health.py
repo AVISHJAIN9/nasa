@@ -65,6 +65,15 @@ async def health_check(
 
     uptime_seconds = int(time.time() - START_TIME)
 
+    # Reference API parity fields
+    active_sessions = 0
+    try:
+        from backend.app.services.ml_fusion_service import MODEL_B_CHANNELS, get_fusion_service
+        active_sessions = len(get_fusion_service()._sessions)
+        channels = MODEL_B_CHANNELS
+    except Exception:
+        channels = ["hr", "rmssd", "activity", "resp", "blink", "voice", "typing", "puff", "rppg_hr"]
+
     # Set response code based on connectivity
     if health_status != "healthy":
         response.status_code = status.HTTP_503_SERVICE_UNAVAILABLE
@@ -75,6 +84,9 @@ async def health_check(
         "uptime_seconds": uptime_seconds,
         "environment": settings.ENVIRONMENT,
         "version": "0.1.0",
+        "sessions": active_sessions,
+        "channels": channels,
+        "not_a_medical_device": True,
         "components": {
             "database": db_status,
             "redis": redis_status,

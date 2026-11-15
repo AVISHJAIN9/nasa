@@ -1,0 +1,129 @@
+{
+  "fusion": {
+    "model": {
+      "fa_per_day": 2.15,
+      "detect_rate": 0.787,
+      "median_delay_min": 51.5
+    },
+    "rolling_z": {
+      "fa_per_day": 1.74,
+      "detect_rate": 0.24,
+      "median_delay_min": 65.0
+    },
+    "fixed_threshold": {
+      "fa_per_day": 1.88,
+      "detect_rate": 0.529,
+      "median_delay_min": 51.5
+    }
+  },
+  "lead_min_model_vs_fixed": -3.0,
+  "lead_min_model_vs_rollingz": 15.0,
+  "conformal": {
+    "target_coverage": 0.9,
+    "coverage": 0.897,
+    "abstain": 0.042,
+    "abstain_on_corrupted": 0.0
+  },
+  "auroc_by_available_signals": {
+    "all": 0.85,
+    "hr": 0.623,
+    "rmssd": 0.666,
+    "activity": 0.712,
+    "hr+rmssd": 0.689
+  },
+  "fusion_note": "Injected deviations over real MMASH baselines (22 healthy people), leave-people-out CV. No real illness onsets.",
+  "camera_pulse_public_validation": {
+    "n_subjects": 5,
+    "pos_mae_bpm": 4.18,
+    "chrom_mae_bpm": 6.96,
+    "within_5bpm_pos": 4,
+    "within_5bpm_chrom": 3,
+    "gate_passed": 1,
+    "pos_mae_gate_passed": 0.9,
+    "method": "PyAV decode + OpenCV Haar face box + POS/CHROM, first 30 s, UBFC-rPPG subjects 1,3,4,5,8",
+    "note": "Small sample (5 subjects). Reliability gate rejected 4 of 5 windows; no accuracy claim beyond this sample."
+  },
+  "volunteer_effects": [
+    {
+      "person": "S_HP94",
+      "d_model": -9.88,
+      "d_meanz": -0.9,
+      "n_rested": 6,
+      "n_fatigued": 11,
+      "channels": "hr,rmssd"
+    },
+    {
+      "person": "S_JC95",
+      "d_model": -0.9,
+      "d_meanz": -0.7,
+      "n_rested": 4,
+      "n_fatigued": 35,
+      "channels": "hr,rmssd"
+    },
+    {
+      "person": "S_LE93",
+      "d_model": -6.52,
+      "d_meanz": -0.63,
+      "n_rested": 8,
+      "n_fatigued": 11,
+      "channels": "hr,rmssd"
+    },
+    {
+      "person": "S_MC91",
+      "d_model": -2.95,
+      "d_meanz": -0.29,
+      "n_rested": 10,
+      "n_fatigued": 11,
+      "channels": "hr,rmssd"
+    },
+    {
+      "person": "S_SF93",
+      "d_model": -1.19,
+      "d_meanz": -0.65,
+      "n_rested": 11,
+      "n_fatigued": 10,
+      "channels": "hr,rmssd"
+    }
+  ],
+  "gesture_trained": false,
+  "nasa_retrieval_index": {
+    "chunks": 220,
+    "files": [
+      "hrp_hazards.txt",
+      "hrp_overview.txt",
+      "hrp_risks.txt",
+      "nasa_red_risks_mars.txt"
+    ]
+  },
+  "api": {
+    "endpoints": [
+      "/health",
+      "/minute",
+      "/reset/{session}",
+      "/claims",
+      "/registry",
+      "/ask"
+    ],
+    "code": "https://huggingface.co/AVISH09/biotech/tree/main/api",
+    "demo_hosting": "temporary Cloudflare tunnel from a Kaggle session"
+  },
+  "not_a_medical_device": true,
+  "web_widget": "astrocare_widget.html",
+  "hosting_files": [
+    "Dockerfile",
+    "render.yaml",
+    "fly.toml"
+  ],
+  "website": "astrocare_site.html + AstroCareMonitor.jsx",
+  "volunteer_note": "Per-person effect sizes (Cohen d, sleep-deprived vs baseline) from the PUBLIC dataset Zenodo 4326598 (Bourdillon et al., CC BY 4.0; 5 people; hr and rmssd only; orthostatic-test RR intervals). NOT team volunteers. Voice, typing, blink, puffy-face remain unvalidated. RESULT: On the public sleep-deprivation dataset (5 usable people) the model score moved in the OPPOSITE direction to expected (lower, not higher, when deprived in 5 of 5 people), so NO detection of sleep-deprivation fatigue is claimed. Raw HR was higher in 3 of 5 people and RMSSD lower in 2 of 5. Confounds: morning orthostatic recordings mix supine/standing posture, only 3 deprivation days, baseline = first half of own rested minutes.",
+  "public_validation_source": "zenodo.org/records/4326598",
+  "public_sleepdep_result": {
+    "n_people": 5,
+    "model_lower_when_deprived": 5,
+    "model_higher_when_deprived": 0,
+    "hr_higher_when_deprived": 3,
+    "rmssd_lower_when_deprived": 2,
+    "n_raw": 5,
+    "statement": "On the public sleep-deprivation dataset (5 usable people) the model score moved in the OPPOSITE direction to expected (lower, not higher, when deprived in 5 of 5 people), so NO detection of sleep-deprivation fatigue is claimed. Raw HR was higher in 3 of 5 people and RMSSD lower in 2 of 5. Confounds: morning orthostatic recordings mix supine/standing posture, only 3 deprivation days, baseline = first half of own rested minutes."
+  }
+}

@@ -10,8 +10,13 @@ export default defineConfig({
       ignored: ['**/*.glb'],
     },
     proxy: {
-      // FastAPI / Python v3 Multimodal & Sensor stream paths
-      '^/api/v1/(audio|behavior|face-metrics|eye-metrics|gestures|motion|twin|panel|fed|mission|consent|sensors|passive|signals|readings|baseline-history|drift-watchdog|timescale-replay|v3-flags|security-events|ml-multimodal|gateway-service)': {
+      // FastAPI / Python ML Fusion, Sources, Multimodal & Sensor stream paths
+      '^/api/v1/(assess|space-weather|iss|sources|assistant|llm|minute|claims|registry|audio|behavior|face-metrics|eye-metrics|gestures|motion|twin|panel|fed|mission|consent|sensors|passive|signals|readings|baseline-history|drift-watchdog|timescale-replay|v3-flags|security-events|ml-multimodal|gateway-service)': {
+        target: 'http://localhost:8001',
+        changeOrigin: true,
+      },
+      // Root level ML endpoints directly proxied to FastAPI
+      '^/(assess|minute|claims|registry)': {
         target: 'http://localhost:8001',
         changeOrigin: true,
       },

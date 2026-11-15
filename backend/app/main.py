@@ -49,6 +49,14 @@ async def lifespan(app: FastAPI):
     except Exception as exc:
         logger.warning(f"Database not immediately reachable during startup: {exc}")
 
+    # Load ML Fusion Models (Model A & Model B) ONCE at startup (Phase 1)
+    try:
+        from backend.app.services.ml_fusion_service import get_fusion_service
+        get_fusion_service().load_models()
+        logger.info("ML Fusion models (Model A & Model B) initialized at startup.")
+    except Exception as exc:
+        logger.warning(f"ML Fusion models load deferred or failed during startup: {exc}")
+
     yield
 
     # Clean shutdown
@@ -94,6 +102,10 @@ def create_application() -> FastAPI:
 
     # Root Level System Endpoints (/health and /metrics)
     app.include_router(health_router)
+
+    # Root Level ML & Reference Endpoints (/assess, /minute, /claims, /registry, /ask)
+    from backend.app.api.v1.endpoints.assess import router as assess_router
+    app.include_router(assess_router)
 
     # Root Level WebSocket Broadcasts (/ws/telemetry and /ws/alerts)
     from backend.app.api.v1.endpoints.telemetry import telemetry_websocket_endpoint

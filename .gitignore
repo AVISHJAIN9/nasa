@@ -10,3 +10,6 @@ __pycache__/
 backend/.venv/
 venv/
 *.log
+.env
+*.env
+backend/.env
