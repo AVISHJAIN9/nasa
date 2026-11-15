@@ -1,0 +1,2400 @@
+[
+  {
+    "method": "POST",
+    "path": "/api/v1/audio/clip",
+    "summary": "Upload Audio Clip",
+    "tags": [
+      "voice"
+    ],
+    "parameters": [
+      {
+        "name": "crew_id",
+        "in": "query",
+        "required": true,
+        "schema": "string"
+      },
+      {
+        "name": "clip_id",
+        "in": "query",
+        "required": true,
+        "schema": "string"
+      },
+      {
+        "name": "task_type",
+        "in": "query",
+        "required": false,
+        "schema": "string"
+      },
+      {
+        "name": "content-type",
+        "in": "header",
+        "required": false,
+        "schema": "string"
+      }
+    ],
+    "request_schema_fields": [],
+    "response_schema_fields": [
+      "clip_id",
+      "crew_id",
+      "task_type",
+      "pitch",
+      "jitter",
+      "shimmer",
+      "rate",
+      "pauses",
+      "quality",
+      "cough_detected",
+      "model_version",
+      "status"
+    ],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/baselines/rebaseline",
+    "summary": "Create New Baseline Version",
+    "tags": [
+      "watchdog"
+    ],
+    "parameters": [],
+    "request_schema_fields": [
+      "crew_id",
+      "metric",
+      "baseline_value",
+      "confidence",
+      "reason"
+    ],
+    "response_schema_fields": [
+      "id",
+      "crew_id",
+      "version",
+      "metric",
+      "baseline_value",
+      "confidence",
+      "active",
+      "reason",
+      "created_at"
+    ],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/baselines/{baseline_id}/restore",
+    "summary": "Restore Old Baseline",
+    "tags": [
+      "watchdog"
+    ],
+    "parameters": [
+      {
+        "name": "baseline_id",
+        "in": "path",
+        "required": true,
+        "schema": "integer"
+      }
+    ],
+    "request_schema_fields": [],
+    "response_schema_fields": [
+      "id",
+      "crew_id",
+      "version",
+      "metric",
+      "baseline_value",
+      "confidence",
+      "active",
+      "reason",
+      "created_at"
+    ],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/baselines/{crew_id}/history",
+    "summary": "List Baselines History",
+    "tags": [
+      "watchdog"
+    ],
+    "parameters": [
+      {
+        "name": "crew_id",
+        "in": "path",
+        "required": true,
+        "schema": "string"
+      }
+    ],
+    "request_schema_fields": [],
+    "response_schema_fields": [],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/behavior/events",
+    "summary": "Ingest Behavior Events",
+    "tags": [
+      "behavior"
+    ],
+    "parameters": [],
+    "request_schema_fields": [],
+    "response_schema_fields": [],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/behavior/windows",
+    "summary": "Query Behavior Windows",
+    "tags": [
+      "behavior"
+    ],
+    "parameters": [
+      {
+        "name": "crew_id",
+        "in": "query",
+        "required": true,
+        "schema": "string"
+      },
+      {
+        "name": "from",
+        "in": "query",
+        "required": true,
+        "schema": "integer"
+      },
+      {
+        "name": "to",
+        "in": "query",
+        "required": true,
+        "schema": "integer"
+      }
+    ],
+    "request_schema_fields": [],
+    "response_schema_fields": [],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/consent",
+    "summary": "Submit Consent",
+    "tags": [
+      "consent"
+    ],
+    "parameters": [],
+    "request_schema_fields": [
+      "crew_id",
+      "sensor",
+      "granted",
+      "consent_version"
+    ],
+    "response_schema_fields": [],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/consent/bump-version",
+    "summary": "Bump Consent Version",
+    "tags": [
+      "consent"
+    ],
+    "parameters": [
+      {
+        "name": "new_version",
+        "in": "query",
+        "required": true,
+        "schema": "integer"
+      }
+    ],
+    "request_schema_fields": [],
+    "response_schema_fields": [],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/eye-metrics",
+    "summary": "Query Eye Metrics Endpoint",
+    "tags": [
+      "eye_metrics"
+    ],
+    "parameters": [
+      {
+        "name": "crew_id",
+        "in": "query",
+        "required": true,
+        "schema": "string"
+      },
+      {
+        "name": "metric",
+        "in": "query",
+        "required": false,
+        "schema": null
+      },
+      {
+        "name": "from",
+        "in": "query",
+        "required": false,
+        "schema": null
+      },
+      {
+        "name": "to",
+        "in": "query",
+        "required": false,
+        "schema": null
+      }
+    ],
+    "request_schema_fields": [],
+    "response_schema_fields": [],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/eye-metrics",
+    "summary": "Ingest Eye Metric Endpoint",
+    "tags": [
+      "eye_metrics"
+    ],
+    "parameters": [],
+    "request_schema_fields": [
+      "reading_id",
+      "crew_id",
+      "metric",
+      "value",
+      "unit",
+      "ts",
+      "quality",
+      "provenance"
+    ],
+    "response_schema_fields": [
+      "reading_id",
+      "crew_id",
+      "metric",
+      "value",
+      "unit",
+      "ts",
+      "quality",
+      "provenance",
+      "status",
+      "proxy_notice"
+    ],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/face-metrics",
+    "summary": "Query Face Metrics Endpoint",
+    "tags": [
+      "face_metrics"
+    ],
+    "parameters": [
+      {
+        "name": "crew_id",
+        "in": "query",
+        "required": true,
+        "schema": "string"
+      },
+      {
+        "name": "from",
+        "in": "query",
+        "required": false,
+        "schema": null
+      },
+      {
+        "name": "to",
+        "in": "query",
+        "required": false,
+        "schema": null
+      }
+    ],
+    "request_schema_fields": [],
+    "response_schema_fields": [],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/face-metrics",
+    "summary": "Ingest Face Metric Endpoint",
+    "tags": [
+      "face_metrics"
+    ],
+    "parameters": [],
+    "request_schema_fields": [
+      "crew_id",
+      "date",
+      "metric",
+      "value",
+      "landmark_quality",
+      "provenance"
+    ],
+    "response_schema_fields": [
+      "crew_id",
+      "date",
+      "metric",
+      "value",
+      "landmark_quality",
+      "provenance",
+      "status",
+      "note"
+    ],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/fed/global",
+    "summary": "Get Global Weights Endpoint",
+    "tags": [
+      "federated_learning"
+    ],
+    "parameters": [],
+    "request_schema_fields": [],
+    "response_schema_fields": [
+      "round_id",
+      "global_weights",
+      "model_version",
+      "prototype",
+      "note"
+    ],
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/fed/rounds",
+    "summary": "Start Round Endpoint",
+    "tags": [
+      "federated_learning"
+    ],
+    "parameters": [],
+    "request_schema_fields": [
+      "round_id"
+    ],
+    "response_schema_fields": [],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/fed/update",
+    "summary": "Submit Update Endpoint",
+    "tags": [
+      "federated_learning"
+    ],
+    "parameters": [
+      {
+        "name": "X-Fed-Client-Token",
+        "in": "header",
+        "required": true,
+        "schema": "string"
+      }
+    ],
+    "request_schema_fields": [
+      "client_id",
+      "n_samples",
+      "weights"
+    ],
+    "response_schema_fields": [],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/flags",
+    "summary": "List all feature flags",
+    "tags": [
+      "Feature Flags"
+    ],
+    "parameters": [],
+    "request_schema_fields": [],
+    "response_schema_fields": [],
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/flags/{name}",
+    "summary": "Get single flag status",
+    "tags": [
+      "Feature Flags"
+    ],
+    "parameters": [
+      {
+        "name": "name",
+        "in": "path",
+        "required": true,
+        "schema": "string"
+      }
+    ],
+    "request_schema_fields": [],
+    "response_schema_fields": [
+      "name",
+      "is_enabled",
+      "description",
+      "id",
+      "updated_at",
+      "updated_by"
+    ],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "PATCH",
+    "path": "/api/v1/flags/{name}",
+    "summary": "Toggle feature flag state",
+    "tags": [
+      "Feature Flags"
+    ],
+    "parameters": [
+      {
+        "name": "name",
+        "in": "path",
+        "required": true,
+        "schema": "string"
+      }
+    ],
+    "request_schema_fields": [
+      "is_enabled",
+      "updated_by"
+    ],
+    "response_schema_fields": [
+      "name",
+      "is_enabled",
+      "description",
+      "id",
+      "updated_at",
+      "updated_by"
+    ],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/gateway/info",
+    "summary": "Gateway metadata and contracts",
+    "tags": [
+      "Gateway & Contracts"
+    ],
+    "parameters": [],
+    "request_schema_fields": [],
+    "response_schema_fields": [
+      "project_name",
+      "api_version",
+      "environment",
+      "docs_url",
+      "openapi_url",
+      "contracts_file",
+      "supported_error_codes"
+    ],
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/gateway/test-error/{code}",
+    "summary": "Trigger standard error for contract verification",
+    "tags": [
+      "Gateway & Contracts"
+    ],
+    "parameters": [
+      {
+        "name": "code",
+        "in": "path",
+        "required": true,
+        "schema": "string"
+      }
+    ],
+    "request_schema_fields": [],
+    "response_schema_fields": [],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/gateway/test-validation",
+    "summary": "Trigger validation error for schema verification",
+    "tags": [
+      "Gateway & Contracts"
+    ],
+    "parameters": [],
+    "request_schema_fields": [
+      "age",
+      "crew_id"
+    ],
+    "response_schema_fields": [],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/gestures",
+    "summary": "Map And Log Gesture Endpoint",
+    "tags": [
+      "gestures"
+    ],
+    "parameters": [],
+    "request_schema_fields": [
+      "crew_id",
+      "gesture",
+      "confidence",
+      "ts"
+    ],
+    "response_schema_fields": [
+      "crew_id",
+      "gesture",
+      "confidence",
+      "resolved_action",
+      "action_permitted",
+      "status",
+      "note"
+    ],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/gestures/log",
+    "summary": "List Gesture Logs Endpoint",
+    "tags": [
+      "gestures"
+    ],
+    "parameters": [
+      {
+        "name": "crew_id",
+        "in": "query",
+        "required": true,
+        "schema": "string"
+      }
+    ],
+    "request_schema_fields": [],
+    "response_schema_fields": [],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/health",
+    "summary": "System Health & Dependency Check",
+    "tags": [
+      "System"
+    ],
+    "parameters": [],
+    "request_schema_fields": [],
+    "response_schema_fields": [],
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/metrics",
+    "summary": "Prometheus Metrics",
+    "tags": [
+      "System"
+    ],
+    "parameters": [],
+    "request_schema_fields": [],
+    "response_schema_fields": [],
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/mission/phase",
+    "summary": "Get Mission Phase Endpoint",
+    "tags": [
+      "mission_phase"
+    ],
+    "parameters": [],
+    "request_schema_fields": [],
+    "response_schema_fields": [],
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "method": "PUT",
+    "path": "/api/v1/mission/phase",
+    "summary": "Update Mission Phase Endpoint",
+    "tags": [
+      "mission_phase"
+    ],
+    "parameters": [],
+    "request_schema_fields": [
+      "phase"
+    ],
+    "response_schema_fields": [],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/mission/thresholds",
+    "summary": "Get Resolved Thresholds Endpoint",
+    "tags": [
+      "mission_phase"
+    ],
+    "parameters": [
+      {
+        "name": "crew_id",
+        "in": "query",
+        "required": true,
+        "schema": "string"
+      },
+      {
+        "name": "metric",
+        "in": "query",
+        "required": true,
+        "schema": "string"
+      },
+      {
+        "name": "phase",
+        "in": "query",
+        "required": false,
+        "schema": null
+      }
+    ],
+    "request_schema_fields": [],
+    "response_schema_fields": [
+      "metric",
+      "phase",
+      "low",
+      "high",
+      "unit",
+      "citation",
+      "phase_specific",
+      "note"
+    ],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/mission/thresholds",
+    "summary": "Add Phase Threshold Endpoint",
+    "tags": [
+      "mission_phase"
+    ],
+    "parameters": [],
+    "request_schema_fields": [
+      "phase",
+      "metric",
+      "low",
+      "high",
+      "unit",
+      "citation"
+    ],
+    "response_schema_fields": [],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/ml/predict-mock",
+    "summary": "Guarded ML endpoint",
+    "tags": [
+      "Machine Learning"
+    ],
+    "parameters": [],
+    "request_schema_fields": [],
+    "response_schema_fields": [],
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/ml/status",
+    "summary": "Check ML engine operational mode",
+    "tags": [
+      "Machine Learning"
+    ],
+    "parameters": [],
+    "request_schema_fields": [],
+    "response_schema_fields": [],
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/motion",
+    "summary": "Ingest Motion Reading Endpoint",
+    "tags": [
+      "motion"
+    ],
+    "parameters": [],
+    "request_schema_fields": [
+      "crew_id",
+      "ts",
+      "movement_magnitude_mean",
+      "movement_magnitude_std",
+      "stillness_flag",
+      "provenance"
+    ],
+    "response_schema_fields": [],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/motion/night-summary",
+    "summary": "Query Motion Night Summary Endpoint",
+    "tags": [
+      "motion"
+    ],
+    "parameters": [
+      {
+        "name": "crew_id",
+        "in": "query",
+        "required": true,
+        "schema": "string"
+      },
+      {
+        "name": "date",
+        "in": "query",
+        "required": true,
+        "schema": "string"
+      }
+    ],
+    "request_schema_fields": [],
+    "response_schema_fields": [
+      "crew_id",
+      "date",
+      "sleep_window_estimate",
+      "restlessness_index",
+      "n_movements",
+      "quality",
+      "provenance",
+      "is_estimate",
+      "note"
+    ],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/panel/consult",
+    "summary": "Consult Panel Endpoint",
+    "tags": [
+      "specialist_panel"
+    ],
+    "parameters": [],
+    "request_schema_fields": [
+      "consultation_id",
+      "question",
+      "context"
+    ],
+    "response_schema_fields": [
+      "consultation_id",
+      "question",
+      "votes",
+      "disagreement",
+      "prototype",
+      "model_version",
+      "note"
+    ],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/passive/metrics",
+    "summary": "Query Passive Metrics",
+    "tags": [
+      "consent"
+    ],
+    "parameters": [],
+    "request_schema_fields": [],
+    "response_schema_fields": [
+      "passive_signals_share",
+      "time_to_first_estimate",
+      "total_passive_signals",
+      "active_signals",
+      "passive_signals"
+    ],
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/readings/quality-summary",
+    "summary": "Query Quality Summary",
+    "tags": [
+      "telemetry"
+    ],
+    "parameters": [
+      {
+        "name": "crew_id",
+        "in": "query",
+        "required": true,
+        "schema": "string"
+      },
+      {
+        "name": "window",
+        "in": "query",
+        "required": false,
+        "schema": "string"
+      }
+    ],
+    "request_schema_fields": [],
+    "response_schema_fields": [
+      "crew_id",
+      "window",
+      "total_count",
+      "mean_quality",
+      "excluded_count",
+      "percent_excluded"
+    ],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/replay/pause",
+    "summary": "Pause Replay Endpoint",
+    "tags": [
+      "telemetry_replay"
+    ],
+    "parameters": [],
+    "request_schema_fields": [],
+    "response_schema_fields": [],
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/replay/resume",
+    "summary": "Resume Replay Endpoint",
+    "tags": [
+      "telemetry_replay"
+    ],
+    "parameters": [],
+    "request_schema_fields": [],
+    "response_schema_fields": [],
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/replay/seek",
+    "summary": "Seek Replay Endpoint",
+    "tags": [
+      "telemetry_replay"
+    ],
+    "parameters": [],
+    "request_schema_fields": [
+      "position_seconds"
+    ],
+    "response_schema_fields": [],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/replay/start",
+    "summary": "Start Replay Endpoint",
+    "tags": [
+      "telemetry_replay"
+    ],
+    "parameters": [],
+    "request_schema_fields": [
+      "dataset_id",
+      "speed",
+      "crew_mapping"
+    ],
+    "response_schema_fields": [
+      "dataset_id",
+      "status",
+      "speed",
+      "provenance",
+      "prototype",
+      "note"
+    ],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/replay/stop",
+    "summary": "Stop Replay Endpoint",
+    "tags": [
+      "telemetry_replay"
+    ],
+    "parameters": [],
+    "request_schema_fields": [],
+    "response_schema_fields": [],
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/security/decrypt",
+    "summary": "Decrypt sensitive field",
+    "tags": [
+      "Security & Encryption"
+    ],
+    "parameters": [],
+    "request_schema_fields": [
+      "ciphertext"
+    ],
+    "response_schema_fields": [
+      "plaintext",
+      "algorithm"
+    ],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/security/encrypt",
+    "summary": "Encrypt sensitive field (AES-256-GCM)",
+    "tags": [
+      "Security & Encryption"
+    ],
+    "parameters": [],
+    "request_schema_fields": [
+      "plaintext"
+    ],
+    "response_schema_fields": [
+      "ciphertext",
+      "algorithm"
+    ],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/security/scan",
+    "summary": "Scan repo for accidental secrets (F135)",
+    "tags": [
+      "Security & Encryption"
+    ],
+    "parameters": [],
+    "request_schema_fields": [],
+    "response_schema_fields": [
+      "files_scanned",
+      "findings_count",
+      "findings",
+      "clean"
+    ],
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/sensors/state",
+    "summary": "Query Sensor State",
+    "tags": [
+      "consent"
+    ],
+    "parameters": [
+      {
+        "name": "crew_id",
+        "in": "query",
+        "required": true,
+        "schema": "string"
+      }
+    ],
+    "request_schema_fields": [],
+    "response_schema_fields": [
+      "crew_id",
+      "sensors"
+    ],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/telemetry",
+    "summary": "Ingest Telemetry",
+    "tags": [
+      "telemetry"
+    ],
+    "parameters": [],
+    "request_schema_fields": [],
+    "response_schema_fields": [],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/twin/simulate",
+    "summary": "Simulate Digital Twin Endpoint",
+    "tags": [
+      "digital_twin"
+    ],
+    "parameters": [],
+    "request_schema_fields": [
+      "crew_id",
+      "horizon_days",
+      "action"
+    ],
+    "response_schema_fields": [
+      "crew_id",
+      "action",
+      "trajectories",
+      "prototype",
+      "model_version",
+      "note"
+    ],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/api/v1/watchdog/events",
+    "summary": "Submit Watchdog Drift Event",
+    "tags": [
+      "watchdog"
+    ],
+    "parameters": [],
+    "request_schema_fields": [
+      "crew_id",
+      "metric",
+      "statistic",
+      "ts"
+    ],
+    "response_schema_fields": [
+      "crew_id",
+      "metric",
+      "degraded",
+      "fallback_mode",
+      "banner_message",
+      "active_baseline"
+    ],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/api/v1/watchdog/status",
+    "summary": "Query Watchdog Status",
+    "tags": [
+      "watchdog"
+    ],
+    "parameters": [
+      {
+        "name": "crew_id",
+        "in": "query",
+        "required": true,
+        "schema": "string"
+      },
+      {
+        "name": "metric",
+        "in": "query",
+        "required": true,
+        "schema": "string"
+      }
+    ],
+    "request_schema_fields": [],
+    "response_schema_fields": [
+      "crew_id",
+      "metric",
+      "degraded",
+      "fallback_mode",
+      "banner_message",
+      "active_baseline"
+    ],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/health",
+    "summary": "System Health & Dependency Check",
+    "tags": [
+      "System"
+    ],
+    "parameters": [],
+    "request_schema_fields": [],
+    "response_schema_fields": [],
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/metrics",
+    "summary": "Prometheus Metrics",
+    "tags": [
+      "System"
+    ],
+    "parameters": [],
+    "request_schema_fields": [],
+    "response_schema_fields": [],
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/v1/audio/clip",
+    "summary": "Upload Audio Clip",
+    "tags": [
+      "voice"
+    ],
+    "parameters": [
+      {
+        "name": "crew_id",
+        "in": "query",
+        "required": true,
+        "schema": "string"
+      },
+      {
+        "name": "clip_id",
+        "in": "query",
+        "required": true,
+        "schema": "string"
+      },
+      {
+        "name": "task_type",
+        "in": "query",
+        "required": false,
+        "schema": "string"
+      },
+      {
+        "name": "content-type",
+        "in": "header",
+        "required": false,
+        "schema": "string"
+      }
+    ],
+    "request_schema_fields": [],
+    "response_schema_fields": [
+      "clip_id",
+      "crew_id",
+      "task_type",
+      "pitch",
+      "jitter",
+      "shimmer",
+      "rate",
+      "pauses",
+      "quality",
+      "cough_detected",
+      "model_version",
+      "status"
+    ],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/v1/baselines/rebaseline",
+    "summary": "Create New Baseline Version",
+    "tags": [
+      "watchdog"
+    ],
+    "parameters": [],
+    "request_schema_fields": [
+      "crew_id",
+      "metric",
+      "baseline_value",
+      "confidence",
+      "reason"
+    ],
+    "response_schema_fields": [
+      "id",
+      "crew_id",
+      "version",
+      "metric",
+      "baseline_value",
+      "confidence",
+      "active",
+      "reason",
+      "created_at"
+    ],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/v1/baselines/{baseline_id}/restore",
+    "summary": "Restore Old Baseline",
+    "tags": [
+      "watchdog"
+    ],
+    "parameters": [
+      {
+        "name": "baseline_id",
+        "in": "path",
+        "required": true,
+        "schema": "integer"
+      }
+    ],
+    "request_schema_fields": [],
+    "response_schema_fields": [
+      "id",
+      "crew_id",
+      "version",
+      "metric",
+      "baseline_value",
+      "confidence",
+      "active",
+      "reason",
+      "created_at"
+    ],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/v1/baselines/{crew_id}/history",
+    "summary": "List Baselines History",
+    "tags": [
+      "watchdog"
+    ],
+    "parameters": [
+      {
+        "name": "crew_id",
+        "in": "path",
+        "required": true,
+        "schema": "string"
+      }
+    ],
+    "request_schema_fields": [],
+    "response_schema_fields": [],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/v1/behavior/events",
+    "summary": "Ingest Behavior Events",
+    "tags": [
+      "behavior"
+    ],
+    "parameters": [],
+    "request_schema_fields": [],
+    "response_schema_fields": [],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/v1/behavior/windows",
+    "summary": "Query Behavior Windows",
+    "tags": [
+      "behavior"
+    ],
+    "parameters": [
+      {
+        "name": "crew_id",
+        "in": "query",
+        "required": true,
+        "schema": "string"
+      },
+      {
+        "name": "from",
+        "in": "query",
+        "required": true,
+        "schema": "integer"
+      },
+      {
+        "name": "to",
+        "in": "query",
+        "required": true,
+        "schema": "integer"
+      }
+    ],
+    "request_schema_fields": [],
+    "response_schema_fields": [],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/v1/consent",
+    "summary": "Submit Consent",
+    "tags": [
+      "consent"
+    ],
+    "parameters": [],
+    "request_schema_fields": [
+      "crew_id",
+      "sensor",
+      "granted",
+      "consent_version"
+    ],
+    "response_schema_fields": [],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/v1/consent/bump-version",
+    "summary": "Bump Consent Version",
+    "tags": [
+      "consent"
+    ],
+    "parameters": [
+      {
+        "name": "new_version",
+        "in": "query",
+        "required": true,
+        "schema": "integer"
+      }
+    ],
+    "request_schema_fields": [],
+    "response_schema_fields": [],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/v1/eye-metrics",
+    "summary": "Query Eye Metrics Endpoint",
+    "tags": [
+      "eye_metrics"
+    ],
+    "parameters": [
+      {
+        "name": "crew_id",
+        "in": "query",
+        "required": true,
+        "schema": "string"
+      },
+      {
+        "name": "metric",
+        "in": "query",
+        "required": false,
+        "schema": null
+      },
+      {
+        "name": "from",
+        "in": "query",
+        "required": false,
+        "schema": null
+      },
+      {
+        "name": "to",
+        "in": "query",
+        "required": false,
+        "schema": null
+      }
+    ],
+    "request_schema_fields": [],
+    "response_schema_fields": [],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/v1/eye-metrics",
+    "summary": "Ingest Eye Metric Endpoint",
+    "tags": [
+      "eye_metrics"
+    ],
+    "parameters": [],
+    "request_schema_fields": [
+      "reading_id",
+      "crew_id",
+      "metric",
+      "value",
+      "unit",
+      "ts",
+      "quality",
+      "provenance"
+    ],
+    "response_schema_fields": [
+      "reading_id",
+      "crew_id",
+      "metric",
+      "value",
+      "unit",
+      "ts",
+      "quality",
+      "provenance",
+      "status",
+      "proxy_notice"
+    ],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/v1/face-metrics",
+    "summary": "Query Face Metrics Endpoint",
+    "tags": [
+      "face_metrics"
+    ],
+    "parameters": [
+      {
+        "name": "crew_id",
+        "in": "query",
+        "required": true,
+        "schema": "string"
+      },
+      {
+        "name": "from",
+        "in": "query",
+        "required": false,
+        "schema": null
+      },
+      {
+        "name": "to",
+        "in": "query",
+        "required": false,
+        "schema": null
+      }
+    ],
+    "request_schema_fields": [],
+    "response_schema_fields": [],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/v1/face-metrics",
+    "summary": "Ingest Face Metric Endpoint",
+    "tags": [
+      "face_metrics"
+    ],
+    "parameters": [],
+    "request_schema_fields": [
+      "crew_id",
+      "date",
+      "metric",
+      "value",
+      "landmark_quality",
+      "provenance"
+    ],
+    "response_schema_fields": [
+      "crew_id",
+      "date",
+      "metric",
+      "value",
+      "landmark_quality",
+      "provenance",
+      "status",
+      "note"
+    ],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/v1/fed/global",
+    "summary": "Get Global Weights Endpoint",
+    "tags": [
+      "federated_learning"
+    ],
+    "parameters": [],
+    "request_schema_fields": [],
+    "response_schema_fields": [
+      "round_id",
+      "global_weights",
+      "model_version",
+      "prototype",
+      "note"
+    ],
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/v1/fed/rounds",
+    "summary": "Start Round Endpoint",
+    "tags": [
+      "federated_learning"
+    ],
+    "parameters": [],
+    "request_schema_fields": [
+      "round_id"
+    ],
+    "response_schema_fields": [],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/v1/fed/update",
+    "summary": "Submit Update Endpoint",
+    "tags": [
+      "federated_learning"
+    ],
+    "parameters": [
+      {
+        "name": "X-Fed-Client-Token",
+        "in": "header",
+        "required": true,
+        "schema": "string"
+      }
+    ],
+    "request_schema_fields": [
+      "client_id",
+      "n_samples",
+      "weights"
+    ],
+    "response_schema_fields": [],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/v1/flags",
+    "summary": "List all feature flags",
+    "tags": [
+      "Feature Flags"
+    ],
+    "parameters": [],
+    "request_schema_fields": [],
+    "response_schema_fields": [],
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/v1/flags/{name}",
+    "summary": "Get single flag status",
+    "tags": [
+      "Feature Flags"
+    ],
+    "parameters": [
+      {
+        "name": "name",
+        "in": "path",
+        "required": true,
+        "schema": "string"
+      }
+    ],
+    "request_schema_fields": [],
+    "response_schema_fields": [
+      "name",
+      "is_enabled",
+      "description",
+      "id",
+      "updated_at",
+      "updated_by"
+    ],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "PATCH",
+    "path": "/v1/flags/{name}",
+    "summary": "Toggle feature flag state",
+    "tags": [
+      "Feature Flags"
+    ],
+    "parameters": [
+      {
+        "name": "name",
+        "in": "path",
+        "required": true,
+        "schema": "string"
+      }
+    ],
+    "request_schema_fields": [
+      "is_enabled",
+      "updated_by"
+    ],
+    "response_schema_fields": [
+      "name",
+      "is_enabled",
+      "description",
+      "id",
+      "updated_at",
+      "updated_by"
+    ],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/v1/gateway/info",
+    "summary": "Gateway metadata and contracts",
+    "tags": [
+      "Gateway & Contracts"
+    ],
+    "parameters": [],
+    "request_schema_fields": [],
+    "response_schema_fields": [
+      "project_name",
+      "api_version",
+      "environment",
+      "docs_url",
+      "openapi_url",
+      "contracts_file",
+      "supported_error_codes"
+    ],
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/v1/gateway/test-error/{code}",
+    "summary": "Trigger standard error for contract verification",
+    "tags": [
+      "Gateway & Contracts"
+    ],
+    "parameters": [
+      {
+        "name": "code",
+        "in": "path",
+        "required": true,
+        "schema": "string"
+      }
+    ],
+    "request_schema_fields": [],
+    "response_schema_fields": [],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/v1/gateway/test-validation",
+    "summary": "Trigger validation error for schema verification",
+    "tags": [
+      "Gateway & Contracts"
+    ],
+    "parameters": [],
+    "request_schema_fields": [
+      "age",
+      "crew_id"
+    ],
+    "response_schema_fields": [],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/v1/gestures",
+    "summary": "Map And Log Gesture Endpoint",
+    "tags": [
+      "gestures"
+    ],
+    "parameters": [],
+    "request_schema_fields": [
+      "crew_id",
+      "gesture",
+      "confidence",
+      "ts"
+    ],
+    "response_schema_fields": [
+      "crew_id",
+      "gesture",
+      "confidence",
+      "resolved_action",
+      "action_permitted",
+      "status",
+      "note"
+    ],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/v1/gestures/log",
+    "summary": "List Gesture Logs Endpoint",
+    "tags": [
+      "gestures"
+    ],
+    "parameters": [
+      {
+        "name": "crew_id",
+        "in": "query",
+        "required": true,
+        "schema": "string"
+      }
+    ],
+    "request_schema_fields": [],
+    "response_schema_fields": [],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/v1/health",
+    "summary": "System Health & Dependency Check",
+    "tags": [
+      "System"
+    ],
+    "parameters": [],
+    "request_schema_fields": [],
+    "response_schema_fields": [],
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/v1/metrics",
+    "summary": "Prometheus Metrics",
+    "tags": [
+      "System"
+    ],
+    "parameters": [],
+    "request_schema_fields": [],
+    "response_schema_fields": [],
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/v1/mission/phase",
+    "summary": "Get Mission Phase Endpoint",
+    "tags": [
+      "mission_phase"
+    ],
+    "parameters": [],
+    "request_schema_fields": [],
+    "response_schema_fields": [],
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "method": "PUT",
+    "path": "/v1/mission/phase",
+    "summary": "Update Mission Phase Endpoint",
+    "tags": [
+      "mission_phase"
+    ],
+    "parameters": [],
+    "request_schema_fields": [
+      "phase"
+    ],
+    "response_schema_fields": [],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/v1/mission/thresholds",
+    "summary": "Get Resolved Thresholds Endpoint",
+    "tags": [
+      "mission_phase"
+    ],
+    "parameters": [
+      {
+        "name": "crew_id",
+        "in": "query",
+        "required": true,
+        "schema": "string"
+      },
+      {
+        "name": "metric",
+        "in": "query",
+        "required": true,
+        "schema": "string"
+      },
+      {
+        "name": "phase",
+        "in": "query",
+        "required": false,
+        "schema": null
+      }
+    ],
+    "request_schema_fields": [],
+    "response_schema_fields": [
+      "metric",
+      "phase",
+      "low",
+      "high",
+      "unit",
+      "citation",
+      "phase_specific",
+      "note"
+    ],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/v1/mission/thresholds",
+    "summary": "Add Phase Threshold Endpoint",
+    "tags": [
+      "mission_phase"
+    ],
+    "parameters": [],
+    "request_schema_fields": [
+      "phase",
+      "metric",
+      "low",
+      "high",
+      "unit",
+      "citation"
+    ],
+    "response_schema_fields": [],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/v1/ml/predict-mock",
+    "summary": "Guarded ML endpoint",
+    "tags": [
+      "Machine Learning"
+    ],
+    "parameters": [],
+    "request_schema_fields": [],
+    "response_schema_fields": [],
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/v1/ml/status",
+    "summary": "Check ML engine operational mode",
+    "tags": [
+      "Machine Learning"
+    ],
+    "parameters": [],
+    "request_schema_fields": [],
+    "response_schema_fields": [],
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/v1/motion",
+    "summary": "Ingest Motion Reading Endpoint",
+    "tags": [
+      "motion"
+    ],
+    "parameters": [],
+    "request_schema_fields": [
+      "crew_id",
+      "ts",
+      "movement_magnitude_mean",
+      "movement_magnitude_std",
+      "stillness_flag",
+      "provenance"
+    ],
+    "response_schema_fields": [],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/v1/motion/night-summary",
+    "summary": "Query Motion Night Summary Endpoint",
+    "tags": [
+      "motion"
+    ],
+    "parameters": [
+      {
+        "name": "crew_id",
+        "in": "query",
+        "required": true,
+        "schema": "string"
+      },
+      {
+        "name": "date",
+        "in": "query",
+        "required": true,
+        "schema": "string"
+      }
+    ],
+    "request_schema_fields": [],
+    "response_schema_fields": [
+      "crew_id",
+      "date",
+      "sleep_window_estimate",
+      "restlessness_index",
+      "n_movements",
+      "quality",
+      "provenance",
+      "is_estimate",
+      "note"
+    ],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/v1/panel/consult",
+    "summary": "Consult Panel Endpoint",
+    "tags": [
+      "specialist_panel"
+    ],
+    "parameters": [],
+    "request_schema_fields": [
+      "consultation_id",
+      "question",
+      "context"
+    ],
+    "response_schema_fields": [
+      "consultation_id",
+      "question",
+      "votes",
+      "disagreement",
+      "prototype",
+      "model_version",
+      "note"
+    ],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/v1/passive/metrics",
+    "summary": "Query Passive Metrics",
+    "tags": [
+      "consent"
+    ],
+    "parameters": [],
+    "request_schema_fields": [],
+    "response_schema_fields": [
+      "passive_signals_share",
+      "time_to_first_estimate",
+      "total_passive_signals",
+      "active_signals",
+      "passive_signals"
+    ],
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/v1/readings/quality-summary",
+    "summary": "Query Quality Summary",
+    "tags": [
+      "telemetry"
+    ],
+    "parameters": [
+      {
+        "name": "crew_id",
+        "in": "query",
+        "required": true,
+        "schema": "string"
+      },
+      {
+        "name": "window",
+        "in": "query",
+        "required": false,
+        "schema": "string"
+      }
+    ],
+    "request_schema_fields": [],
+    "response_schema_fields": [
+      "crew_id",
+      "window",
+      "total_count",
+      "mean_quality",
+      "excluded_count",
+      "percent_excluded"
+    ],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/v1/replay/pause",
+    "summary": "Pause Replay Endpoint",
+    "tags": [
+      "telemetry_replay"
+    ],
+    "parameters": [],
+    "request_schema_fields": [],
+    "response_schema_fields": [],
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/v1/replay/resume",
+    "summary": "Resume Replay Endpoint",
+    "tags": [
+      "telemetry_replay"
+    ],
+    "parameters": [],
+    "request_schema_fields": [],
+    "response_schema_fields": [],
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/v1/replay/seek",
+    "summary": "Seek Replay Endpoint",
+    "tags": [
+      "telemetry_replay"
+    ],
+    "parameters": [],
+    "request_schema_fields": [
+      "position_seconds"
+    ],
+    "response_schema_fields": [],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/v1/replay/start",
+    "summary": "Start Replay Endpoint",
+    "tags": [
+      "telemetry_replay"
+    ],
+    "parameters": [],
+    "request_schema_fields": [
+      "dataset_id",
+      "speed",
+      "crew_mapping"
+    ],
+    "response_schema_fields": [
+      "dataset_id",
+      "status",
+      "speed",
+      "provenance",
+      "prototype",
+      "note"
+    ],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/v1/replay/stop",
+    "summary": "Stop Replay Endpoint",
+    "tags": [
+      "telemetry_replay"
+    ],
+    "parameters": [],
+    "request_schema_fields": [],
+    "response_schema_fields": [],
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/v1/security/decrypt",
+    "summary": "Decrypt sensitive field",
+    "tags": [
+      "Security & Encryption"
+    ],
+    "parameters": [],
+    "request_schema_fields": [
+      "ciphertext"
+    ],
+    "response_schema_fields": [
+      "plaintext",
+      "algorithm"
+    ],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/v1/security/encrypt",
+    "summary": "Encrypt sensitive field (AES-256-GCM)",
+    "tags": [
+      "Security & Encryption"
+    ],
+    "parameters": [],
+    "request_schema_fields": [
+      "plaintext"
+    ],
+    "response_schema_fields": [
+      "ciphertext",
+      "algorithm"
+    ],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/v1/security/scan",
+    "summary": "Scan repo for accidental secrets (F135)",
+    "tags": [
+      "Security & Encryption"
+    ],
+    "parameters": [],
+    "request_schema_fields": [],
+    "response_schema_fields": [
+      "files_scanned",
+      "findings_count",
+      "findings",
+      "clean"
+    ],
+    "responses": [
+      "200"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/v1/sensors/state",
+    "summary": "Query Sensor State",
+    "tags": [
+      "consent"
+    ],
+    "parameters": [
+      {
+        "name": "crew_id",
+        "in": "query",
+        "required": true,
+        "schema": "string"
+      }
+    ],
+    "request_schema_fields": [],
+    "response_schema_fields": [
+      "crew_id",
+      "sensors"
+    ],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/v1/telemetry",
+    "summary": "Ingest Telemetry",
+    "tags": [
+      "telemetry"
+    ],
+    "parameters": [],
+    "request_schema_fields": [],
+    "response_schema_fields": [],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/v1/twin/simulate",
+    "summary": "Simulate Digital Twin Endpoint",
+    "tags": [
+      "digital_twin"
+    ],
+    "parameters": [],
+    "request_schema_fields": [
+      "crew_id",
+      "horizon_days",
+      "action"
+    ],
+    "response_schema_fields": [
+      "crew_id",
+      "action",
+      "trajectories",
+      "prototype",
+      "model_version",
+      "note"
+    ],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "POST",
+    "path": "/v1/watchdog/events",
+    "summary": "Submit Watchdog Drift Event",
+    "tags": [
+      "watchdog"
+    ],
+    "parameters": [],
+    "request_schema_fields": [
+      "crew_id",
+      "metric",
+      "statistic",
+      "ts"
+    ],
+    "response_schema_fields": [
+      "crew_id",
+      "metric",
+      "degraded",
+      "fallback_mode",
+      "banner_message",
+      "active_baseline"
+    ],
+    "responses": [
+      "200",
+      "422"
+    ]
+  },
+  {
+    "method": "GET",
+    "path": "/v1/watchdog/status",
+    "summary": "Query Watchdog Status",
+    "tags": [
+      "watchdog"
+    ],
+    "parameters": [
+      {
+        "name": "crew_id",
+        "in": "query",
+        "required": true,
+        "schema": "string"
+      },
+      {
+        "name": "metric",
+        "in": "query",
+        "required": true,
+        "schema": "string"
+      }
+    ],
+    "request_schema_fields": [],
+    "response_schema_fields": [
+      "crew_id",
+      "metric",
+      "degraded",
+      "fallback_mode",
+      "banner_message",
+      "active_baseline"
+    ],
+    "responses": [
+      "200",
+      "422"
+    ]
+  }
+]

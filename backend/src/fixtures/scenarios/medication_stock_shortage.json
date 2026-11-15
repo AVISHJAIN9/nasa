@@ -1,0 +1,28 @@
+{
+  "scenario_id": "SCENARIO_MED_SHORTAGE",
+  "title": "Emergency Countermeasure Inventory Depletion",
+  "category": "SUPPLIES",
+  "severity": "WARNING",
+  "description": "Onboard critical medical supplies (Epinephrine Auto-Injectors) fall below critical mission reserve threshold.",
+  "duration_seconds": 45,
+  "injects": [
+    {
+      "time_seconds": 0,
+      "type": "INVENTORY_CHECK",
+      "target": "MED-EPIN-01",
+      "payload": { "item_id": "MED-EPIN-01", "quantity": 10, "min_threshold": 4 }
+    },
+    {
+      "time_seconds": 30,
+      "type": "INVENTORY_UPDATE",
+      "target": "MED-EPIN-01",
+      "payload": { "item_id": "MED-EPIN-01", "new_quantity": 2 }
+    },
+    {
+      "time_seconds": 45,
+      "type": "EVENT_ALERT",
+      "target": "cmo_sarah",
+      "payload": { "title": "Critical Supply Depletion", "severity": "warning", "message": "Epinephrine auto-injector stock (2 vials) is below reserve threshold (4 vials)" }
+    }
+  ]
+}

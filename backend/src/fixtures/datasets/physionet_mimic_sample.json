@@ -1,0 +1,18 @@
+{
+  "dataset_id": "PHYSIONET_MIMIC3",
+  "name": "PhysioNet MIMIC-III Clinical Database",
+  "license": "ODC-BY 1.0",
+  "provenance": "REPLAY",
+  "description": "High-acuity human physiological telemetry from critical care monitoring",
+  "records": [
+    { "delta_seconds": 0, "metric": "heart_rate", "value": 88, "unit": "bpm" },
+    { "delta_seconds": 0, "metric": "spo2", "value": 96.1, "unit": "%" },
+    { "delta_seconds": 0, "metric": "sys_bp", "value": 132, "unit": "mmHg" },
+    { "delta_seconds": 0, "metric": "dia_bp", "value": 84, "unit": "mmHg" },
+    { "delta_seconds": 0, "metric": "respiration_rate", "value": 18, "unit": "rpm" },
+    { "delta_seconds": 5, "metric": "heart_rate", "value": 89, "unit": "bpm" },
+    { "delta_seconds": 5, "metric": "spo2", "value": 96.0, "unit": "%" },
+    { "delta_seconds": 10, "metric": "heart_rate", "value": 91, "unit": "bpm" },
+    { "delta_seconds": 10, "metric": "temperature", "value": 37.3, "unit": "celsius" }
+  ]
+}

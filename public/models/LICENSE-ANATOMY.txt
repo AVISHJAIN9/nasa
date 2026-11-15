@@ -1,0 +1,1 @@
+3D model adapted from Z-Anatomy (CC BY-SA 4.0) which derives from BodyParts3D, The Database Center for Life Science (CC BY-SA 2.1 Japan). Modified: regions merged, decimated, exported to glTF.

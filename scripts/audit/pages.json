@@ -1,0 +1,1059 @@
+[
+  {
+    "page": "home",
+    "role": "astronaut",
+    "tab": "live",
+    "component": "Astronaut",
+    "file": "frontend/src/app/pages/Astronaut.tsx",
+    "store_usage": [
+      "ackAlert",
+      "acknowledgeOrder",
+      "addCheckIn",
+      "alerts",
+      "astronautHomeTab",
+      "broadcasts",
+      "cabin",
+      "cameraPulseActive",
+      "crew",
+      "emergency",
+      "lastCheckInTimes",
+      "markBroadcastRead",
+      "medicalOfficerCrewId",
+      "missedCheckInHours",
+      "orders",
+      "resolveAlert",
+      "sendMessage",
+      "setAstronautHomeTab",
+      "setEmergency",
+      "setPage",
+      "startProtocol"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "home",
+    "role": "astronaut",
+    "tab": "environment",
+    "component": "Astronaut",
+    "file": "frontend/src/app/pages/Astronaut.tsx",
+    "store_usage": [
+      "ackAlert",
+      "acknowledgeOrder",
+      "addCheckIn",
+      "alerts",
+      "astronautHomeTab",
+      "broadcasts",
+      "cabin",
+      "cameraPulseActive",
+      "crew",
+      "emergency",
+      "lastCheckInTimes",
+      "markBroadcastRead",
+      "medicalOfficerCrewId",
+      "missedCheckInHours",
+      "orders",
+      "resolveAlert",
+      "sendMessage",
+      "setAstronautHomeTab",
+      "setEmergency",
+      "setPage",
+      "startProtocol"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "home",
+    "role": "astronaut",
+    "tab": "checkin",
+    "component": "Astronaut",
+    "file": "frontend/src/app/pages/Astronaut.tsx",
+    "store_usage": [
+      "ackAlert",
+      "acknowledgeOrder",
+      "addCheckIn",
+      "alerts",
+      "astronautHomeTab",
+      "broadcasts",
+      "cabin",
+      "cameraPulseActive",
+      "crew",
+      "emergency",
+      "lastCheckInTimes",
+      "markBroadcastRead",
+      "medicalOfficerCrewId",
+      "missedCheckInHours",
+      "orders",
+      "resolveAlert",
+      "sendMessage",
+      "setAstronautHomeTab",
+      "setEmergency",
+      "setPage",
+      "startProtocol"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "home",
+    "role": "astronaut",
+    "tab": "orders",
+    "component": "Astronaut",
+    "file": "frontend/src/app/pages/Astronaut.tsx",
+    "store_usage": [
+      "ackAlert",
+      "acknowledgeOrder",
+      "addCheckIn",
+      "alerts",
+      "astronautHomeTab",
+      "broadcasts",
+      "cabin",
+      "cameraPulseActive",
+      "crew",
+      "emergency",
+      "lastCheckInTimes",
+      "markBroadcastRead",
+      "medicalOfficerCrewId",
+      "missedCheckInHours",
+      "orders",
+      "resolveAlert",
+      "sendMessage",
+      "setAstronautHomeTab",
+      "setEmergency",
+      "setPage",
+      "startProtocol"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "home",
+    "role": "surgeon",
+    "tab": "roster",
+    "component": "Surgeon",
+    "file": "frontend/src/app/pages/Surgeon.tsx",
+    "store_usage": [
+      "ackAlert",
+      "aiDegraded",
+      "alerts",
+      "checkIns",
+      "computeRiskScore",
+      "crew",
+      "crewSigmaThresholds",
+      "designateMedicalOfficer",
+      "feedbackCounts",
+      "lastCheckInTimes",
+      "medicalOfficerCrewId",
+      "missedCheckInHours",
+      "recordFeedback",
+      "replayLastHour",
+      "resolveAlert",
+      "revokeMedicalOfficer",
+      "selectedCrewId",
+      "sendMessage",
+      "setSelectedCrewId",
+      "setSurgeonHomeTab",
+      "surgeonHomeTab",
+      "workoutLogs"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "home",
+    "role": "surgeon",
+    "tab": "alerts",
+    "component": "Surgeon",
+    "file": "frontend/src/app/pages/Surgeon.tsx",
+    "store_usage": [
+      "ackAlert",
+      "aiDegraded",
+      "alerts",
+      "checkIns",
+      "computeRiskScore",
+      "crew",
+      "crewSigmaThresholds",
+      "designateMedicalOfficer",
+      "feedbackCounts",
+      "lastCheckInTimes",
+      "medicalOfficerCrewId",
+      "missedCheckInHours",
+      "recordFeedback",
+      "replayLastHour",
+      "resolveAlert",
+      "revokeMedicalOfficer",
+      "selectedCrewId",
+      "sendMessage",
+      "setSelectedCrewId",
+      "setSurgeonHomeTab",
+      "surgeonHomeTab",
+      "workoutLogs"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "home",
+    "role": "surgeon",
+    "tab": "priors",
+    "component": "Surgeon",
+    "file": "frontend/src/app/pages/Surgeon.tsx",
+    "store_usage": [
+      "ackAlert",
+      "aiDegraded",
+      "alerts",
+      "checkIns",
+      "computeRiskScore",
+      "crew",
+      "crewSigmaThresholds",
+      "designateMedicalOfficer",
+      "feedbackCounts",
+      "lastCheckInTimes",
+      "medicalOfficerCrewId",
+      "missedCheckInHours",
+      "recordFeedback",
+      "replayLastHour",
+      "resolveAlert",
+      "revokeMedicalOfficer",
+      "selectedCrewId",
+      "sendMessage",
+      "setSelectedCrewId",
+      "setSurgeonHomeTab",
+      "surgeonHomeTab",
+      "workoutLogs"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "home",
+    "role": "control",
+    "tab": "overview",
+    "component": "Control",
+    "file": "frontend/src/app/pages/Control.tsx",
+    "store_usage": [
+      "ackAlert",
+      "alerts",
+      "broadcasts",
+      "cabin",
+      "commsBlackout",
+      "controlHomeTab",
+      "crew",
+      "messages",
+      "mode",
+      "resolveAlert",
+      "setControlHomeTab"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "home",
+    "role": "control",
+    "tab": "cabin",
+    "component": "Control",
+    "file": "frontend/src/app/pages/Control.tsx",
+    "store_usage": [
+      "ackAlert",
+      "alerts",
+      "broadcasts",
+      "cabin",
+      "commsBlackout",
+      "controlHomeTab",
+      "crew",
+      "messages",
+      "mode",
+      "resolveAlert",
+      "setControlHomeTab"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "home",
+    "role": "control",
+    "tab": "comms",
+    "component": "Control",
+    "file": "frontend/src/app/pages/Control.tsx",
+    "store_usage": [
+      "ackAlert",
+      "alerts",
+      "broadcasts",
+      "cabin",
+      "commsBlackout",
+      "controlHomeTab",
+      "crew",
+      "messages",
+      "mode",
+      "resolveAlert",
+      "setControlHomeTab"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "woa",
+    "role": "astronaut",
+    "tab": "default",
+    "component": "WaitOrAct",
+    "file": "frontend/src/app/pages/WaitOrAct.tsx",
+    "store_usage": [
+      "addToast",
+      "incidents",
+      "resolveIncident",
+      "sendMessage",
+      "setPage",
+      "startProtocol"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "woa",
+    "role": "surgeon",
+    "tab": "default",
+    "component": "WaitOrAct",
+    "file": "frontend/src/app/pages/WaitOrAct.tsx",
+    "store_usage": [
+      "addToast",
+      "incidents",
+      "resolveIncident",
+      "sendMessage",
+      "setPage",
+      "startProtocol"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "woa",
+    "role": "control",
+    "tab": "default",
+    "component": "WaitOrAct",
+    "file": "frontend/src/app/pages/WaitOrAct.tsx",
+    "store_usage": [
+      "addToast",
+      "incidents",
+      "resolveIncident",
+      "sendMessage",
+      "setPage",
+      "startProtocol"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "assistant",
+    "role": "astronaut",
+    "tab": "default",
+    "component": "Assistant",
+    "file": "frontend/src/app/pages/Assistant.tsx",
+    "store_usage": [
+      "addToast",
+      "assistantInitialQuery",
+      "assistantOffline",
+      "sendMessage",
+      "setAssistantInitialQuery",
+      "setAssistantOffline",
+      "setEmergency"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "assistant",
+    "role": "surgeon",
+    "tab": "default",
+    "component": "Assistant",
+    "file": "frontend/src/app/pages/Assistant.tsx",
+    "store_usage": [
+      "addToast",
+      "assistantInitialQuery",
+      "assistantOffline",
+      "sendMessage",
+      "setAssistantInitialQuery",
+      "setAssistantOffline",
+      "setEmergency"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "assistant",
+    "role": "control",
+    "tab": "default",
+    "component": "Assistant",
+    "file": "frontend/src/app/pages/Assistant.tsx",
+    "store_usage": [
+      "addToast",
+      "assistantInitialQuery",
+      "assistantOffline",
+      "sendMessage",
+      "setAssistantInitialQuery",
+      "setAssistantOffline",
+      "setEmergency"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "protocols",
+    "role": "astronaut",
+    "tab": "default",
+    "component": "Protocols",
+    "file": "frontend/src/app/pages/Protocols.tsx",
+    "store_usage": [
+      "abortProtocol",
+      "activeProtocol",
+      "addToast",
+      "advanceProtocolStep",
+      "eventLog",
+      "startProtocol",
+      "verifyEventLogChain"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "protocols",
+    "role": "surgeon",
+    "tab": "default",
+    "component": "Protocols",
+    "file": "frontend/src/app/pages/Protocols.tsx",
+    "store_usage": [
+      "abortProtocol",
+      "activeProtocol",
+      "addToast",
+      "advanceProtocolStep",
+      "eventLog",
+      "startProtocol",
+      "verifyEventLogChain"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "protocols",
+    "role": "control",
+    "tab": "default",
+    "component": "Protocols",
+    "file": "frontend/src/app/pages/Protocols.tsx",
+    "store_usage": [
+      "abortProtocol",
+      "activeProtocol",
+      "addToast",
+      "advanceProtocolStep",
+      "eventLog",
+      "startProtocol",
+      "verifyEventLogChain"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "proof",
+    "role": "astronaut",
+    "tab": "default",
+    "component": "Proof",
+    "file": "frontend/src/app/pages/Proof.tsx",
+    "store_usage": [],
+    "api_calls": []
+  },
+  {
+    "page": "proof",
+    "role": "surgeon",
+    "tab": "default",
+    "component": "Proof",
+    "file": "frontend/src/app/pages/Proof.tsx",
+    "store_usage": [],
+    "api_calls": []
+  },
+  {
+    "page": "proof",
+    "role": "control",
+    "tab": "default",
+    "component": "Proof",
+    "file": "frontend/src/app/pages/Proof.tsx",
+    "store_usage": [],
+    "api_calls": []
+  },
+  {
+    "page": "limits",
+    "role": "astronaut",
+    "tab": "default",
+    "component": "Limits",
+    "file": "frontend/src/app/pages/Limits.tsx",
+    "store_usage": [
+      "crew"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "limits",
+    "role": "surgeon",
+    "tab": "default",
+    "component": "Limits",
+    "file": "frontend/src/app/pages/Limits.tsx",
+    "store_usage": [
+      "crew"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "limits",
+    "role": "control",
+    "tab": "default",
+    "component": "Limits",
+    "file": "frontend/src/app/pages/Limits.tsx",
+    "store_usage": [
+      "crew"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "wellness",
+    "role": "astronaut",
+    "tab": "default",
+    "component": "Wellness",
+    "file": "frontend/src/app/pages/Wellness.tsx",
+    "store_usage": [
+      "companionMessages",
+      "crew",
+      "doseLogs",
+      "foodLogs",
+      "importKitCSV",
+      "kitInventory",
+      "linkUp",
+      "logDose",
+      "logFood",
+      "logMood",
+      "logPain",
+      "logVision",
+      "logWorkout",
+      "moodLogs",
+      "painLogs",
+      "painMapMode",
+      "role",
+      "selectedCrewId",
+      "sendCompanionMessage",
+      "setPainMapMode",
+      "toggleWeeklyGoal",
+      "updateWeeklyGoalText",
+      "weeklyGoals",
+      "wellnessHistory",
+      "workoutLogs"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "wellness",
+    "role": "surgeon",
+    "tab": "default",
+    "component": "Wellness",
+    "file": "frontend/src/app/pages/Wellness.tsx",
+    "store_usage": [
+      "companionMessages",
+      "crew",
+      "doseLogs",
+      "foodLogs",
+      "importKitCSV",
+      "kitInventory",
+      "linkUp",
+      "logDose",
+      "logFood",
+      "logMood",
+      "logPain",
+      "logVision",
+      "logWorkout",
+      "moodLogs",
+      "painLogs",
+      "painMapMode",
+      "role",
+      "selectedCrewId",
+      "sendCompanionMessage",
+      "setPainMapMode",
+      "toggleWeeklyGoal",
+      "updateWeeklyGoalText",
+      "weeklyGoals",
+      "wellnessHistory",
+      "workoutLogs"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "wellness",
+    "role": "control",
+    "tab": "default",
+    "component": "Wellness",
+    "file": "frontend/src/app/pages/Wellness.tsx",
+    "store_usage": [
+      "companionMessages",
+      "crew",
+      "doseLogs",
+      "foodLogs",
+      "importKitCSV",
+      "kitInventory",
+      "linkUp",
+      "logDose",
+      "logFood",
+      "logMood",
+      "logPain",
+      "logVision",
+      "logWorkout",
+      "moodLogs",
+      "painLogs",
+      "painMapMode",
+      "role",
+      "selectedCrewId",
+      "sendCompanionMessage",
+      "setPainMapMode",
+      "toggleWeeklyGoal",
+      "updateWeeklyGoalText",
+      "weeklyGoals",
+      "wellnessHistory",
+      "workoutLogs"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "notes",
+    "role": "astronaut",
+    "tab": "default",
+    "component": "Notes",
+    "file": "frontend/src/app/pages/Notes.tsx",
+    "store_usage": [
+      "crew",
+      "draftSoapTemplate",
+      "medicalOfficerCrewId",
+      "notes",
+      "restoreNoteVersion",
+      "role",
+      "saveNote",
+      "selectedCrewId",
+      "setSelectedCrewId"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "notes",
+    "role": "surgeon",
+    "tab": "default",
+    "component": "Notes",
+    "file": "frontend/src/app/pages/Notes.tsx",
+    "store_usage": [
+      "crew",
+      "draftSoapTemplate",
+      "medicalOfficerCrewId",
+      "notes",
+      "restoreNoteVersion",
+      "role",
+      "saveNote",
+      "selectedCrewId",
+      "setSelectedCrewId"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "notes",
+    "role": "control",
+    "tab": "default",
+    "component": "Notes",
+    "file": "frontend/src/app/pages/Notes.tsx",
+    "store_usage": [
+      "crew",
+      "draftSoapTemplate",
+      "medicalOfficerCrewId",
+      "notes",
+      "restoreNoteVersion",
+      "role",
+      "saveNote",
+      "selectedCrewId",
+      "setSelectedCrewId"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "orders",
+    "role": "astronaut",
+    "tab": "default",
+    "component": "Orders",
+    "file": "frontend/src/app/pages/Orders.tsx",
+    "store_usage": [
+      "acknowledgeOrder",
+      "composeOrder",
+      "crew",
+      "medicalOfficerCrewId",
+      "mode",
+      "orders",
+      "role"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "orders",
+    "role": "surgeon",
+    "tab": "default",
+    "component": "Orders",
+    "file": "frontend/src/app/pages/Orders.tsx",
+    "store_usage": [
+      "acknowledgeOrder",
+      "composeOrder",
+      "crew",
+      "medicalOfficerCrewId",
+      "mode",
+      "orders",
+      "role"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "orders",
+    "role": "control",
+    "tab": "default",
+    "component": "Orders",
+    "file": "frontend/src/app/pages/Orders.tsx",
+    "store_usage": [
+      "acknowledgeOrder",
+      "composeOrder",
+      "crew",
+      "medicalOfficerCrewId",
+      "mode",
+      "orders",
+      "role"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "brief",
+    "role": "astronaut",
+    "tab": "default",
+    "component": "Brief",
+    "file": "frontend/src/app/pages/Brief.tsx",
+    "store_usage": [
+      "alerts",
+      "crew",
+      "moodLogs",
+      "painLogs",
+      "selectedCrewId",
+      "setSelectedCrewId",
+      "visionLogs"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "brief",
+    "role": "surgeon",
+    "tab": "default",
+    "component": "Brief",
+    "file": "frontend/src/app/pages/Brief.tsx",
+    "store_usage": [
+      "alerts",
+      "crew",
+      "moodLogs",
+      "painLogs",
+      "selectedCrewId",
+      "setSelectedCrewId",
+      "visionLogs"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "brief",
+    "role": "control",
+    "tab": "default",
+    "component": "Brief",
+    "file": "frontend/src/app/pages/Brief.tsx",
+    "store_usage": [
+      "alerts",
+      "crew",
+      "moodLogs",
+      "painLogs",
+      "selectedCrewId",
+      "setSelectedCrewId",
+      "visionLogs"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "whatif",
+    "role": "astronaut",
+    "tab": "default",
+    "component": "WhatIf",
+    "file": "frontend/src/app/pages/WhatIf.tsx",
+    "store_usage": [
+      "crew",
+      "selectedCrewId",
+      "setSelectedCrewId"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "whatif",
+    "role": "surgeon",
+    "tab": "default",
+    "component": "WhatIf",
+    "file": "frontend/src/app/pages/WhatIf.tsx",
+    "store_usage": [
+      "crew",
+      "selectedCrewId",
+      "setSelectedCrewId"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "whatif",
+    "role": "control",
+    "tab": "default",
+    "component": "WhatIf",
+    "file": "frontend/src/app/pages/WhatIf.tsx",
+    "store_usage": [
+      "crew",
+      "selectedCrewId",
+      "setSelectedCrewId"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "audit",
+    "role": "astronaut",
+    "tab": "default",
+    "component": "Audit",
+    "file": "frontend/src/app/pages/Audit.tsx",
+    "store_usage": [
+      "eventLog",
+      "tamperEventLog",
+      "verifyEventLogChain"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "audit",
+    "role": "surgeon",
+    "tab": "default",
+    "component": "Audit",
+    "file": "frontend/src/app/pages/Audit.tsx",
+    "store_usage": [
+      "eventLog",
+      "tamperEventLog",
+      "verifyEventLogChain"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "audit",
+    "role": "control",
+    "tab": "default",
+    "component": "Audit",
+    "file": "frontend/src/app/pages/Audit.tsx",
+    "store_usage": [
+      "eventLog",
+      "tamperEventLog",
+      "verifyEventLogChain"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "supplies",
+    "role": "astronaut",
+    "tab": "default",
+    "component": "Supplies",
+    "file": "frontend/src/app/pages/Supplies.tsx",
+    "store_usage": [
+      "kitInventory"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "supplies",
+    "role": "surgeon",
+    "tab": "default",
+    "component": "Supplies",
+    "file": "frontend/src/app/pages/Supplies.tsx",
+    "store_usage": [
+      "kitInventory"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "supplies",
+    "role": "control",
+    "tab": "default",
+    "component": "Supplies",
+    "file": "frontend/src/app/pages/Supplies.tsx",
+    "store_usage": [
+      "kitInventory"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "syndromes",
+    "role": "astronaut",
+    "tab": "default",
+    "component": "Syndromes",
+    "file": "frontend/src/app/pages/Syndromes.tsx",
+    "store_usage": [
+      "crew",
+      "moodLogs",
+      "painLogs",
+      "selectedCrewId",
+      "setSelectedCrewId",
+      "visionLogs"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "syndromes",
+    "role": "surgeon",
+    "tab": "default",
+    "component": "Syndromes",
+    "file": "frontend/src/app/pages/Syndromes.tsx",
+    "store_usage": [
+      "crew",
+      "moodLogs",
+      "painLogs",
+      "selectedCrewId",
+      "setSelectedCrewId",
+      "visionLogs"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "syndromes",
+    "role": "control",
+    "tab": "default",
+    "component": "Syndromes",
+    "file": "frontend/src/app/pages/Syndromes.tsx",
+    "store_usage": [
+      "crew",
+      "moodLogs",
+      "painLogs",
+      "selectedCrewId",
+      "setSelectedCrewId",
+      "visionLogs"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "forecast",
+    "role": "astronaut",
+    "tab": "default",
+    "component": "Forecast",
+    "file": "frontend/src/app/pages/Forecast.tsx",
+    "store_usage": [
+      "crew",
+      "selectedCrewId",
+      "setSelectedCrewId"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "forecast",
+    "role": "surgeon",
+    "tab": "default",
+    "component": "Forecast",
+    "file": "frontend/src/app/pages/Forecast.tsx",
+    "store_usage": [
+      "crew",
+      "selectedCrewId",
+      "setSelectedCrewId"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "forecast",
+    "role": "control",
+    "tab": "default",
+    "component": "Forecast",
+    "file": "frontend/src/app/pages/Forecast.tsx",
+    "store_usage": [
+      "crew",
+      "selectedCrewId",
+      "setSelectedCrewId"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "telesession",
+    "role": "astronaut",
+    "tab": "default",
+    "component": "TeleSession",
+    "file": "frontend/src/app/pages/TeleSession.tsx",
+    "store_usage": [],
+    "api_calls": []
+  },
+  {
+    "page": "telesession",
+    "role": "surgeon",
+    "tab": "default",
+    "component": "TeleSession",
+    "file": "frontend/src/app/pages/TeleSession.tsx",
+    "store_usage": [],
+    "api_calls": []
+  },
+  {
+    "page": "telesession",
+    "role": "control",
+    "tab": "default",
+    "component": "TeleSession",
+    "file": "frontend/src/app/pages/TeleSession.tsx",
+    "store_usage": [],
+    "api_calls": []
+  },
+  {
+    "page": "broadcast",
+    "role": "astronaut",
+    "tab": "default",
+    "component": "Broadcast",
+    "file": "frontend/src/app/pages/Broadcast.tsx",
+    "store_usage": [
+      "broadcasts",
+      "crew",
+      "markBroadcastRead",
+      "mode",
+      "role",
+      "sendBroadcast"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "broadcast",
+    "role": "surgeon",
+    "tab": "default",
+    "component": "Broadcast",
+    "file": "frontend/src/app/pages/Broadcast.tsx",
+    "store_usage": [
+      "broadcasts",
+      "crew",
+      "markBroadcastRead",
+      "mode",
+      "role",
+      "sendBroadcast"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "broadcast",
+    "role": "control",
+    "tab": "default",
+    "component": "Broadcast",
+    "file": "frontend/src/app/pages/Broadcast.tsx",
+    "store_usage": [
+      "broadcasts",
+      "crew",
+      "markBroadcastRead",
+      "mode",
+      "role",
+      "sendBroadcast"
+    ],
+    "api_calls": []
+  },
+  {
+    "page": "roadmap",
+    "role": "astronaut",
+    "tab": "default",
+    "component": "Roadmap",
+    "file": "frontend/src/app/pages/Roadmap.tsx",
+    "store_usage": [],
+    "api_calls": []
+  },
+  {
+    "page": "roadmap",
+    "role": "surgeon",
+    "tab": "default",
+    "component": "Roadmap",
+    "file": "frontend/src/app/pages/Roadmap.tsx",
+    "store_usage": [],
+    "api_calls": []
+  },
+  {
+    "page": "roadmap",
+    "role": "control",
+    "tab": "default",
+    "component": "Roadmap",
+    "file": "frontend/src/app/pages/Roadmap.tsx",
+    "store_usage": [],
+    "api_calls": []
+  }
+]

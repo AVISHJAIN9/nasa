@@ -1,0 +1,18 @@
+{
+  "dataset_id": "ZEPHYR_BIOHARNESS",
+  "name": "Zephyr BioHarness Wearable Physiology",
+  "license": "PhysioNet Public / CC-BY 4.0",
+  "provenance": "REPLAY",
+  "description": "Wearable multi-sensor physiological stress and physical exertion telemetry",
+  "records": [
+    { "delta_seconds": 0, "metric": "heart_rate", "value": 110, "unit": "bpm" },
+    { "delta_seconds": 0, "metric": "spo2", "value": 97.0, "unit": "%" },
+    { "delta_seconds": 0, "metric": "hrv", "value": 34, "unit": "ms" },
+    { "delta_seconds": 0, "metric": "respiration_rate", "value": 22, "unit": "rpm" },
+    { "delta_seconds": 0, "metric": "temperature", "value": 37.1, "unit": "celsius" },
+    { "delta_seconds": 5, "metric": "heart_rate", "value": 112, "unit": "bpm" },
+    { "delta_seconds": 5, "metric": "hrv", "value": 32, "unit": "ms" },
+    { "delta_seconds": 10, "metric": "heart_rate", "value": 115, "unit": "bpm" },
+    { "delta_seconds": 10, "metric": "respiration_rate", "value": 24, "unit": "rpm" }
+  ]
+}

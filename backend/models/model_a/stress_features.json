@@ -1,0 +1,16 @@
+{
+  "features": [
+    "hr_mean",
+    "sdnn",
+    "rmssd",
+    "pnn50",
+    "eda_mean",
+    "eda_std",
+    "eda_slope",
+    "temp_mean"
+  ],
+  "classes": {
+    "0": "not_stressed",
+    "1": "stressed"
+  }
+}

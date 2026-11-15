@@ -1,0 +1,34 @@
+{
+  "scenario_id": "SCENARIO_SOLAR_EVENT",
+  "title": "Coronal Mass Ejection & Solar Particle Event",
+  "category": "RADIATION",
+  "severity": "CRITICAL",
+  "description": "Deep space solar particle storm surges radiation dose rate. Automated storm warning and storm shelter checklist broadcast to crew.",
+  "duration_seconds": 60,
+  "injects": [
+    {
+      "time_seconds": 0,
+      "type": "RADIATION_DOSE",
+      "target": "fleet",
+      "payload": { "days": 1, "spe_spike_msv": 0, "notes": "Baseline deep space background" }
+    },
+    {
+      "time_seconds": 25,
+      "type": "EVENT_ALERT",
+      "target": "all_crew",
+      "payload": { "title": "Solar Particle Event Detected", "severity": "warning", "message": "Proton flux threshold exceeded on exterior sensors" }
+    },
+    {
+      "time_seconds": 50,
+      "type": "RADIATION_DOSE",
+      "target": "fleet",
+      "payload": { "days": 0, "spe_spike_msv": 65.0, "notes": "Solar Particle Event peak proton flux deposition" }
+    },
+    {
+      "time_seconds": 60,
+      "type": "EVENT_ALERT",
+      "target": "all_crew",
+      "payload": { "title": "Storm Shelter Order", "severity": "critical", "message": "Proceed immediately to water-shielded central storm shelter" }
+    }
+  ]
+}

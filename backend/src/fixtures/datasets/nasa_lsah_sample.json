@@ -1,0 +1,18 @@
+{
+  "dataset_id": "NASA_LSAH_01",
+  "name": "NASA Longitudinal Study of Astronaut Health (LSAH)",
+  "license": "NASA Open Data",
+  "provenance": "REPLAY",
+  "description": "Historical astronaut in-flight mission physiological vitals",
+  "records": [
+    { "delta_seconds": 0, "metric": "heart_rate", "value": 72, "unit": "bpm" },
+    { "delta_seconds": 0, "metric": "spo2", "value": 98.4, "unit": "%" },
+    { "delta_seconds": 0, "metric": "sys_bp", "value": 118, "unit": "mmHg" },
+    { "delta_seconds": 0, "metric": "dia_bp", "value": 76, "unit": "mmHg" },
+    { "delta_seconds": 0, "metric": "temperature", "value": 36.7, "unit": "celsius" },
+    { "delta_seconds": 5, "metric": "heart_rate", "value": 74, "unit": "bpm" },
+    { "delta_seconds": 5, "metric": "spo2", "value": 98.5, "unit": "%" },
+    { "delta_seconds": 10, "metric": "heart_rate", "value": 75, "unit": "bpm" },
+    { "delta_seconds": 10, "metric": "respiration_rate", "value": 14, "unit": "rpm" }
+  ]
+}

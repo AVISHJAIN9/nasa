@@ -1,3 +1,4 @@
+# Python & Bytecode
 __pycache__/
 **/__pycache__/
 *.py[cod]
@@ -9,3 +10,29 @@ __pycache__/
 *.egg-info/
 build/
 dist/
+.venv/
+backend/.venv/
+venv/
+
+# Node & Frontend
+node_modules/
+frontend/node_modules/
+backend/node_modules/
+frontend/dist/
+backend/dist/
+
+# Environment Variables
+.env
+*.env
+backend/.env
+**/.env
+!.env.example
+!backend/.env.example
+!frontend/.env.example
+
+# IDE & OS
+.idea/
+.vscode/
+*.zip
+*.tar.gz
+*.tgz

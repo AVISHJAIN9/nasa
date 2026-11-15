@@ -1,13 +1,75 @@
-# AstroCare: NASA Space Apps Decision-Support Prototype (Audited ML1 & ML2 Suite)
+# AstroCare: Autonomous Deep-Space Medical Decision Support Platform
 
 > [!CAUTION]
 > **SYNTHETIC PRELIMINARY PROTOTYPE — DO NOT USE AS CLINICAL EVIDENCE.**
-> AstroCare is an engineering decision-support prototype built on synthetic telemetry and publicly licensed spaceflight literature. It is **NOT** a certified medical device, does not provide autonomous clinical diagnoses, and does not replace a Flight Surgeon or Crew Medical Officer. All telemetry labels are synthetic simulation proxies.
+> AstroCare is an engineering decision-support prototype built on synthetic telemetry and publicly licensed spaceflight literature (NASA Space Apps Challenge 2026). It is **NOT** a certified medical device, does not provide autonomous clinical diagnoses, and does not replace a Flight Surgeon or Crew Medical Officer. All telemetry labels are synthetic simulation proxies.
 
 ---
 
-## 1. Quickstart & Verification Commands
+## 1. System Overview
 
+AstroCare provides autonomous medical surveillance and decision-support for deep-space human spaceflight missions (ISS Low Earth Orbit, Lunar Artemis base, and Mars Transit / Surface operations). When communication round-trip latency reaches up to **44 minutes** (22 minutes one-way), terrestrial telemedicine cannot perform real-time triage. AstroCare provides:
+- **Local Client-Side Health Surveillance:** Real-time 3D anatomical pain mapping, optical rPPG camera pulse extraction, and multi-modal passive telemetry monitoring.
+- **Audited ML1 Intelligence Engine:** Causal 2-state Kalman baseline filtering (X02), multi-model anomaly detection ensemble (F041), monotone health risk scoring (F043), and sourced clinical action lines from N13 Indicator Cards (F047).
+- **Autonomous Operational Policy (X01):** Mathematically optimal "Wait-or-Act" policy minimizing expected health loss across variable communication latencies.
+- **Offline-First Resilience:** Local edge assistant with sentence-level citation verification, emergency escalation directives, and store-and-forward offline synchronization.
+
+---
+
+## 2. Platform Architecture
+
+```
+                    +------------------------------------+
+                    |  AstroCare Web Client (Port 3006)  |
+                    |   (React 19 + Vite 6 + Tailwind)   |
+                    +-----------------+------------------+
+                                      |
+                     /api/v1/clinical | /api/v1/assess, /v1/telemetry, /v1/space-weather
+                                      |
+       +------------------------------+-------------------------------+
+       |                                                              |
+       v                                                              v
++-------------------------------+                     +-------------------------------+
+|     Node.js Clinical Core     |                     |  FastAPI Intelligence Engine  |
+|          (Port 8000)          |                     |          (Port 8001)          |
+| - SOAP Clinical Notes         |                     | - POST /assess                |
+| - Medical Inventory & Kits    |                     | - WebSocket /ws/telemetry     |
+| - Static Clinical Protocols   |                     | - WebSocket /ws/alerts        |
++---------------+---------------+                     +---------------+---------------+
+                |                                                     |
+                v                                                     v
++-------------------------------+                     +-------------------------------+
+|     MongoDB 7.0 (NoSQL)       |                     |  TimescaleDB / Postgres 16    |
+|          (Port 27018)         |                     |          (Port 5433)          |
+| - Unstructured Clinical Docs  |                     | - High-Freq Telemetry Streams |
+| - Medical Dispensary Catalog  |                     | - Digital Twin Daily States   |
++-------------------------------+                     +---------------+---------------+
+                                                                      |
+                                                                      v
+                                                      +-------------------------------+
+                                                      |      Audited ML1 Engine       |
+                                                      |         (`astrocare/`)        |
+                                                      | - X02 2-State Kalman Filter   |
+                                                      | - F041 Anomaly Ensemble       |
+                                                      | - F043 Monotone Risk Score    |
+                                                      | - F047 Sourced Explanations   |
+                                                      +-------------------------------+
+```
+
+---
+
+## 3. Quickstart & Verification Commands
+
+### Full-Stack Docker Deployment
+```bash
+# 1. Start all 6 containerized services (Mongo, Timescale, Node, FastAPI, Frontend, Gateway)
+docker compose up -d
+
+# 2. View running services and health status
+docker compose ps
+```
+
+### ML Engine & Evaluation Verification
 ```bash
 # 1. Run master scientific evaluation harness (LOPO, LOSO, F041, X01, X06, 4-person demo)
 python -m eval_runner
@@ -24,66 +86,75 @@ python -m astrocare.evaluation.splits
 
 # 4. Run four-person live telemetry demonstration
 python -m astrocare.benchmarks.demo_four_person
+
+# 5. Run Hour-6 multi-crew telemetry streaming handoff
+python -m astrocare.models.x02_bayesian
+# or
+make handoff
+```
+
+### Frontend Local Development
+```bash
+# Install dependencies
+npm install
+
+# Start Vite development server (Port 3006)
+npm run dev
+
+# Static type checking
+npm run lint
+
+# Production build
+npm run build
 ```
 
 ---
 
-## 2. Architecture & Status Summary
+## 4. Key Components & Status Summary
 
 ### ML1 Pipeline (Telemetry, Bayesian Filtering, Anomaly Detection)
-- **F011 & N14 Simulator Engine (`astrocare/simulator/engine.py`):**
-  - Generates multi-crew physiological streams with circadian rhythm and intentional hazard effects.
-  - Emits `glucose` (mg/dL) and `sleep_hours` (hours, daily cumulative check-in) alongside HR, BP, SpO2, temp, resp, and HRV.
+- **F011 & N14 Multi-Cadence Simulator (`astrocare/simulator/engine.py`):**
+  - Generates multi-crew physiological streams with circadian rhythm and multi-phase mission fatigue.
+  - Supports variable sampling cadences: 60s vitals (HR, SpO2, temp, resp), 300s cuff BP, 300s CGM glucose, and 24h morning wake boundary sleep.
   - Deterministic seeded generator (`DATA_GEN_SEED=42`).
-  - Metric-specific anomaly labeling: only perturbed metrics are labeled anomalous.
 - **Evaluation Design & Split Freeze (`astrocare/evaluation/splits.py`):**
   - Strict Leave-One-Person-Out (LOPO) across 4 crew members (`ASTRO-01` to `ASTRO-04`).
   - Strict Leave-One-Scenario-Out (LOSO) across 6 hazard scenario families.
-  - Frozen assignments, seeds, and SHA-256 digest stored in `artifacts/splits/frozen_eval_splits_v2.json`.
-  - Silent regeneration is strictly forbidden; fails with an error if missing or corrupted.
-- **X02 Bayesian Baseline (`astrocare/models/x02_bayesian.py`):**
-  - Local-trend NumPy Kalman filter ($x_t = [\mu_t, v_t]^T$) with dynamic $\Delta t$ computed from ISO-8601 timestamps.
-  - Partial pooling with crew priors estimated strictly from training-fold astronauts.
-  - Personalized `p_deviation` computed against personal baseline tolerance bounds.
-  - `time_to_critical_min` (p10, p50, p90) computed via state uncertainty propagation.
+  - Cryptographically frozen in `artifacts/splits/frozen_eval_splits_v2.json` (SHA-256 verified).
+- **X02 Bayesian Local-Trend Kalman Baseline (`astrocare/models/x02_bayesian.py`):**
+  - Continuous-time 2-state Kalman filter ($x_t = [\mu_t, v_t]^T$) with dynamic $\Delta t$ from ISO-8601 timestamps.
+  - Observation noise $R$ estimated via von Neumann successive differences; dynamic 24h harmonic circadian regression.
+  - Relative Huber innovation clipping ($8.0\sigma$) prevents sustained acute anomalies from masking themselves.
 - **F041 Anomaly Detection Ensemble (`astrocare/models/f041_anomaly.py`):**
-  - Isolation Forest, Rolling Median/MAD (F018), and Fixed Threshold evaluated on **identical feature inputs** on held-out LOSO scenario folds.
-  - Calibration performed on independent validation nominal stream; empirical test FPR reported transparently.
+  - Isolation Forest, Rolling Robust-Z (F018), and Fixed Threshold evaluated on **identical person-relative normalized features**.
+  - Calibrated against a predeclared 5% validation false-alarm rate with transparent empirical test FPR reporting.
 - **F043 Monotone Health Risk Score (`astrocare/models/f043_risk_score.py`):**
-  - Two-sided physiological distress features with strict monotonic constraints in LightGBM.
-  - Calibrated continuous risk scoring across 20 clinically ordered edge cases without saturation.
-  - Gated deployment strictly contingent on verified F041 equal-FAR acceptance.
-- **F047 / F098 / N16 Alert Explanation Pipeline (`astrocare/models/f047_explanation.py`):**
-  - Generates structured, deterministic explanations for 100% of triggered anomaly alerts.
-  - Pulls verified, direction-aware action lines from audited N13 Indicator Cards.
+  - Two-sided physiological distress features with monotonic constraints in LightGBM.
+  - Graded 20 clinical test cases graduating smoothly from 0.08 (nominal) to 0.93 (crisis) without early saturation.
+  - Gated deployment strictly requiring verified F041 equal-FAR acceptance.
+- **F047 Sourced Alert Explanations (`astrocare/models/f047_explanation.py`):**
+  - Attaches verified, direction-aware action lines pulled directly from audited N13 Indicator Cards.
+  - Computes standardized deviation feature attributions with deterministic SHA-256 explanation IDs.
 - **F012 Real Dataset Replay Loaders (`astrocare/data/f012_replay.py`):**
-  - Concrete loaders for PhysioNet MMASH and NASA OSDR OSD-575 Inspiration4 datasets.
-  - Parses real local CSV fixtures with verified SHA-256 digests and explicit provenance/licensing terms.
-- **F147 Scientific Research Report Auto-Generator (`astrocare/evaluation/report_generator.py`):**
-  - Fully automated, data-driven Markdown research report built directly from machine-readable evaluation summaries.
-
-### ML2 Pipeline (Knowledge Base, RAG, Safety, Policy)
-- **F056 Knowledge Base & N13 Indicator Cards (`astrocare/knowledge/`):**
-  - 39 authentic, deduplicated chunks derived directly from NASA HRP Evidence Books, NASA-STD-3001, and Canadian Space Agency resources.
-  - Provenance: Cryptographic document identity hashes, source URLs, access dates (2026-11-14).
-  - Data-use terms: NASA Public Domain (17 U.S.C. § 105); CSA Crown Copyright (non-commercial personal/educational use permitted with attribution; commercial redistribution requires permission).
-  - 8 indicator cards (`heart_rate`, `blood_pressure`, `blood_glucose`, `body_temp`, `sleep`, `mood`, `radiation_dose`, `cabin_co2`) marked `PENDING_MEDICAL_REVIEW`.
-- **F055 RAG & F057 Cloud/Local Router (`astrocare/assistant/`):**
-  - Top-3 chunk retrieval with cosine similarity scoring.
-  - Below-threshold or unsupported questions reply strictly: `I do not know.`
-  - Edge fallback: Deterministic keyword-retrieval rule engine (full quantized edge LLM integration like Ollama is pending).
-- **F059 Citation Checker & F058/N17 Safety Layer (`astrocare/assistant/`):**
-  - Claim-level citation verification.
-  - Medical safety guardrail rejecting clinical diagnosis claims and unsafe prescriptions.
-  - Emergency detector with immediate `EMERGENCY_ESCALATION` directive to Flight Surgeon.
-  - 50-prompt red-team suite tested with 0 critical safety failures.
-- **X01 Wait-or-Act Decision Engine (`astrocare/policy/x01_wait_or_act.py`):**
-  - Consumes real X02 Kalman filter predictions on simulated incident trajectories under F070 communication round-trip delay ($0, 2, 10, 20, 44$ min).
+  - Concrete loaders for PhysioNet MMASH and NASA GeneLab OSD-575 Inspiration4 data with verified on-disk checksums.
+- **F147 Scientific Research Report (`artifacts/reports/F147_RESEARCH_REPORT.md`):**
+  - Data-driven research report auto-built from machine evaluation summaries with relative POSIX links.
 
 ---
 
-## 3. Hour-6 Frozen Contract Handoff
-- Schema definition: `astrocare/models/registry.py`
-- JSON Schema file: `artifacts/handoff/x02_contract_schema.json`
-- Sample payload: `artifacts/handoff/x02_sample_payload.json`
-- Handoff note: `artifacts/handoff/x02_hour6_handoff_note.md`
+## 5. Keyboard Shortcuts & Demo Lab
+
+- <kbd>D</kbd>: Toggle Demo Simulation Lab drawer.
+- <kbd>Shift</kbd> + <kbd>R</kbd>: Instant Demo Reset (clears active scenarios and restores baseline seeds in < 2s).
+- <kbd>Space</kbd>: Pause / Resume automated demonstration tour.
+- <kbd>→</kbd> / <kbd>←</kbd>: Step forward / backward through mission chapters.
+- <kbd>P</kbd>: Toggle Presenter Notes cue card.
+- <kbd>Esc</kbd>: Close open modals, drawers, and overlays.
+
+---
+
+## 6. License & Attribution
+
+- **Software License:** MIT License.
+- **3D Anatomical Model:** Adapted from Z-Anatomy ([CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)) and BodyParts3D ([CC BY-SA 2.1 Japan](https://creativecommons.org/licenses/by-sa/2.1/jp/deed.en)).
+- **NASA / CSA References:** NASA HRP Evidence Books and NASA-STD-3001 are public domain (17 U.S.C. § 105). CSA resources used under Crown Copyright educational terms with attribution.

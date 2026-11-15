@@ -1,0 +1,43 @@
+{
+  "name": "wesad_wrist_stress_classifier",
+  "version": "stress-v1",
+  "date": "2026-11-08",
+  "selected_model": "logistic_regression",
+  "metrics": {
+    "validation": "leave-one-subject-out",
+    "per_model": {
+      "random_forest": {
+        "balanced_accuracy": 0.8755761210386922,
+        "accuracy": 0.896877269426289,
+        "stress_f1": 0.7835365853658537,
+        "confusion_matrix": [
+          [
+            978,
+            92
+          ],
+          [
+            50,
+            257
+          ]
+        ]
+      },
+      "logistic_regression": {
+        "balanced_accuracy": 0.8971475539590246,
+        "accuracy": 0.8888888888888888,
+        "stress_f1": 0.7854137447405329,
+        "confusion_matrix": [
+          [
+            944,
+            126
+          ],
+          [
+            27,
+            280
+          ]
+        ]
+      }
+    }
+  },
+  "data_sha256": "8896d17d07f4d317229e178b7736c7b375f82ca59ce3751a846815fc6098eb7d",
+  "seed": 42
+}

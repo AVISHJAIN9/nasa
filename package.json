@@ -1,0 +1,39 @@
+{
+  "name": "astrocare-v2-backend",
+  "version": "0.1.0",
+  "description": "AstroCare v2 MERN Backend - Autonomous Medical Decision Support Platform",
+  "type": "module",
+  "main": "backend/src/server.js",
+  "scripts": {
+    "dev": "node backend/src/server.js",
+    "start": "node backend/src/server.js",
+    "test": "vitest run --config backend/vitest.config.js",
+    "doctor": "node scripts/doctor.mjs",
+    "verify:tier1": "node scripts/verify/verify-tier1.mjs",
+    "lint": "eslint backend/ tests/ scripts/",
+    "seed": "node scripts/seed.js",
+    "eval": "node scripts/eval.js",
+    "db:indexes": "node scripts/db-indexes.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.2.0",
+    "helmet": "^7.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.3.1",
+    "node-cron": "^3.0.3",
+    "pino": "^8.20.0",
+    "pino-http": "^9.0.0",
+    "pino-pretty": "^11.0.0",
+    "socket.io": "^4.7.5",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "supertest": "^6.3.4",
+    "vitest": "^1.5.0"
+  }
+}

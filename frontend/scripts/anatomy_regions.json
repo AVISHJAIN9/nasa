@@ -1,0 +1,82 @@
+{
+  "rules": [
+    {
+      "pattern": ".*auric.*|.*antihel.*|.*tragus.*|.*concha.*|.*helix.*|.*incis.*|.*scapha.*|.*triang.*|.*fossa.*|.*frontal.*|.*eyebrow.*|.*mastoid.*|.*occipital.*|.*parietal.*|.*temporal.*|.*buccal.*|.*infra-orbital.*|.*mental.*|.*sulcus.*|.*nasal.*|.*mouth.*|.*oral.*|.*labial.*|.*philtrum.*|.*lip.*|.*orbital.*|.*parotideo.*|.*zygomatic.*",
+      "regionId": "head"
+    },
+    {
+      "pattern": ".*neck.*|.*carotid.*|.*muscular triangle.*|.*submandibular.*|.*submental.*|.*supraclavicular.*|.*sternocleidomastoid.*",
+      "regionId": "neck"
+    },
+    {
+      "pattern": ".*deltopectoral.*|.*infraclavicular.*|.*pectoral.*|.*inframammary.*|.*mammary.*|.*presternal.*|.*lateral region of thorax.*",
+      "regionId": "chest"
+    },
+    {
+      "pattern": ".*infrascapular.*|.*interscapular.*|.*scapular region.*|.*triangle of auscultation.*",
+      "regionId": "upper_back"
+    },
+    {
+      "pattern": ".*lumbar region.*|.*sacral region.*|.*vertebral region.*",
+      "regionId": "lumbar_spine"
+    },
+    {
+      "pattern": ".*anal region.*|.*urogenital.*|.*gluteal.*|.*hip region.*",
+      "regionId": "pelvis"
+    },
+    {
+      "pattern": ".*deltoid.*",
+      "sideDependent": true,
+      "left": "left_shoulder",
+      "right": "right_shoulder"
+    },
+    {
+      "pattern": ".*region of arm.*|.*bicipital groove.*|.*elbow.*|.*cubital.*",
+      "sideDependent": true,
+      "left": "left_arm",
+      "right": "right_arm"
+    },
+    {
+      "pattern": ".*forearm.*",
+      "sideDependent": true,
+      "left": "left_forearm",
+      "right": "right_forearm"
+    },
+    {
+      "pattern": ".*wrist.*|.*foveola.*|.*hand.*|.*palm.*|.*nail plate.*|.*perionyx.*",
+      "sideDependent": true,
+      "left": "left_hand",
+      "right": "right_hand"
+    },
+    {
+      "pattern": ".*thigh.*|.*femoral.*",
+      "sideDependent": true,
+      "left": "left_thigh",
+      "right": "right_thigh"
+    },
+    {
+      "pattern": ".*knee.*|.*popliteal.*",
+      "sideDependent": true,
+      "left": "left_knee",
+      "right": "right_knee"
+    },
+    {
+      "pattern": ".*region of leg.*",
+      "sideDependent": true,
+      "left": "left_leg",
+      "right": "right_leg"
+    },
+    {
+      "pattern": ".*ankle.*|.*malleol.*|.*retromalleol.*|.*foot.*|.*sole.*|.*heel.*|.*metatarsal.*|.*hallucial.*|.*nail plate \\(foot\\).*|.*perionyx \\(foot\\).*",
+      "sideDependent": true,
+      "left": "left_foot",
+      "right": "right_foot"
+    },
+    {
+      "pattern": ".*epigastric.*|.*hypochondriac.*|.*hypogastric.*|.*inguinal.*|.*lateral region of abdomen.*|.*umbilic.*",
+      "sideDependent": true,
+      "left": "left_abdomen",
+      "right": "right_abdomen"
+    }
+  ]
+}

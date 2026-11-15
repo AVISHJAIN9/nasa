@@ -1,0 +1,16 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="orbit-grad" x1="6" y1="8" x2="42" y2="40" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#6fb6ff" />
+      <stop offset="50%" stop-color="#d8c3b4" />
+      <stop offset="100%" stop-color="#e2704a" />
+    </linearGradient>
+  </defs>
+  <rect width="48" height="48" rx="10" fill="#0a0605"/>
+  <ellipse cx="24" cy="24" rx="20" ry="13" transform="rotate(-25 24 24)" stroke="url(#orbit-grad)" stroke-width="2" stroke-dasharray="1.5 3.5" stroke-opacity="0.45" />
+  <path d="M9 22 C 11 12, 23 8, 33 13 C 39 16, 42 21, 41 26" stroke="#6fb6ff" stroke-width="2.5" stroke-linecap="round" />
+  <path d="M4 27 L 14 27 L 17 21 L 21 34 L 25 15 L 29 32 L 32 25 L 35 28 L 44 28" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+  <circle cx="33" cy="13" r="3.25" fill="#6fb6ff" />
+  <circle cx="33" cy="13" r="1.5" fill="#ffffff" />
+  <circle cx="41" cy="26" r="2.5" fill="#e2704a" />
+</svg>

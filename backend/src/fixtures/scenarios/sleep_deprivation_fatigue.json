@@ -1,0 +1,28 @@
+{
+  "scenario_id": "SCENARIO_CIRCADIAN_FATIGUE",
+  "title": "Chronic Sleep Debt & Cognitive Fatigue",
+  "category": "WELLNESS",
+  "severity": "WARNING",
+  "description": "Multi-day circadian misalignment leading to low HRV, elevated sympathetic tone, and cognitive performance risk.",
+  "duration_seconds": 60,
+  "injects": [
+    {
+      "time_seconds": 0,
+      "type": "VITALS_READING",
+      "target": "CREW-01",
+      "payload": { "heart_rate": 66, "spo2": 98.4, "hrv": 62, "temperature": 36.7 }
+    },
+    {
+      "time_seconds": 30,
+      "type": "VITALS_READING",
+      "target": "CREW-01",
+      "payload": { "heart_rate": 78, "spo2": 97.9, "hrv": 24, "temperature": 36.9 }
+    },
+    {
+      "time_seconds": 60,
+      "type": "EVENT_ALERT",
+      "target": "CREW-01",
+      "payload": { "title": "Elevated Sleep Debt Warning", "severity": "warning", "message": "Autonomic nervous system recovery index depressed. Countermeasure nap recommended." }
+    }
+  ]
+}

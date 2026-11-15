@@ -1,0 +1,33 @@
+{
+  "channels": [
+    "hr",
+    "rmssd",
+    "activity",
+    "resp",
+    "blink",
+    "voice",
+    "typing",
+    "puff",
+    "rppg_hr"
+  ],
+  "orient": [
+    1.0,
+    -1.0,
+    -1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "alpha": 0.002883946665410808,
+  "burn_min": 120,
+  "persistence_min": 3,
+  "refractory_min": 60,
+  "fa_budget_per_day": 2.0,
+  "thr_model": 0.6343264956570709,
+  "conformal_q": 0.3901701271533966,
+  "seed": 42,
+  "input": "per-minute oriented causal z-scores vs own EWMA baseline; any subset of channels (mask)"
+}

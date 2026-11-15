@@ -1,0 +1,1256 @@
+[
+  {
+    "method": "GET",
+    "path": "//api/v1/adaptation/curves",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/adaptation/evaluate",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/ai/panel/:alert_id",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/ai/panel/evaluate",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/alerts/:id/acknowledge",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/alerts/:id/assign",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/alerts/:id/feedback",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/alerts/:id/resolve",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/alerts/:id/snooze",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/alerts/evaluate-rule",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/alerts/feedback/replay",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/alerts/feedback/thresholds/:crew_id",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/alerts/fuse",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/alerts/inbox",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/analytics/dashboard/views",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/analytics/rollups/refresh",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/assistant/chat",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/assistant/check-citations",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/assistant/dual-mode/status",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/assistant/dual-mode/toggle",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/assistant/red-team-results",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/audit/logs",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/audit/logs",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/audit/verify-chain",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/auth/admin-only",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/auth/astronaut-only",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/auth/login",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/auth/me",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/auth/mission-control-only",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/auth/refresh",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/auth/register",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/auth/surgeon-only",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/baselines/:crew_id",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/baselines/:crew_id/:metric",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/baselines/calculate",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/bayesian/evaluate",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/bayesian/forecast",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/bayesian/model",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/benchmarks/crew-percentile",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/benchmarks/eval/run",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/benchmarks/packages",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/broadcasts",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/broadcasts",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/broadcasts/:id",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/broadcasts/:id/read",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/broadcasts/:id/receipts",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/cabin/gauges",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/cabin/history",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/cabin/readings",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/cabin/simulate-leak",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/clinical/source-register",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/cmo/:crew_id",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/cmo/:crew_id/grant",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/cmo/:crew_id/revoke",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/cmo/checklists",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/comms/status",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/companion/chat",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/companion/history/:crew_id",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/conditions/classify",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/conditions/confusion-matrix",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/conditions/crew/:crew_id",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/consults/inbox",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/consults/messages",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/consults/messages/:id",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/consults/outbox",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/consults/process-deliveries",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/crew",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/crew",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "DELETE",
+    "path": "//api/v1/crew/:id",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/crew/:id",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "PATCH",
+    "path": "//api/v1/crew/:id",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/crew/:id/simulate-baseline",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/crew/generate-synthetic",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/decisions/conformal/evaluate",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/decisions/conformal/risk-coverage",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/decisions/earth-independence",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/decisions/wait-or-act",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/decisions/wait-or-act/benchmark",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/demo/cabin-to-body/benchmark",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/demo/cabin-to-body/evaluate",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/demo/choreography/moment/:moment_id",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/demo/choreography/rehearse-3",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/demo/mode",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/demo/panel",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/demo/scenarios/:id/trigger",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/demo/scenarios/stop",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/demo/seed",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/demo/storyline",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/demo/storyline/rehearse-3",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/demo/storyline/run",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/demo/time-speed",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/emergency/declare",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/emergency/stand-down",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/emergency/status",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/ethics/limitations",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/events/history",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/events/publish",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/flags",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/flags/:name",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "PATCH",
+    "path": "//api/v1/flags/:name",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/forecaster/backtest",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/forecaster/predict",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/gateway/info",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/gateway/test-error/:code",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/gateway/test-validation",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/governance/backup",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/governance/backups",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/governance/restore",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/health-records",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/health-records/:crew_id",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "PATCH",
+    "path": "//api/v1/health-records/:crew_id/clearance",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "PATCH",
+    "path": "//api/v1/health-records/:crew_id/medications",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/health-records/:crew_id/notes",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/inventory",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/inventory",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "DELETE",
+    "path": "//api/v1/inventory/:id",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/inventory/:id",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "PATCH",
+    "path": "//api/v1/inventory/:id",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/inventory/alerts/expiring-or-low",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/inventory/import-csv",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/knowledge/rebuild",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/knowledge/search",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/knowledge/stats",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/medical-events",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/medical-events",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/medical-events/verify-chain",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/mission-config",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "PATCH",
+    "path": "//api/v1/mission-config",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/mission-config/mode",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/ml/anomaly/compare-rules",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/ml/anomaly/evaluate",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/ml/anomaly/scan",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/ml/predict-mock",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/ml/status",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/orders",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/orders/:id/acknowledge",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/orders/:id/complete",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/orders/crew/:crew_id",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/provenance/badge",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/provenance/datasets",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/provenance/datasets",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/radiation/accumulate",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/radiation/crew/:crew_id",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/radiation/crew/:crew_id/history",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/radiation/spe-spike",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/radiation/summary",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/replay/datasets",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/replay/start",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/reports/daily-brief",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/reports/daily-brief/evaluate-10",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/reports/incident-sbar",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/reports/mission-debrief",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/reports/pdf",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/reports/soap/:note_id",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "PUT",
+    "path": "//api/v1/reports/soap/:note_id",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/reports/soap/draft",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/reports/surgeon-handoff",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/risk/calculate",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/risk/calibration",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/risk/crew/:crew_id",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/scenarios",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/scenarios/:id",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/scenarios/:id/play",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/security/decrypt",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/security/encrypt",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/security/scan",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/simulator/vitals/benchmark",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/simulator/vitals/stream",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/supplies/eva-readiness",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/supplies/mission-readiness",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/supplies/treatment-plan",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/sync/changelog",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/sync/changes",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/sync/conflicts",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/sync/entities/:id",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/sync/reconcile",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/syndromes/crew/:crew_id",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/syndromes/evaluate",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/syndromes/evaluate/:syndrome_id",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/syndromes/knowledge-base",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/telemed/sessions",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/telemed/sessions/:id",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/telemed/sessions/:id/chat",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/telemed/sessions/:id/chat",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/telemed/sessions/:id/end",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/telemed/sessions/:id/signal",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/telemed/sessions/:id/signals",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/telemetry/ingest",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/telemetry/quality-check",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/telemetry/range",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/telemetry/readings",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/triage/protocols",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/triage/protocols/:protocol_id",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/triage/protocols/seed",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/triage/session/:session_id",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/triage/session/advance",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/triage/session/start",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/triage/trees",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/uncertainty/evaluate",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/uncertainty/reliability-diagram",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/watchdog/inject-drift",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/watchdog/inject-sensor-failure",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/watchdog/logs",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/watchdog/recover",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/watchdog/status",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//api/v1/what-if/scenarios",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "POST",
+    "path": "//api/v1/what-if/simulate",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//health",
+    "schema_fields": [],
+    "sample_response": null
+  },
+  {
+    "method": "GET",
+    "path": "//metrics",
+    "schema_fields": [],
+    "sample_response": null
+  }
+]
