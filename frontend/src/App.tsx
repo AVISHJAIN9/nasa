@@ -10,7 +10,28 @@ import {useStore} from './store';
 
 export default function App() {
   const view = useStore((s) => s.view);
+  const setView = useStore((s) => s.setView);
+  const setPage = useStore((s) => s.setPage);
   const reduced = useReducedMotion();
+
+  useEffect(() => {
+    const checkHash = () => {
+      const h = window.location.hash.replace('#', '').trim();
+      const consolePages = [
+        'home', 'woa', 'assistant', 'protocols', 'proof', 'limits',
+        'wellness', 'notes', 'orders', 'brief', 'whatif', 'audit',
+        'supplies', 'syndromes', 'forecast', 'telesession', 'broadcast',
+        'roadmap', 'integration'
+      ];
+      if (consolePages.includes(h)) {
+        setView('app');
+        setPage(h as any);
+      }
+    };
+    checkHash();
+    window.addEventListener('hashchange', checkHash);
+    return () => window.removeEventListener('hashchange', checkHash);
+  }, [setView, setPage]);
 
   useEffect(() => {
     if (view === 'landing') {

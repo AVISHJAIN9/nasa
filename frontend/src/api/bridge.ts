@@ -253,7 +253,7 @@ export async function pollHydrate(): Promise<void> {
 
   // 2. Fetch remote entities in parallel (fail-safe)
   try {
-    const [alertsRes, checkInsRes, notesRes, ordersRes, broadcastsRes] = await Promise.allSettled([
+    const [alertsRes, checkInsRes, _notesRes, ordersRes, broadcastsRes] = await Promise.allSettled([
       api.get<{ alerts: Record<string, unknown>[] }>('/alerts/inbox'),
       api.get<Record<string, unknown>[]>('/checkins'),
       api.get<Record<string, unknown>[]>('/notes'),

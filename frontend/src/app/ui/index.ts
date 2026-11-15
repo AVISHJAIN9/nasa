@@ -9,3 +9,4 @@ export * from './PageHeader';
 export * from './ErrorBoundary';
 export * from './PageSkeleton';
 export * from './TodayStrip';
+export * from './DelaySlider';

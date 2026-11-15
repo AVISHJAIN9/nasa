@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useStore, UserRole } from '../../store';
-import { api, setStoredTokens, clearStoredTokens, getStoredToken } from '../../api/client';
+import { api, setStoredTokens } from '../../api/client';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -63,7 +63,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
   const [loading, setLoading] = useState(false);
 
   const setRole = useStore((s) => s.setRole);
-  const setPersonId = useStore((s) => s.setPersonId);
+  const setSelectedCrewId = useStore((s) => s.setSelectedCrewId);
 
   if (!isOpen) return null;
 
@@ -76,7 +76,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
     if (isMock) {
       // Offline simulation fallback
       setRole(targetRole);
-      if (crewId) setPersonId(crewId);
+      if (crewId) setSelectedCrewId(crewId);
       setLoading(false);
       onClose();
       return;
@@ -102,9 +102,9 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
 
       setRole(mappedRole);
       if (resp.user?.crew_id) {
-        setPersonId(resp.user.crew_id.toLowerCase());
+        setSelectedCrewId(resp.user.crew_id.toLowerCase());
       } else if (crewId) {
-        setPersonId(crewId);
+        setSelectedCrewId(crewId);
       }
 
       setLoading(false);

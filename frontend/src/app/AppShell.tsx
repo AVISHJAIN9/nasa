@@ -79,17 +79,33 @@ export function AppShell() {
     setMobileMenuOpen(false);
   }, [page, role]);
 
-  // Listen for #integration route
+  // Synchronize hash routing bidirectionally
   useEffect(() => {
+    const validPages: AppPage[] = [
+      'home', 'woa', 'assistant', 'protocols', 'proof', 'limits',
+      'wellness', 'notes', 'orders', 'brief', 'whatif', 'audit',
+      'supplies', 'syndromes', 'forecast', 'telesession', 'broadcast',
+      'roadmap', 'integration'
+    ];
+
     const handleHash = () => {
-      if (window.location.hash === '#integration') {
-        setPage('integration');
+      const h = window.location.hash.replace('#', '').trim();
+      if (validPages.includes(h as AppPage)) {
+        setPage(h as AppPage);
       }
     };
+
     handleHash();
     window.addEventListener('hashchange', handleHash);
     return () => window.removeEventListener('hashchange', handleHash);
   }, [setPage]);
+
+  // Keep location hash in sync with page
+  useEffect(() => {
+    if (page && window.location.hash !== `#${page}`) {
+      window.location.hash = page;
+    }
+  }, [page]);
 
   // Set default role if null
   useEffect(() => {

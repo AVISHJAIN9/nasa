@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { PageHeader } from '../ui';
-import { api, getStoredToken } from '../../api/client';
+import { getStoredToken } from '../../api/client';
 
 export interface IntegrationTestItem {
   id: string;
@@ -21,7 +21,6 @@ export function Integration() {
   const [filterService, setFilterService] = useState<'ALL' | 'Node.js' | 'FastAPI' | 'Fused'>('ALL');
   const [search, setSearch] = useState('');
   const [isRunningAll, setIsRunningAll] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<IntegrationTestItem | null>(null);
 
   const initialItems: IntegrationTestItem[] = [
     {
@@ -444,9 +443,9 @@ export function Integration() {
   return (
     <div className="space-y-6 animate-fade-in">
       <PageHeader
+        eyebrow="SYSTEM DIAGNOSTICS"
         title="Integration Status & Live Endpoint Verification"
-        subtitle="In-app diagnostic matrix querying dual backends through single-origin proxy. Live execution, never mock data."
-        badgeText="SYSTEM DIAGNOSTICS"
+        description="In-app diagnostic matrix querying dual backends through single-origin proxy. Live execution, never mock data."
       />
 
       {/* Summary Scorecard */}
@@ -539,7 +538,7 @@ export function Integration() {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
-              {filteredItems.map((item, idx) => {
+              {filteredItems.map((item) => {
                 const isPassing = typeof item.lastStatus === 'number' && item.lastStatus < 400;
                 const isFailing = item.lastStatus === 'ERR' || (typeof item.lastStatus === 'number' && item.lastStatus >= 400);
 

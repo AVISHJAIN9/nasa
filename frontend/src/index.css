@@ -174,3 +174,24 @@ html.lenis body {
   animation-duration: 0.001ms !important;
   transition-duration: 0.001ms !important;
 }
+
+/* Interactive elements polish: 150-200ms transitions, pointer cursor, active feedback */
+button,
+[role="button"],
+input[type="range"],
+input[type="checkbox"],
+input[type="radio"] {
+  cursor: pointer;
+}
+
+button:not(:disabled):active,
+[role="button"]:not([aria-disabled="true"]):active {
+  transform: scale(0.99);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button:not(:disabled):active,
+  [role="button"]:not([aria-disabled="true"]):active {
+    transform: none !important;
+  }
+}

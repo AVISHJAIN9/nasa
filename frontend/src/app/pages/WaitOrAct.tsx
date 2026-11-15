@@ -1,6 +1,6 @@
 import {useState, useMemo} from 'react';
 import {useStore, type Incident} from '../../store';
-import {Panel, Gauge, PageHeader} from '../ui';
+import {Panel, Gauge, PageHeader, DelaySlider} from '../ui';
 import {ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend} from 'recharts';
 
 // Seeded RNG (seed 42) for deterministic policy comparison over 1000 simulated incidents
@@ -161,31 +161,15 @@ export function WaitOrAct() {
                 </div>
               </div>
 
-              {/* Slider: Latency Delay */}
-              <div className="space-y-2 font-mono text-xs">
-                <div className="flex justify-between items-center">
-                  <label htmlFor="latency-slider" className="text-regolith/70 uppercase">
-                    Round-Trip Signal Delay (Minutes)
-                  </label>
-                  <span className="text-earth font-bold text-sm">{sliderDelay} min RTT</span>
-                </div>
-                <input
-                  id="latency-slider"
-                  type="range"
-                  min="0"
-                  max="50"
-                  step="1"
-                  value={sliderDelay}
-                  onChange={(e) => setSliderDelay(Number(e.target.value))}
-                  className="w-full accent-earth h-1.5 bg-void rounded cursor-pointer"
-                />
-                <div className="flex justify-between text-[11px] text-regolith/40">
-                  <span>0m (LEO/ISS)</span>
-                  <span>6m (Moon)</span>
-                  <span>22m (Mars Mid)</span>
-                  <span>44m (Mars Conjunction)</span>
-                </div>
-              </div>
+              {/* Slider: Latency Delay with interactive hover tooltip & autonomy tiers */}
+              <DelaySlider
+                id="latency-slider"
+                roundTripMinutes={sliderDelay}
+                onChange={setSliderDelay}
+                min={0}
+                max={50}
+                step={1}
+              />
 
               {/* Decision Callout Badge */}
               <div className="rounded-xl border border-white/15 bg-void-2 p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
