@@ -2,6 +2,206 @@ import {useEffect, useState, useRef} from 'react';
 import {useStore, type MissionMode} from '../store';
 import {LogoIcon} from './ui/Logo';
 
+interface ToggleRowProps {
+  id?: string;
+  label: string;
+  subtext?: string;
+  checked: boolean;
+  onToggle: () => void;
+  accent?: 'earth' | 'mars' | 'emerald' | 'amber';
+  activeLabel?: string;
+  inactiveLabel?: string;
+  badge?: string;
+}
+
+function ToggleRow({
+  id,
+  label,
+  subtext,
+  checked,
+  onToggle,
+  accent = 'earth',
+  activeLabel = 'ENABLED',
+  inactiveLabel = 'DISABLED',
+  badge,
+}: ToggleRowProps) {
+  const accentTheme = {
+    earth: {
+      borderActive: 'border-earth/60 bg-earth/10 shadow-[0_0_12px_rgba(111,182,255,0.15)]',
+      thumb: 'bg-earth',
+      textActive: 'text-earth',
+      ring: 'focus-visible:ring-earth',
+    },
+    mars: {
+      borderActive: 'border-mars/60 bg-mars/10 shadow-[0_0_12px_rgba(226,112,74,0.15)]',
+      thumb: 'bg-mars',
+      textActive: 'text-mars',
+      ring: 'focus-visible:ring-mars',
+    },
+    emerald: {
+      borderActive: 'border-emerald-500/60 bg-emerald-500/10 shadow-[0_0_12px_rgba(16,185,129,0.15)]',
+      thumb: 'bg-emerald-400',
+      textActive: 'text-emerald-400',
+      ring: 'focus-visible:ring-emerald-400',
+    },
+    amber: {
+      borderActive: 'border-[#e0b03a]/60 bg-[#e0b03a]/10 shadow-[0_0_12px_rgba(224,176,58,0.15)]',
+      thumb: 'bg-[#e0b03a]',
+      textActive: 'text-[#e0b03a]',
+      ring: 'focus-visible:ring-[#e0b03a]',
+    },
+  }[accent];
+
+  return (
+    <div
+      id={id}
+      role="switch"
+      tabIndex={0}
+      aria-checked={checked}
+      onClick={onToggle}
+      onKeyDown={(e) => {
+        if (e.key === ' ' || e.key === 'Enter') {
+          e.preventDefault();
+          onToggle();
+        }
+      }}
+      className={`group w-full text-left rounded-lg p-2.5 border transition-all duration-150 cursor-pointer flex items-center justify-between select-none focus-visible:ring-2 focus-visible:outline-none ${accentTheme.ring} ${
+        checked
+          ? accentTheme.borderActive
+          : 'bg-void border-white/10 hover:border-white/25 hover:bg-white/5'
+      }`}
+    >
+      <div className="space-y-0.5 pr-2 min-w-0">
+        <div className="flex items-center gap-2">
+          <span className={`font-bold text-xs truncate transition-colors ${checked ? 'text-white' : 'text-regolith/90 group-hover:text-white'}`}>
+            {label}
+          </span>
+          {badge && (
+            <span className="text-[10px] text-regolith/50 uppercase font-mono px-1 py-0.2 rounded bg-white/5">
+              {badge}
+            </span>
+          )}
+        </div>
+        {subtext && <span className="text-[11px] text-regolith/60 block line-clamp-1">{subtext}</span>}
+      </div>
+
+      <div className="flex items-center gap-2 shrink-0">
+        <span className={`text-[10px] font-bold uppercase tracking-wider ${checked ? accentTheme.textActive : 'text-regolith/50'}`}>
+          {checked ? activeLabel : inactiveLabel}
+        </span>
+        <div
+          className={`w-9 h-5 rounded-full transition-colors p-0.5 flex items-center ${
+            checked ? accentTheme.thumb : 'bg-white/15 group-hover:bg-white/20'
+          }`}
+        >
+          <div
+            className={`w-4 h-4 rounded-full bg-void-2 shadow-md transform transition-transform duration-150 ${
+              checked ? 'translate-x-4' : 'translate-x-0'
+            }`}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+interface ToggleCardProps {
+  id?: string;
+  title: string;
+  subtitle: string;
+  checked: boolean;
+  onToggle: () => void;
+  accent?: 'earth' | 'mars' | 'emerald' | 'amber';
+  activeLabel?: string;
+  inactiveLabel?: string;
+  fullWidth?: boolean;
+}
+
+function ToggleCard({
+  id,
+  title,
+  subtitle,
+  checked,
+  onToggle,
+  accent = 'mars',
+  activeLabel = 'ACTIVE',
+  inactiveLabel = 'NOMINAL',
+  fullWidth = false,
+}: ToggleCardProps) {
+  const accentTheme = {
+    earth: {
+      borderActive: 'border-earth/60 bg-earth/10 shadow-[0_0_12px_rgba(111,182,255,0.15)]',
+      thumb: 'bg-earth',
+      textActive: 'text-earth',
+      ring: 'focus-visible:ring-earth',
+    },
+    mars: {
+      borderActive: 'border-mars/60 bg-mars/10 shadow-[0_0_12px_rgba(226,112,74,0.15)]',
+      thumb: 'bg-mars',
+      textActive: 'text-mars',
+      ring: 'focus-visible:ring-mars',
+    },
+    emerald: {
+      borderActive: 'border-emerald-500/60 bg-emerald-500/10 shadow-[0_0_12px_rgba(16,185,129,0.15)]',
+      thumb: 'bg-emerald-400',
+      textActive: 'text-emerald-400',
+      ring: 'focus-visible:ring-emerald-400',
+    },
+    amber: {
+      borderActive: 'border-[#e0b03a]/60 bg-[#e0b03a]/10 shadow-[0_0_12px_rgba(224,176,58,0.15)]',
+      thumb: 'bg-[#e0b03a]',
+      textActive: 'text-[#e0b03a]',
+      ring: 'focus-visible:ring-[#e0b03a]',
+    },
+  }[accent];
+
+  return (
+    <div
+      id={id}
+      role="switch"
+      tabIndex={0}
+      aria-checked={checked}
+      onClick={onToggle}
+      onKeyDown={(e) => {
+        if (e.key === ' ' || e.key === 'Enter') {
+          e.preventDefault();
+          onToggle();
+        }
+      }}
+      className={`group rounded-lg p-2.5 border transition-all duration-150 cursor-pointer select-none focus-visible:ring-2 focus-visible:outline-none ${
+        fullWidth ? 'col-span-2' : ''
+      } ${accentTheme.ring} ${
+        checked
+          ? accentTheme.borderActive
+          : 'bg-void border-white/10 hover:border-white/25 hover:bg-white/5'
+      }`}
+    >
+      <div className="flex items-center justify-between gap-1 mb-1">
+        <span className={`font-bold text-xs truncate ${checked ? 'text-white' : 'text-regolith/90 group-hover:text-white'}`}>
+          {title}
+        </span>
+        <div
+          className={`w-7 h-3.5 rounded-full transition-colors p-0.5 flex items-center shrink-0 ${
+            checked ? accentTheme.thumb : 'bg-white/15'
+          }`}
+        >
+          <div
+            className={`w-2.5 h-2.5 rounded-full bg-void shadow transform transition-transform duration-150 ${
+              checked ? 'translate-x-3.5' : 'translate-x-0'
+            }`}
+          />
+        </div>
+      </div>
+      <div className="flex items-center justify-between text-[11px]">
+        <span className="text-regolith/50 truncate">{subtitle}</span>
+        <span className={`font-bold uppercase tracking-wider text-[10px] shrink-0 ${checked ? accentTheme.textActive : 'text-regolith/40'}`}>
+          {checked ? activeLabel : inactiveLabel}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 export function DemoPanel() {
   const [open, setOpen] = useState(false);
 
@@ -24,8 +224,12 @@ export function DemoPanel() {
   const setMissedCheckInHours = useStore((s) => s.setMissedCheckInHours);
 
   const startCO2Leak = useStore((s) => s.startCO2Leak);
+  const toggleCO2Leak = useStore((s) => s.toggleCO2Leak);
   const startSolarEvent = useStore((s) => s.startSolarEvent);
+  const toggleSolarEvent = useStore((s) => s.toggleSolarEvent);
   const startIllness = useStore((s) => s.startIllness);
+  const toggleIllness = useStore((s) => s.toggleIllness);
+  const scenarios = useStore((s) => s.scenarios);
   const clearScenarios = useStore((s) => s.clearScenarios);
   const injectSensorFailure = useStore((s) => s.injectSensorFailure);
   const injectDrift = useStore((s) => s.injectDrift);
@@ -317,24 +521,19 @@ export function DemoPanel() {
             </div>
 
             {/* Offline-First Link Toggle (F039) */}
-            <div className="rounded-lg bg-void p-3 border border-white/10 space-y-2">
-              <div className="flex justify-between items-center">
-                <span className="text-[11px] text-white font-bold uppercase">Deep-Space Link (F039)</span>
-                <span className={`text-[11px] font-bold uppercase ${linkUp ? 'text-earth' : 'text-mars'}`}>
-                  {linkUp ? '● ONLINE' : '○ CARRIER LOSS'}
-                </span>
-              </div>
-              <button
-                type="button"
-                onClick={toggleLinkUp}
-                className={`w-full rounded py-2 text-xs font-bold uppercase border transition-colors min-h-[44px] ${
-                  !linkUp
-                    ? 'bg-mars text-white border-mars shadow-md'
-                    : 'bg-void-2 text-regolith/80 border-white/15 hover:border-mars hover:text-mars'
-                }`}
-              >
-                {linkUp ? 'Simulate Link Down (Pull Carrier)' : 'Restore Deep-Space Link'}
-              </button>
+            <div>
+              <span className="text-[11px] text-regolith/60 uppercase block mb-1.5">Deep-Space Link Carrier (F039)</span>
+              <ToggleRow
+                id="toggle-deep-space-link"
+                label="Deep-Space Carrier Link"
+                subtext={linkUp ? "DSN locked (continuous telemetry sync)" : "Carrier lost (store-and-forward offline queue active)"}
+                checked={linkUp}
+                onToggle={toggleLinkUp}
+                accent="earth"
+                activeLabel="ONLINE"
+                inactiveLabel="CARRIER LOSS"
+                badge="DSN"
+              />
             </div>
 
             {/* Consent Policy Version Bump (F006) */}
@@ -358,16 +557,18 @@ export function DemoPanel() {
                 <span className="text-[11px] text-white font-bold uppercase">Check-In Window (F035)</span>
                 <span className="text-mars text-[11px] font-bold">{missedCheckInHours}h threshold</span>
               </div>
-              <div className="grid grid-cols-3 gap-1.5">
+              <div role="radiogroup" aria-label="Missed check-in window" className="grid grid-cols-3 gap-1.5">
                 {[12, 24, 48].map((h) => (
                   <button
                     key={h}
                     type="button"
+                    role="radio"
+                    aria-checked={missedCheckInHours === h}
                     onClick={() => setMissedCheckInHours(h)}
-                    className={`rounded py-1.5 text-xs font-bold uppercase border transition-colors ${
+                    className={`rounded py-2 text-xs font-bold uppercase border transition-colors cursor-pointer min-h-[44px] focus-visible:ring-2 focus-visible:ring-mars focus-visible:outline-none ${
                       missedCheckInHours === h
-                        ? 'bg-mars text-white border-mars'
-                        : 'bg-void-2 text-regolith/70 border-white/10 hover:border-white/20'
+                        ? 'bg-mars text-white border-mars shadow-md'
+                        : 'bg-void-2 text-regolith/70 border-white/10 hover:border-white/20 hover:text-white'
                     }`}
                   >
                     {h}h Window
@@ -379,16 +580,18 @@ export function DemoPanel() {
             {/* Time Scaling */}
             <div>
               <span className="text-[11px] text-regolith/60 uppercase block mb-1.5">Simulation Velocity</span>
-              <div className="grid grid-cols-3 gap-2">
+              <div role="radiogroup" aria-label="Simulation velocity" className="grid grid-cols-3 gap-2">
                 {([1, 5, 20] as const).map((scale) => (
                   <button
                     key={scale}
                     type="button"
+                    role="radio"
+                    aria-checked={timeScale === scale}
                     onClick={() => setTimeScale(scale)}
-                    className={`rounded py-1 text-xs font-bold uppercase transition-colors border ${
+                    className={`rounded py-2 text-xs font-bold uppercase transition-colors border cursor-pointer min-h-[44px] focus-visible:ring-2 focus-visible:ring-earth focus-visible:outline-none ${
                       timeScale === scale
-                        ? 'bg-earth text-void border-earth'
-                        : 'bg-void text-regolith/80 border-white/10 hover:border-white/20'
+                        ? 'bg-earth text-void border-earth shadow-md'
+                        : 'bg-void text-regolith/80 border-white/10 hover:border-white/20 hover:text-white'
                     }`}
                   >
                     {scale}x Speed
@@ -400,16 +603,18 @@ export function DemoPanel() {
             {/* Mode Switcher */}
             <div>
               <span className="text-[11px] text-regolith/60 uppercase block mb-1.5">Mission Latency Mode</span>
-              <div className="grid grid-cols-3 gap-2">
+              <div role="radiogroup" aria-label="Mission latency mode" className="grid grid-cols-3 gap-2">
                 {(['ISS', 'MOON', 'MARS'] as MissionMode[]).map((m) => (
                   <button
                     key={m}
                     type="button"
+                    role="radio"
+                    aria-checked={mode === m}
                     onClick={() => setMode(m)}
-                    className={`rounded py-1 text-xs font-bold uppercase transition-colors border ${
+                    className={`rounded py-2 text-xs font-bold uppercase transition-colors border cursor-pointer min-h-[44px] focus-visible:ring-2 focus-visible:ring-mars focus-visible:outline-none ${
                       mode === m
-                        ? 'bg-mars text-white border-mars'
-                        : 'bg-void text-regolith/80 border-white/10 hover:border-white/20'
+                        ? 'bg-mars text-white border-mars shadow-md'
+                        : 'bg-void text-regolith/80 border-white/10 hover:border-white/20 hover:text-white'
                     }`}
                   >
                     {m}
@@ -420,72 +625,83 @@ export function DemoPanel() {
 
             {/* Injected Scenarios */}
             <div>
-              <span className="text-[11px] text-regolith/60 uppercase block mb-1.5">Emergency Scenarios</span>
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-[11px] text-regolith/60 uppercase">Emergency Scenarios</span>
+                <span className="text-[10px] text-regolith/40 font-mono">Row toggles state</span>
+              </div>
               <div className="grid grid-cols-2 gap-2">
-                <button
-                  type="button"
-                  onClick={startCO2Leak}
-                  className="rounded bg-void p-2 text-xs text-left text-white border border-white/10 hover:border-mars hover:text-mars transition-colors"
-                >
-                  <span className="font-bold block">CO2 Leak</span>
-                  <span className="text-[11px] text-regolith/50">+40ppm/s ramp</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={startSolarEvent}
-                  className="rounded bg-void p-2 text-xs text-left text-white border border-white/10 hover:border-mars hover:text-mars transition-colors"
-                >
-                  <span className="font-bold block">Solar Event</span>
-                  <span className="text-[11px] text-regolith/50">x40 flux spike</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => startIllness('okoye')}
-                  className="rounded bg-void p-2 text-xs text-left text-white border border-white/10 hover:border-mars hover:text-mars transition-colors col-span-2"
-                >
-                  <span className="font-bold block">Astronaut Illness (Amara Okoye)</span>
-                  <span className="text-[11px] text-regolith/50">Pyrexia & tachycardia drift</span>
-                </button>
+                <ToggleCard
+                  id="toggle-co2-leak"
+                  title="CO2 Leak"
+                  subtitle="+40ppm/s ramp"
+                  checked={scenarios.co2Leak.active}
+                  onToggle={toggleCO2Leak}
+                  accent="mars"
+                  activeLabel="LEAK ACTIVE"
+                  inactiveLabel="NOMINAL"
+                />
+                <ToggleCard
+                  id="toggle-solar-event"
+                  title="Solar Event"
+                  subtitle="x40 flux spike"
+                  checked={scenarios.solarEvent.active}
+                  onToggle={toggleSolarEvent}
+                  accent="mars"
+                  activeLabel="STORM ACTIVE"
+                  inactiveLabel="NOMINAL"
+                />
+                <ToggleCard
+                  id="toggle-crew-illness"
+                  title="Astronaut Illness (Okoye)"
+                  subtitle="Pyrexia & tachycardia drift"
+                  checked={scenarios.illness.active}
+                  onToggle={() => toggleIllness('okoye')}
+                  accent="mars"
+                  activeLabel="ILLNESS ACTIVE"
+                  inactiveLabel="NOMINAL"
+                  fullWidth
+                />
               </div>
             </div>
 
             {/* Network & Sensor Faults */}
             <div>
-              <span className="text-[11px] text-regolith/60 uppercase block mb-1.5">Network & Sensor Faults</span>
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-[11px] text-regolith/60 uppercase">Network & Sensor Faults</span>
+                <span className="text-[10px] text-regolith/40 font-mono">Row toggles state</span>
+              </div>
               <div className="grid grid-cols-2 gap-2">
-                <button
-                  type="button"
-                  onClick={injectSensorFailure}
-                  className={`rounded p-1.5 text-xs font-bold uppercase border transition-colors ${
-                    sensorFailure
-                      ? 'bg-mars text-white border-mars'
-                      : 'bg-void text-regolith/80 border-white/10 hover:border-white/20'
-                  }`}
-                >
-                  {sensorFailure ? 'Restore Sensor' : 'Sensor Failure'}
-                </button>
-                <button
-                  type="button"
-                  onClick={injectDrift}
-                  className={`rounded p-1.5 text-xs font-bold uppercase border transition-colors ${
-                    sensorDrift
-                      ? 'bg-[#e0b03a] text-void border-[#e0b03a]'
-                      : 'bg-void text-regolith/80 border-white/10 hover:border-white/20'
-                  }`}
-                >
-                  {sensorDrift ? 'Calibrate Drift' : 'Inject Drift'}
-                </button>
-                <button
-                  type="button"
-                  onClick={toggleCommsBlackout}
-                  className={`rounded p-1.5 text-xs font-bold uppercase border transition-colors col-span-2 ${
-                    commsBlackout
-                      ? 'bg-mars text-white border-mars'
-                      : 'bg-void text-regolith/80 border-white/10 hover:border-white/20'
-                  }`}
-                >
-                  {commsBlackout ? 'Lift Comms Blackout' : 'Engage Comms Blackout'}
-                </button>
+                <ToggleCard
+                  id="toggle-sensor-failure"
+                  title="Sensor Failure"
+                  subtitle="Disconnect pulse"
+                  checked={sensorFailure}
+                  onToggle={injectSensorFailure}
+                  accent="mars"
+                  activeLabel="FAULT INJECTED"
+                  inactiveLabel="CALIBRATED"
+                />
+                <ToggleCard
+                  id="toggle-sensor-drift"
+                  title="Sensor Drift"
+                  subtitle="+1.5%/min drift"
+                  checked={sensorDrift}
+                  onToggle={injectDrift}
+                  accent="amber"
+                  activeLabel="DRIFTING"
+                  inactiveLabel="CALIBRATED"
+                />
+                <ToggleCard
+                  id="toggle-comms-blackout"
+                  title="Comms Blackout"
+                  subtitle="Conjunction RF loss"
+                  checked={commsBlackout}
+                  onToggle={toggleCommsBlackout}
+                  accent="mars"
+                  activeLabel="BLACKOUT ACTIVE"
+                  inactiveLabel="CARRIER UP"
+                  fullWidth
+                />
               </div>
             </div>
 
@@ -495,7 +711,7 @@ export function DemoPanel() {
               <button
                 type="button"
                 onClick={tamperEventLog}
-                className="rounded bg-white/5 border border-white/10 px-2 py-1 text-[11px] text-regolith/70 hover:text-white uppercase focus-visible:ring-2 focus-visible:ring-earth"
+                className="rounded bg-white/5 border border-white/10 px-2 py-1 text-[11px] text-regolith/70 hover:text-white uppercase focus-visible:ring-2 focus-visible:ring-earth min-h-[36px]"
               >
                 Tamper Log Chain
               </button>
@@ -505,49 +721,39 @@ export function DemoPanel() {
             <div>
               <span className="text-[11px] text-regolith/60 uppercase block mb-1.5">System Feature Flags (F141)</span>
               <div className="space-y-1.5 text-xs">
-                {/* ML Alerts Flag */}
-                <div className="flex items-center justify-between p-2 rounded bg-void border border-white/10">
-                  <span className="text-white">ML Anomaly Alerts</span>
-                  <button
-                    type="button"
-                    onClick={toggleMlAlerts}
-                    className={`rounded px-2.5 py-0.5 font-bold uppercase text-[11px] border ${
-                      mlAlertsEnabled
-                        ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
-                        : 'bg-mars/20 text-mars border border-mars/40'
-                    }`}
-                  >
-                    {mlAlertsEnabled ? 'ENABLED' : 'OFF (Rules Only)'}
-                  </button>
-                </div>
-
-                {/* Assistant Mode Flag */}
-                <div className="flex items-center justify-between p-2 rounded bg-void border border-white/10">
-                  <span className="text-white">Assistant Mode</span>
-                  <button
-                    type="button"
-                    onClick={() => setAssistantMode(assistantMode === 'cloud' ? 'offline' : 'cloud')}
-                    className="rounded bg-earth/20 text-earth border border-earth/40 px-2.5 py-0.5 font-bold uppercase text-[11px]"
-                  >
-                    {assistantMode}
-                  </button>
-                </div>
-
-                {/* Wait-or-Act Flag */}
-                <div className="flex items-center justify-between p-2 rounded bg-void border border-white/10">
-                  <span className="text-white">Wait-or-Act Engine</span>
-                  <button
-                    type="button"
-                    onClick={toggleWaitOrAct}
-                    className={`rounded px-2.5 py-0.5 font-bold uppercase text-[11px] border ${
-                      waitOrActEnabled
-                        ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
-                        : 'bg-mars/20 text-mars border border-mars/40'
-                    }`}
-                  >
-                    {waitOrActEnabled ? 'ACTIVE' : 'BYPASS'}
-                  </button>
-                </div>
+                <ToggleRow
+                  id="toggle-ml-alerts"
+                  label="ML Anomaly Alerts"
+                  subtext="Neural risk prediction vs deterministic rules"
+                  checked={mlAlertsEnabled}
+                  onToggle={toggleMlAlerts}
+                  accent="emerald"
+                  activeLabel="ONLINE"
+                  inactiveLabel="RULES ONLY"
+                  badge="AI"
+                />
+                <ToggleRow
+                  id="toggle-assistant-mode"
+                  label="Assistant Engine"
+                  subtext={assistantMode === 'offline' ? "Local edge model (radiation-hardened)" : "Deep-space cloud relay"}
+                  checked={assistantMode === 'offline'}
+                  onToggle={() => setAssistantMode(assistantMode === 'cloud' ? 'offline' : 'cloud')}
+                  accent="earth"
+                  activeLabel="OFFLINE"
+                  inactiveLabel="CLOUD"
+                  badge="LLM"
+                />
+                <ToggleRow
+                  id="toggle-wait-or-act"
+                  label="Wait-or-Act Engine"
+                  subtext="Autonomy decision gate based on Mars latency"
+                  checked={waitOrActEnabled}
+                  onToggle={toggleWaitOrAct}
+                  accent="emerald"
+                  activeLabel="ACTIVE"
+                  inactiveLabel="BYPASSED"
+                  badge="AUTONOMY"
+                />
               </div>
             </div>
 

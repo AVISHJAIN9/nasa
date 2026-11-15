@@ -548,6 +548,15 @@ function getStoredJson<T>(key: string, fallback: T): T {
   }
 }
 
+function setStoredJson<T>(key: string, val: T): void {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem(key, JSON.stringify(val));
+  } catch {
+    // ignore quota/security errors
+  }
+}
+
 export interface AppStore {
   mode: MissionMode;
   role: UserRole;
@@ -749,8 +758,11 @@ export interface AppStore {
   updateWeeklyGoalText: (id: string, text: string) => void;
 
   startCO2Leak: () => void;
+  toggleCO2Leak: () => void;
   startSolarEvent: () => void;
+  toggleSolarEvent: () => void;
   startIllness: (crewId?: string) => void;
+  toggleIllness: (crewId?: string) => void;
   clearScenarios: () => void;
   injectSensorFailure: () => void;
   injectDrift: () => void;
@@ -881,9 +893,20 @@ export const useStore = create<AppStore>((set, get) => ({
     },
   },
   scenarios: {
-    co2Leak: {active: false, elapsed: 0, earlyWarningFired: false},
-    solarEvent: {active: false, elapsed: 0},
-    illness: {active: false, crewId: 'okoye', elapsed: 0},
+    co2Leak: {
+      active: getStoredJson<boolean>('astrocare_toggle_scenario_co2Leak', false),
+      elapsed: 0,
+      earlyWarningFired: false,
+    },
+    solarEvent: {
+      active: getStoredJson<boolean>('astrocare_toggle_scenario_solarEvent', false),
+      elapsed: 0,
+    },
+    illness: {
+      active: getStoredJson<boolean>('astrocare_toggle_scenario_illness', false),
+      crewId: 'okoye',
+      elapsed: 0,
+    },
   },
   alerts: [
     {
@@ -903,11 +926,11 @@ export const useStore = create<AppStore>((set, get) => ({
       resolveNote: 'Automated ground handshake completed.',
     },
   ],
-  aiDegraded: false,
-  aiDegradedReason: null,
-  sensorFailure: false,
+  aiDegraded: getStoredJson<boolean>('astrocare_toggle_sensorFailure', false),
+  aiDegradedReason: getStoredJson<boolean>('astrocare_toggle_sensorFailure', false) ? 'sensor quality' : null,
+  sensorFailure: getStoredJson<boolean>('astrocare_toggle_sensorFailure', false),
   sensorFailureElapsed: 0,
-  sensorDrift: false,
+  sensorDrift: getStoredJson<boolean>('astrocare_toggle_sensorDrift', false),
   sensorDriftElapsed: 0,
   timeScale: 1,
   emergency: null,
@@ -925,7 +948,7 @@ export const useStore = create<AppStore>((set, get) => ({
       status: 'delivered',
     },
   ],
-  commsBlackout: false,
+  commsBlackout: getStoredJson<boolean>('astrocare_toggle_commsBlackout', false),
   incidents: [
     {
       id: 'inc-demo-1',
@@ -962,7 +985,7 @@ export const useStore = create<AppStore>((set, get) => ({
   onboardingStep: 1,
   onboardingProfile: getStoredJson<{age: number; sex: 'M' | 'F' | 'O'; height: number; weight: number} | null>('astrocare_onboarding_profile', null),
   a11yMode: false,
-  linkUp: true,
+  linkUp: getStoredJson<boolean>('astrocare_toggle_linkUp', true),
   missedCheckInHours: 24,
   lastCheckInTimes: {
     vega: Date.now() - 86400000 * 1.2,
@@ -991,9 +1014,9 @@ export const useStore = create<AppStore>((set, get) => ({
     tanaka: {trueCount: 0, falseCount: 0},
   },
   medicalOfficerCrewId: 'vega', // Initially Vega is designated CMO
-  mlAlertsEnabled: true,
-  assistantMode: 'offline',
-  waitOrActEnabled: true,
+  mlAlertsEnabled: getStoredJson<boolean>('astrocare_toggle_mlAlertsEnabled', true),
+  assistantMode: getStoredJson<'cloud' | 'offline'>('astrocare_toggle_assistantMode', 'offline'),
+  waitOrActEnabled: getStoredJson<boolean>('astrocare_toggle_waitOrActEnabled', true),
 
   // Batch E State
   astronautHomeTab: 'live',
@@ -1117,6 +1140,17 @@ export const useStore = create<AppStore>((set, get) => ({
   },
 
   resetDemoState: () => {
+    setStoredJson('astrocare_toggle_sensorFailure', false);
+    setStoredJson('astrocare_toggle_sensorDrift', false);
+    setStoredJson('astrocare_toggle_commsBlackout', false);
+    setStoredJson('astrocare_toggle_linkUp', true);
+    setStoredJson('astrocare_toggle_mlAlertsEnabled', true);
+    setStoredJson('astrocare_toggle_assistantMode', 'offline');
+    setStoredJson('astrocare_toggle_waitOrActEnabled', true);
+    setStoredJson('astrocare_toggle_scenario_co2Leak', false);
+    setStoredJson('astrocare_toggle_scenario_solarEvent', false);
+    setStoredJson('astrocare_toggle_scenario_illness', false);
+
     const freshCrew = INITIAL_CREW.map((c) => ({
       ...c,
       readings: {
@@ -1352,6 +1386,7 @@ export const useStore = create<AppStore>((set, get) => ({
   toggleCommsBlackout: () =>
     set((s) => {
       const next = !s.commsBlackout;
+      setStoredJson('astrocare_toggle_commsBlackout', next);
       get().logEvent(`COMMS_LINK: ${next ? 'SOLAR_CONJUNCTION_BLACKOUT_ENGAGED' : 'CARRIER_RESTORED'}`, 'system', 'watchdog');
       get().addToast(next ? 'Deep space comms blackout engaged: messages held' : 'Comms carrier link re-established', next ? 'warn' : 'success');
       return {commsBlackout: next};
@@ -1567,6 +1602,7 @@ export const useStore = create<AppStore>((set, get) => ({
 
   toggleLinkUp: () => {
     const next = !get().linkUp;
+    setStoredJson('astrocare_toggle_linkUp', next);
     set({linkUp: next});
     get().logEvent(`DEEP_SPACE_LINK: ${next ? 'LINK_RESTORED' : 'LINK_DOWN_OFFLINE'}`, 'system', 'watchdog');
 
@@ -2256,17 +2292,20 @@ export const useStore = create<AppStore>((set, get) => ({
   // --- Batch D Feature Flags & Backup (F141, F128) ---
   toggleMlAlerts: () => {
     const next = !get().mlAlertsEnabled;
+    setStoredJson('astrocare_toggle_mlAlertsEnabled', next);
     set({mlAlertsEnabled: next});
     get().addToast(`ML Anomaly Engine: ${next ? 'ONLINE' : 'OFF (Deterministic Rules Only)'}`, next ? 'info' : 'warn');
   },
 
   setAssistantMode: (mode) => {
+    setStoredJson('astrocare_toggle_assistantMode', mode);
     set({assistantMode: mode});
     get().addToast(`Assistant Engine Mode set to ${mode.toUpperCase()}`, 'info');
   },
 
   toggleWaitOrAct: () => {
     const next = !get().waitOrActEnabled;
+    setStoredJson('astrocare_toggle_waitOrActEnabled', next);
     set({waitOrActEnabled: next});
     get().addToast(`Wait-or-Act Operational Engine: ${next ? 'ACTIVE' : 'BYPASSED'}`, 'info');
   },
@@ -2438,6 +2477,7 @@ export const useStore = create<AppStore>((set, get) => ({
   },
 
   startCO2Leak: () => {
+    setStoredJson('astrocare_toggle_scenario_co2Leak', true);
     set((s) => ({
       scenarios: {...s.scenarios, co2Leak: {active: true, elapsed: 0, earlyWarningFired: false}},
     }));
@@ -2450,7 +2490,24 @@ export const useStore = create<AppStore>((set, get) => ({
     get().logEvent('SCENARIO: CO2 leak ramp started', 'simulation', 'scenario');
   },
 
+  toggleCO2Leak: () => {
+    const isCurrentlyActive = get().scenarios.co2Leak.active;
+    if (isCurrentlyActive) {
+      setStoredJson('astrocare_toggle_scenario_co2Leak', false);
+      set((s) => ({
+        scenarios: {...s.scenarios, co2Leak: {active: false, elapsed: 0, earlyWarningFired: false}},
+        cabin: {...s.cabin, co2: 820},
+      }));
+      get().logEvent('SCENARIO: CO2 leak stopped', 'simulation', 'scenario');
+      get().addToast('CO2 leak resolved — Hab atmosphere nominal', 'success');
+    } else {
+      get().startCO2Leak();
+      get().addToast('CO2 leak scenario active (+40ppm/s ramp)', 'warn');
+    }
+  },
+
   startSolarEvent: () => {
+    setStoredJson('astrocare_toggle_scenario_solarEvent', true);
     set((s) => ({
       scenarios: {...s.scenarios, solarEvent: {active: true, elapsed: 0}},
     }));
@@ -2462,7 +2519,27 @@ export const useStore = create<AppStore>((set, get) => ({
     get().logEvent('SCENARIO: Solar particle event spike started', 'simulation', 'scenario');
   },
 
+  toggleSolarEvent: () => {
+    const isCurrentlyActive = get().scenarios.solarEvent.active;
+    if (isCurrentlyActive) {
+      setStoredJson('astrocare_toggle_scenario_solarEvent', false);
+      set((s) => ({
+        scenarios: {...s.scenarios, solarEvent: {active: false, elapsed: 0}},
+        cabin: {
+          ...s.cabin,
+          radiation: {...s.cabin.radiation, dailyDose: 1.8},
+        },
+      }));
+      get().logEvent('SCENARIO: Solar particle event normalized', 'simulation', 'scenario');
+      get().addToast('Solar event cleared — Storm shelter released', 'success');
+    } else {
+      get().startSolarEvent();
+      get().addToast('Solar event scenario active (x40 flux spike)', 'warn');
+    }
+  },
+
   startIllness: (crewId = 'okoye') => {
+    setStoredJson('astrocare_toggle_scenario_illness', true);
     set((s) => ({
       scenarios: {...s.scenarios, illness: {active: true, crewId, elapsed: 0}},
     }));
@@ -2475,7 +2552,28 @@ export const useStore = create<AppStore>((set, get) => ({
     get().logEvent(`SCENARIO: Sepsis illness progression on ${crewId}`, 'simulation', 'scenario');
   },
 
-  clearScenarios: () =>
+  toggleIllness: (crewId = 'okoye') => {
+    const isCurrentlyActive = get().scenarios.illness.active;
+    if (isCurrentlyActive) {
+      setStoredJson('astrocare_toggle_scenario_illness', false);
+      set((s) => ({
+        scenarios: {...s.scenarios, illness: {active: false, crewId, elapsed: 0}},
+      }));
+      get().logEvent(`SCENARIO: Illness resolved on ${crewId}`, 'simulation', 'scenario');
+      get().addToast(`Illness scenario cleared for ${crewId}`, 'success');
+    } else {
+      get().startIllness(crewId);
+      get().addToast(`Astronaut illness scenario active (${crewId})`, 'warn');
+    }
+  },
+
+  clearScenarios: () => {
+    setStoredJson('astrocare_toggle_scenario_co2Leak', false);
+    setStoredJson('astrocare_toggle_scenario_solarEvent', false);
+    setStoredJson('astrocare_toggle_scenario_illness', false);
+    setStoredJson('astrocare_toggle_sensorFailure', false);
+    setStoredJson('astrocare_toggle_sensorDrift', false);
+    setStoredJson('astrocare_toggle_commsBlackout', false);
     set({
       scenarios: {
         co2Leak: {active: false, elapsed: 0, earlyWarningFired: false},
@@ -2507,19 +2605,35 @@ export const useStore = create<AppStore>((set, get) => ({
         startWallTime: 0,
       },
       painMapMode: '3d',
-    }),
+    });
+    get().addToast('Cleared all active emergency scenarios', 'info');
+  },
 
   injectSensorFailure: () =>
-    set((s) => ({
-      sensorFailure: !s.sensorFailure,
-      sensorFailureElapsed: 0,
-    })),
+    set((s) => {
+      const next = !s.sensorFailure;
+      setStoredJson('astrocare_toggle_sensorFailure', next);
+      get().logEvent(`SENSOR_FAULT: Biometric sensor failure ${next ? 'INJECTED' : 'RESOLVED'}`, 'system', 'sensor');
+      get().addToast(next ? 'Sensor failure injected (AI Degraded mode active)' : 'Sensor restored to nominal calibration', next ? 'warn' : 'success');
+      return {
+        sensorFailure: next,
+        sensorFailureElapsed: 0,
+        aiDegraded: next,
+        aiDegradedReason: next ? 'sensor quality' : null,
+      };
+    }),
 
   injectDrift: () =>
-    set((s) => ({
-      sensorDrift: !s.sensorDrift,
-      sensorDriftElapsed: 0,
-    })),
+    set((s) => {
+      const next = !s.sensorDrift;
+      setStoredJson('astrocare_toggle_sensorDrift', next);
+      get().logEvent(`SENSOR_DRIFT: Calibration drift ${next ? 'INJECTED' : 'CALIBRATED'}`, 'system', 'sensor');
+      get().addToast(next ? 'Sensor drift injected (+1.5%/min)' : 'Sensor drift calibrated', next ? 'warn' : 'success');
+      return {
+        sensorDrift: next,
+        sensorDriftElapsed: 0,
+      };
+    }),
 
   computeRiskScore: (member: CrewMember) => {
     const hrLatest = member.readings.hr[member.readings.hr.length - 1]?.value ?? member.baseline.hr;
