@@ -1,6 +1,7 @@
 import {useState, type MouseEvent} from 'react';
 import {brand, nav} from '../content';
 import {scrollToHash} from '../lib/scroll';
+import {Logo, LogoIcon} from '../app/ui/Logo';
 
 function go(e: MouseEvent<HTMLAnchorElement>, then?: () => void) {
   const hash = e.currentTarget.getAttribute('href');
@@ -10,23 +11,13 @@ function go(e: MouseEvent<HTMLAnchorElement>, then?: () => void) {
   scrollToHash(hash);
 }
 
-/** A crescent: the mark. */
-function Crescent({className = ''}: {className?: string}) {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true" className={className}>
-      <path d="M15.5 3.2A9 9 0 1 0 20.8 16 7.2 7.2 0 0 1 15.5 3.2Z" fill="currentColor" />
-    </svg>
-  );
-}
-
 export function Header() {
   const [open, setOpen] = useState(false);
   return (
     <header className="fixed inset-x-0 top-0 z-50 text-white">
       <div className="flex items-center justify-between px-4 pt-4 sm:px-6 sm:pt-5 md:px-[3vw]">
         <a href="#top" onClick={(e) => go(e)} className="flex items-center gap-2.5" aria-label={`${brand.name} — back to top`}>
-          <Crescent className="size-5" />
-          <span className="font-display text-[0.9375rem] tracking-[0.36em]">{brand.wordmark}</span>
+          <Logo size={24} />
         </a>
         <nav aria-label="Primary" className="hidden items-center gap-8 md:flex">
           {nav.map((item) => (
@@ -59,7 +50,7 @@ export function Footer() {
     <footer className="border-t border-white/10 bg-void px-4 py-8 sm:px-6 md:px-[6vw]">
       <div className="flex flex-col gap-4 font-mono text-label text-regolith/50 uppercase md:flex-row md:items-center md:justify-between">
         <span className="flex items-center gap-2.5 text-white/80">
-          <Crescent className="size-4 shrink-0" />
+          <LogoIcon size={20} />
           <span>{brand.wordmark} · AstroCare: how should a Mars crew decide when a reply takes 20 minutes? A decision-support prototype on simulated and public data. Not a medical device.</span>
         </span>
         <span>© {new Date().getFullYear()} · Imagery generated for this concept</span>

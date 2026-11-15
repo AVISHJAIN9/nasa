@@ -169,11 +169,18 @@ export function Surgeon() {
                     : 'text-earth border-earth/30 bg-earth/5';
 
                 return (
-                  <button
+                  <div
                     key={member.id}
-                    type="button"
+                    role="button"
+                    tabIndex={0}
                     onClick={() => setSelectedCrewId(member.id)}
-                    className={`relative rounded-xl p-4 text-left transition-all border min-h-[44px] focus-visible:ring-2 focus-visible:ring-earth focus-visible:outline-none ${
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setSelectedCrewId(member.id);
+                      }
+                    }}
+                    className={`relative rounded-xl p-4 text-left transition-all border min-h-[44px] cursor-pointer focus-visible:ring-2 focus-visible:ring-earth focus-visible:outline-none ${
                       isSelected
                         ? 'border-earth bg-void-2 shadow-[0_0_20px_rgba(111,182,255,0.12)]'
                         : 'border-white/10 bg-void-2/60 hover:border-white/25'
@@ -255,7 +262,7 @@ export function Surgeon() {
                         {medicalOfficerCrewId === member.id ? 'Revoke CMO' : 'Designate CMO'}
                       </button>
                     </div>
-                  </button>
+                  </div>
                 );
               })}
             </div>

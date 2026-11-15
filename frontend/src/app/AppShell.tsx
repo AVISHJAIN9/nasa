@@ -8,7 +8,7 @@ import {
   type MissionMode,
   type AppPage,
 } from '../store';
-import {ErrorBoundary, PageSkeleton} from './ui';
+import {ErrorBoundary, PageSkeleton, Logo} from './ui';
 import {DemoPanel} from './DemoPanel';
 import {ConsentModal} from './ui/ConsentModal';
 import {OnboardingWizard} from './ui/OnboardingWizard';
@@ -70,9 +70,21 @@ export function AppShell() {
   const toggleA11yMode = useStore((s) => s.toggleA11yMode);
   const mlAlertsEnabled = useStore((s) => s.mlAlertsEnabled);
   const narrationCaption = useStore((s) => s.narrationCaption);
+  const storyRunning = useStore((s) => s.storyRunning);
+  const stopMarsStory = useStore((s) => s.stopMarsStory);
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showExitTourModal, setShowExitTourModal] = useState(false);
   const [clock, setClock] = useState(() => new Date().toLocaleTimeString());
+
+  const handleBrandHomeClick = () => {
+    if (storyRunning) {
+      setShowExitTourModal(true);
+      return;
+    }
+    setPage('home');
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  };
 
   // Close drawer on route or role change
   useEffect(() => {
@@ -284,16 +296,16 @@ export function AppShell() {
   const sidebarContent = (
     <div className="flex flex-col h-full justify-between p-4 space-y-6">
       <div className="space-y-5">
-        {/* Brand Wordmark */}
+        {/* Brand Wordmark & Home Navigation */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <svg viewBox="0 0 24 24" aria-hidden="true" className="size-5 text-white">
-              <path d="M15.5 3.2A9 9 0 1 0 20.8 16 7.2 7.2 0 0 1 15.5 3.2Z" fill="currentColor" />
-            </svg>
-            <span className="font-display text-[0.9375rem] tracking-[0.24em] text-white font-bold uppercase">
-              ASTROCARE
-            </span>
-          </div>
+          <button
+            type="button"
+            onClick={handleBrandHomeClick}
+            className="flex items-center gap-2.5 text-left group focus-visible:ring-2 focus-visible:ring-earth rounded-md p-1 -m-1 transition-transform duration-150 active:scale-95 cursor-pointer"
+            aria-label="AstroCare — Return to Home"
+          >
+            <Logo size={26} glow />
+          </button>
           <button
             type="button"
             onClick={() => setMobileMenuOpen(false)}
@@ -547,6 +559,15 @@ export function AppShell() {
               </svg>
             </button>
 
+            <button
+              type="button"
+              onClick={handleBrandHomeClick}
+              className="md:hidden flex items-center p-1 rounded hover:bg-white/5 focus-visible:ring-2 focus-visible:ring-earth"
+              aria-label="AstroCare — Return to Home"
+            >
+              <Logo size={20} showWordmark={false} />
+            </button>
+
             <span className="text-white font-bold tracking-wider hidden sm:inline">
               SOL 142 · {clock} UTC
             </span>
@@ -716,6 +737,46 @@ export function AppShell() {
           </div>
           <p className="text-regolith leading-relaxed">{narrationCaption}</p>
         </aside>
+      )}
+
+      {/* Exit Demo Tour Confirmation Modal (A8) */}
+      {showExitTourModal && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="exit-tour-title"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in"
+        >
+          <div className="w-full max-w-sm rounded-xl bg-void-2 border border-white/20 p-5 font-mono text-xs shadow-2xl">
+            <h4 id="exit-tour-title" className="font-display text-sm uppercase text-white font-bold mb-2">
+              Exit Demo Tour?
+            </h4>
+            <p className="text-regolith/70 mb-5 leading-relaxed">
+              The 8-minute Mars mission tour is currently active. Do you want to stop the tour and return to Home Console?
+            </p>
+            <div className="flex justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => setShowExitTourModal(false)}
+                className="rounded px-3 py-1.5 border border-white/10 text-regolith/80 hover:text-white uppercase font-bold focus-visible:ring-2 focus-visible:ring-earth"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  stopMarsStory();
+                  setShowExitTourModal(false);
+                  setPage('home');
+                  window.scrollTo({top: 0, behavior: 'smooth'});
+                }}
+                className="rounded bg-mars px-3 py-1.5 text-white uppercase font-bold hover:bg-mars/90 shadow-md focus-visible:ring-2 focus-visible:ring-mars"
+              >
+                Exit Tour & Go Home
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Floating Demo Simulation Lab Panel */}

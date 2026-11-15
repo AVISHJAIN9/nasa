@@ -1,5 +1,6 @@
 import {useEffect, useState, useRef} from 'react';
 import {useStore, type MissionMode} from '../store';
+import {LogoIcon} from './ui/Logo';
 
 export function DemoPanel() {
   const [open, setOpen] = useState(false);
@@ -136,9 +137,12 @@ export function DemoPanel() {
         >
           <div className="space-y-5">
             <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <div>
-                <h3 className="font-display text-sm tracking-wider text-white uppercase">Clinical Demo Lab</h3>
-                <span className="text-[11px] text-regolith/50">Autonomous Deep-Space Verification</span>
+              <div className="flex items-center gap-2.5">
+                <LogoIcon size={24} glow />
+                <div>
+                  <h3 className="font-display text-sm tracking-wider text-white uppercase">Clinical Demo Lab</h3>
+                  <span className="text-[11px] text-regolith/50">Autonomous Deep-Space Verification</span>
+                </div>
               </div>
               <button
                 type="button"

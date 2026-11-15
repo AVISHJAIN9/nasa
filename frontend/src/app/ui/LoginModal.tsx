@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useStore, UserRole } from '../../store';
 import { api, setStoredTokens } from '../../api/client';
+import { LogoIcon } from './Logo';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -131,7 +132,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
         <div className="flex items-center justify-between pb-4 mb-4 border-b border-white/10">
           <div>
             <h2 className="text-lg font-bold font-mono tracking-tight flex items-center gap-2">
-              <span className="text-earth">🛡️</span> AstroCare Authentication
+              <LogoIcon size={22} glow /> <span>AstroCare Authentication</span>
             </h2>
             <p className="text-xs text-regolith/70 font-mono">
               Sign in with unified JWT credentials or select a pre-seeded demo profile

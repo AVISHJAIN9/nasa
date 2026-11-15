@@ -14,7 +14,13 @@ export async function capture(pageName = 'home', prefix = 'run') {
   const browser = await puppeteer.launch({
     executablePath: CHROME_PATH,
     headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu'],
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-gpu',
+      '--use-fake-ui-for-media-stream',
+      '--use-fake-device-for-media-stream',
+    ],
   });
 
   const errors = [];
