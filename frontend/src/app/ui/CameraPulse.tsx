@@ -7,7 +7,6 @@ export function CameraPulse() {
   const cameraPulseActive = useStore((s) => s.cameraPulseActive);
   const setCameraPulseActive = useStore((s) => s.setCameraPulseActive);
   const updateVegaLivePulse = useStore((s) => s.updateVegaLivePulse);
-  const liveCameraBpm = useStore((s) => s.liveCameraBpm);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const sampleCanvasRef = useRef<HTMLCanvasElement>(null);
@@ -42,6 +41,9 @@ export function CameraPulse() {
       streamRef.current.getTracks().forEach((track) => track.stop());
       streamRef.current = null;
     }
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
     setCameraPulseActive(false);
     setBpm(null);
     setIsGatePassing(false);
@@ -52,22 +54,32 @@ export function CameraPulse() {
     setErrorMsg(null);
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'user', width: { ideal: 320 }, height: { ideal: 240 } },
+        video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } },
         audio: false,
       });
       streamRef.current = stream;
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        await videoRef.current.play();
-      }
       setCameraPulseActive(true);
-      processFrame();
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Camera permission denied or unavailable';
       setErrorMsg(msg);
       setCameraPulseActive(false);
     }
   };
+
+  useEffect(() => {
+    if (cameraPulseActive && streamRef.current && videoRef.current) {
+      const video = videoRef.current;
+      if (video.srcObject !== streamRef.current) {
+        video.srcObject = streamRef.current;
+      }
+      video.play().catch((err) => {
+        console.warn('Video play error:', err);
+      });
+      if (!rafRef.current) {
+        rafRef.current = requestAnimationFrame(processFrame);
+      }
+    }
+  }, [cameraPulseActive]);
 
   const processFrame = async () => {
     const video = videoRef.current;
@@ -87,7 +99,7 @@ export function CameraPulse() {
         setGateMessage(output.gateMessage);
       }
 
-      if (!output.isGatePassing || output.pulseBpm === null) {
+      if (!output.isGatePassing || output.pulseBpm == null) {
         // Quality gate is failing: strictly NO BPM and NO REAL provenance
         setBpm(null);
         setQuality('poor');
@@ -199,7 +211,7 @@ export function CameraPulse() {
             type="button"
             onClick={startCamera}
             id="start-camera-pulse-btn"
-            className="rounded bg-earth px-4 py-2 font-bold text-void uppercase hover:bg-earth/90 transition-colors shrink-0"
+            className="rounded bg-earth px-4 py-2 font-bold text-void uppercase hover:bg-earth/90 active:scale-[0.97] transition-all duration-150 ease-out touch-manipulation cursor-pointer shrink-0"
           >
             Measure my pulse
           </button>
@@ -221,7 +233,19 @@ export function CameraPulse() {
             {/* Live Video Preview (Small) & Canvas */}
             <div className="sm:col-span-4 relative rounded overflow-hidden aspect-video bg-black/60 border border-white/15">
               <video
-                ref={videoRef}
+                ref={(el) => {
+                  videoRef.current = el;
+                  if (el && streamRef.current && el.srcObject !== streamRef.current) {
+                    el.srcObject = streamRef.current;
+                    el.play().catch((err) => {
+                      console.warn('Video play error:', err);
+                    });
+                    if (!rafRef.current) {
+                      rafRef.current = requestAnimationFrame(processFrame);
+                    }
+                  }
+                }}
+                autoPlay
                 playsInline
                 muted
                 className="w-full h-full object-cover scale-x-[-1]"
@@ -286,7 +310,7 @@ export function CameraPulse() {
                 <button
                   type="button"
                   onClick={stopCamera}
-                  className="rounded bg-white/10 px-3 py-1 text-white uppercase hover:bg-white/20 transition-colors"
+                  className="rounded bg-white/10 px-3 py-1 text-white uppercase hover:bg-white/20 active:scale-[0.97] transition-all duration-150 ease-out touch-manipulation cursor-pointer"
                 >
                   Stop Camera
                 </button>
