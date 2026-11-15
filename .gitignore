@@ -1,0 +1,8 @@
+node_modules
+dist
+assets-src/
+*.glb
+!public/models/anatomy.glb
+.env
+.DS_Store
+node_modules
