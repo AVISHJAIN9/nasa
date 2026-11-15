@@ -10,6 +10,8 @@ import { BroadcastAnnouncement } from '../models/BroadcastAnnouncement.js';
 import { validateBody } from '../middleware/validation.js';
 import { NotFoundException } from '../middleware/errors.js';
 
+import { authenticateToken, requireRole } from '../middleware/auth.js';
+
 const router = Router();
 
 const BroadcastSchema = z.object({
@@ -26,7 +28,7 @@ const ReceiptSchema = z.object({
   crew_id: z.string().optional()
 });
 
-router.post('/api/v1/broadcasts', validateBody(BroadcastSchema), async (req, res, next) => {
+router.post('/api/v1/broadcasts', authenticateToken, requireRole(['mission_control', 'flight_surgeon', 'admin']), validateBody(BroadcastSchema), async (req, res, next) => {
   try {
     const broadcast = await createBroadcast(req.body);
     res.status(201).json(broadcast);

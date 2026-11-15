@@ -13,8 +13,10 @@ export async function comparePassword(plainPassword, hash) {
 }
 
 export function generateTokens(user) {
+  const userId = user._id ? user._id.toString() : (user.id || user.userId);
   const payload = {
-    userId: user._id ? user._id.toString() : user.id,
+    sub: userId,
+    userId: userId,
     username: user.username,
     role: user.role,
     crew_id: user.crew_id
@@ -22,7 +24,7 @@ export function generateTokens(user) {
 
   const accessToken = jwt.sign(payload, config.jwtSecret, { expiresIn: '15m' });
   const refreshToken = jwt.sign(
-    { userId: payload.userId, type: 'refresh' },
+    { sub: userId, userId: userId, type: 'refresh' },
     config.jwtSecret,
     { expiresIn: '7d' }
   );

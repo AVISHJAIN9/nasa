@@ -92,3 +92,64 @@ def scan_file_for_secrets(filepath: str) -> list[tuple[int, str]]:
                 if pattern.search(line):
                     findings.append((line_num, line.strip()))
     return findings
+
+
+# --- Unified JWT Authentication & Role-Based Access Control ---
+import jwt
+from fastapi import Header, HTTPException, status, Depends
+from pydantic import BaseModel
+
+class TokenClaims(BaseModel):
+    sub: str
+    role: str
+    crew_id: str | None = None
+    username: str | None = None
+
+
+def verify_jwt_token(authorization: str | None = Header(None)) -> TokenClaims:
+    """Verify bearer JWT token issued by Node auth service (F001)."""
+    if not authorization:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Authorization header missing",
+        )
+    parts = authorization.split()
+    if len(parts) != 2 or parts[0].lower() != "bearer":
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid authorization format; must be Bearer <token>",
+        )
+    token = parts[1]
+    settings = get_settings()
+    secret = settings.JWT_SECRET.get_secret_value()
+    try:
+        payload = jwt.decode(token, secret, algorithms=["HS256"])
+        return TokenClaims(
+            sub=str(payload.get("sub") or payload.get("userId") or ""),
+            role=str(payload.get("role", "astronaut")),
+            crew_id=payload.get("crew_id"),
+            username=payload.get("username"),
+        )
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Token has expired; please re-login",
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f"Invalid authentication token: {str(e)}",
+        )
+
+
+def require_role(allowed_roles: list[str]):
+    """FastAPI dependency to enforce role policy."""
+    def role_checker(claims: TokenClaims = Depends(verify_jwt_token)) -> TokenClaims:
+        if allowed_roles and claims.role not in allowed_roles:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"Role '{claims.role}' lacks permission for this resource. Required: {allowed_roles}",
+            )
+        return claims
+    return role_checker
+

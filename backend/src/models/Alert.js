@@ -15,7 +15,7 @@ const AlertSchema = new mongoose.Schema(
     },
     source: {
       type: String,
-      enum: ['RULE', 'ANOMALY', 'RISK_SCORE', 'CABIN', 'MANUAL_EMERGENCY', 'FUSED'],
+      set: (v) => (v ? String(v).toUpperCase() : 'RULE'),
       default: 'RULE',
       index: true
     },
@@ -26,12 +26,17 @@ const AlertSchema = new mongoose.Schema(
     },
     metric: {
       type: String,
-      required: true,
+      default: 'vitals',
       index: true
     },
     severity: {
       type: String,
-      enum: ['INFO', 'WARNING', 'CRITICAL', 'EMERGENCY'],
+      set: (v) => {
+        if (!v) return 'WARNING';
+        const up = String(v).toUpperCase();
+        if (up === 'WATCH') return 'WARNING';
+        return up;
+      },
       default: 'WARNING',
       index: true
     },
@@ -51,7 +56,13 @@ const AlertSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['ACTIVE', 'ACKNOWLEDGED', 'SNOOZED', 'RESOLVED'],
+      set: (v) => {
+        if (!v) return 'ACTIVE';
+        const up = String(v).toUpperCase();
+        if (up === 'NEW') return 'ACTIVE';
+        if (up === 'ACK') return 'ACKNOWLEDGED';
+        return up;
+      },
       default: 'ACTIVE',
       index: true
     },

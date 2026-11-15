@@ -6,6 +6,16 @@ import {
   type OfflineCheckInRecord,
 } from './app/lib/offlineQueue';
 import {getCompanionResponse} from './data/companion';
+import {
+  bridgeAcknowledgeAlert,
+  bridgeResolveAlert,
+  bridgeSaveCheckIn,
+  bridgeSaveSoapNote,
+  bridgeSaveOrder,
+  bridgeSaveBroadcast,
+  bridgeSaveConsultMessage,
+  bridgeSetMissionMode
+} from './api/bridge';
 
 export type MissionMode = 'ISS' | 'MOON' | 'MARS';
 export type UserRole = 'astronaut' | 'surgeon' | 'control' | null;
@@ -1181,6 +1191,7 @@ export const useStore = create<AppStore>((set, get) => ({
     if (oldLevel !== newLevel) {
       get().addToast(`Mission mode changed autonomy level to Level ${newLevel} (${LEVELS[newLevel].label})`, 'info');
     }
+    bridgeSetMissionMode(mode).catch(() => {});
   },
 
   setRole: (role) => {
@@ -1207,6 +1218,7 @@ export const useStore = create<AppStore>((set, get) => ({
     }));
     get().logEvent(`ALERT_ACK: Alert ${id} acknowledged by operator`, get().role || 'operator', 'alert');
     get().addToast(`Alert ${id} acknowledged`, 'success');
+    bridgeAcknowledgeAlert(id, get().role || 'operator').catch(() => {});
   },
 
   resolveAlert: (id, note) => {
@@ -1215,6 +1227,7 @@ export const useStore = create<AppStore>((set, get) => ({
     }));
     get().logEvent(`ALERT_RESOLVE: Alert ${id} resolved with note: ${note || 'None'}`, get().role || 'operator', 'alert');
     get().addToast(`Alert ${id} resolved`, 'success');
+    bridgeResolveAlert(id, note || '', get().role || 'operator').catch(() => {});
   },
 
   addCheckIn: (ci) => {
@@ -1230,6 +1243,7 @@ export const useStore = create<AppStore>((set, get) => ({
       timestamp: now,
       status: isOnline ? 'synced' : 'pending',
     };
+    bridgeSaveCheckIn(checkIn).catch(() => {});
 
     set((s) => ({
       lastCheckInTimes: {
@@ -1321,6 +1335,7 @@ export const useStore = create<AppStore>((set, get) => ({
     };
 
     set((s) => ({messages: [newMsg, ...s.messages]}));
+    bridgeSaveConsultMessage(newMsg).catch(() => {});
     get().logEvent(`MSG_QUEUED: ${from.toUpperCase()} [${kind.toUpperCase()}]: ${text.slice(0, 40)}`, from, 'general');
     if (!state.linkUp) {
       get().addToast(`Message queued in transit buffer (Deep-space link currently down)`, 'warn');
@@ -2031,6 +2046,7 @@ export const useStore = create<AppStore>((set, get) => ({
 
     get().logEvent(`SOAP_NOTE_SAVED: Version ${nextVer} for ${crewId} saved by ${author}`, author, 'note');
     get().addToast(`SOAP Note v${nextVer} saved for ${crewId}`, 'success');
+    bridgeSaveSoapNote(crewId, author, subjective, objective, assessment, plan, `note-${crewId}-${nextVer}`).catch(() => {});
   },
 
   restoreNoteVersion: (crewId, version) => {
@@ -2067,6 +2083,7 @@ export const useStore = create<AppStore>((set, get) => ({
     set((s) => ({orders: [newOrder, ...s.orders]}));
     get().logEvent(`ORDER_DISPATCHED: [${type.toUpperCase()}] to ${targetCrewId}: ${text.slice(0, 45)}`, composedBy, 'order');
     get().addToast(`Directive dispatched to ${targetCrewId} (${Math.round(oneWaySec / 60)}m latency delay)`, 'info');
+    bridgeSaveOrder(newOrder).catch(() => {});
   },
 
   acknowledgeOrder: (orderId, astronautName) => {
@@ -2117,6 +2134,7 @@ export const useStore = create<AppStore>((set, get) => ({
     set((s) => ({broadcasts: [newBroadcast, ...s.broadcasts]}));
     get().logEvent(`BROADCAST_SENT: [${priority.toUpperCase()}] ${title}`, sentBy, 'general');
     get().addToast(`Broadcast dispatched to all crew modules`, 'info');
+    bridgeSaveBroadcast(newBroadcast).catch(() => {});
   },
 
   markBroadcastRead: (broadcastId, crewId, crewName) => {

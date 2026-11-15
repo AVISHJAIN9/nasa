@@ -1,7 +1,7 @@
-"""TEMP-until-DB: phase_thresholds, baseline_history, watchdog_events, face_metrics, motion_readings, motion_night, gesture_log, twin_state, panel_votes, fed_rounds
+"""Phase thresholds, baseline history, watchdog events, face metrics, motion readings, motion night, gesture log, twin state, panel votes, fed rounds
 
-Revision ID: 0003_TEMP_until_DB
-Revises: 0002_TEMP_until_DB
+Revision ID: 0003_multimodal_twin_fed
+Revises: 0002_signal_voice_behavior
 Create Date: 2026-11-14 20:45:00.000000
 
 """
@@ -11,8 +11,8 @@ from collections.abc import Sequence
 import sqlalchemy as sa
 from alembic import op
 
-revision: str = "0003_TEMP_until_DB"
-down_revision: str | None = "0002_TEMP_until_DB"
+revision: str = "0003_multimodal_twin_fed"
+down_revision: str | None = "0002_signal_voice_behavior"
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
 

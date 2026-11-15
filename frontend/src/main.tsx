@@ -3,6 +3,10 @@ import {createRoot} from 'react-dom/client';
 import App from './App';
 import './index.css';
 import {useStore} from './store';
+import {startBridgeSync} from './api/bridge';
+
+// Initialize bridge sync when live
+startBridgeSync();
 
 // Expose store for test/automation
 (window as unknown as {useStore: typeof useStore}).useStore = useStore;

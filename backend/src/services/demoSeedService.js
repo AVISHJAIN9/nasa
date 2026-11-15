@@ -1,6 +1,6 @@
 import { initializeDefaultFlags } from './flagService.js';
 import { initializeMissionConfig, setMissionMode } from './missionConfigService.js';
-import { registerUser } from './authService.js';
+import { registerUser, hashPassword } from './authService.js';
 import { User } from '../models/User.js';
 import { CrewProfile } from '../models/CrewProfile.js';
 import { HealthRecord } from '../models/HealthRecord.js';
@@ -9,6 +9,94 @@ import { VitalsDailyRollup } from '../models/VitalsDailyRollup.js';
 import { initializeDatasetRegistry } from './provenanceService.js';
 
 const DEMO_CREW = [
+  {
+    crew_id: 'okoye',
+    name: 'Dr. Amina Okoye',
+    role: 'Commander & Geochemist',
+    age: 42,
+    sex: 'female',
+    height_cm: 175,
+    weight_kg: 68,
+    allergies: [],
+    provenance: 'SIMULATED',
+    baseline_vitals: {
+      heart_rate_bpm: { min: 54, max: 94, mean: 66, resting: 60 },
+      blood_pressure_systolic: { min: 106, max: 130, mean: 115, resting: 115 },
+      blood_pressure_diastolic: { min: 66, max: 86, mean: 75, resting: 75 },
+      spo2_percent: { min: 97, max: 100, mean: 98.9, resting: 98.9 },
+      respiratory_rate_bpm: { min: 12, max: 18, mean: 14, resting: 14 },
+      core_temp_celsius: { min: 36.3, max: 37.2, mean: 36.7, resting: 36.7 },
+      hrv_rmssd_ms: { min: 42, max: 90, mean: 70, resting: 70 },
+      days_monitored: 30,
+      baseline_established: true
+    }
+  },
+  {
+    crew_id: 'vega',
+    name: 'Dr. Alex Vega',
+    role: 'Chief Medical Officer',
+    age: 45,
+    sex: 'female',
+    height_cm: 168,
+    weight_kg: 62,
+    allergies: ['Penicillin'],
+    provenance: 'SIMULATED',
+    baseline_vitals: {
+      heart_rate_bpm: { min: 55, max: 95, mean: 68, resting: 62 },
+      blood_pressure_systolic: { min: 105, max: 130, mean: 114, resting: 114 },
+      blood_pressure_diastolic: { min: 65, max: 85, mean: 74, resting: 74 },
+      spo2_percent: { min: 96, max: 100, mean: 98.8, resting: 98.8 },
+      respiratory_rate_bpm: { min: 12, max: 18, mean: 14, resting: 14 },
+      core_temp_celsius: { min: 36.3, max: 37.2, mean: 36.7, resting: 36.7 },
+      hrv_rmssd_ms: { min: 40, max: 90, mean: 68, resting: 68 },
+      days_monitored: 30,
+      baseline_established: true
+    }
+  },
+  {
+    crew_id: 'marin',
+    name: 'Elena Marin',
+    role: 'Flight Systems Engineer',
+    age: 37,
+    sex: 'female',
+    height_cm: 170,
+    weight_kg: 64,
+    allergies: ['Sulfa drugs'],
+    provenance: 'SIMULATED',
+    baseline_vitals: {
+      heart_rate_bpm: { min: 52, max: 92, mean: 64, resting: 58 },
+      blood_pressure_systolic: { min: 108, max: 132, mean: 116, resting: 116 },
+      blood_pressure_diastolic: { min: 68, max: 86, mean: 74, resting: 74 },
+      spo2_percent: { min: 97, max: 100, mean: 99.0, resting: 99.0 },
+      respiratory_rate_bpm: { min: 11, max: 17, mean: 13, resting: 13 },
+      core_temp_celsius: { min: 36.2, max: 37.1, mean: 36.6, resting: 36.6 },
+      hrv_rmssd_ms: { min: 45, max: 95, mean: 72, resting: 72 },
+      days_monitored: 30,
+      baseline_established: true
+    }
+  },
+  {
+    crew_id: 'tanaka',
+    name: 'Kenji Tanaka',
+    role: 'Robotics Specialist',
+    age: 39,
+    sex: 'male',
+    height_cm: 180,
+    weight_kg: 76,
+    allergies: [],
+    provenance: 'SIMULATED',
+    baseline_vitals: {
+      heart_rate_bpm: { min: 50, max: 90, mean: 62, resting: 56 },
+      blood_pressure_systolic: { min: 110, max: 135, mean: 118, resting: 118 },
+      blood_pressure_diastolic: { min: 70, max: 88, mean: 76, resting: 76 },
+      spo2_percent: { min: 96, max: 100, mean: 98.6, resting: 98.6 },
+      respiratory_rate_bpm: { min: 12, max: 18, mean: 14, resting: 14 },
+      core_temp_celsius: { min: 36.4, max: 37.3, mean: 36.8, resting: 36.8 },
+      hrv_rmssd_ms: { min: 48, max: 96, mean: 74, resting: 74 },
+      days_monitored: 30,
+      baseline_established: true
+    }
+  },
   {
     crew_id: 'CREW-01',
     name: 'Elena Rostova',
@@ -173,15 +261,32 @@ export async function seedDemoData({ reset = false } = {}) {
 
   // 2. Default Users
   const defaultUsers = [
-    { username: 'admin', email: 'admin@astrocare.nasa', password: 'AstroAdmin2026!', role: 'admin' },
-    { username: 'flight_surgeon', email: 'surgeon@astrocare.nasa', password: 'SurgeonDoc2026!', role: 'flight_surgeon' },
+    { username: 'admin', email: 'admin@astrocare.nasa', password: 'Password123!', role: 'admin' },
+    { username: 'surgeon', email: 'surgeon@astrocare.nasa', password: 'Password123!', role: 'flight_surgeon' },
+    { username: 'flight_surgeon', email: 'flight_surgeon@astrocare.nasa', password: 'Password123!', role: 'flight_surgeon' },
+    { username: 'control', email: 'control@astrocare.nasa', password: 'Password123!', role: 'mission_control' },
+    { username: 'okoye', email: 'okoye@astrocare.nasa', password: 'Password123!', role: 'astronaut', crew_id: 'okoye' },
+    { username: 'vega', email: 'vega@astrocare.nasa', password: 'Password123!', role: 'astronaut', crew_id: 'vega' },
+    { username: 'marin', email: 'marin@astrocare.nasa', password: 'Password123!', role: 'astronaut', crew_id: 'marin' },
+    { username: 'tanaka', email: 'tanaka@astrocare.nasa', password: 'Password123!', role: 'astronaut', crew_id: 'tanaka' },
     { username: 'cmo_sarah', email: 'cmo@astrocare.nasa', password: 'CrewDoctor2026!', role: 'astronaut', crew_id: 'CREW-03' }
   ];
   for (const u of defaultUsers) {
-    const existing = await User.findOne({ $or: [{ username: u.username }, { email: u.email }] });
-    if (!existing) {
-      await registerUser(u);
-    }
+    const passwordHash = await hashPassword(u.password);
+    await User.deleteMany({ email: u.email, username: { $ne: u.username } });
+    await User.findOneAndUpdate(
+      { username: u.username },
+      {
+        $set: {
+          username: u.username,
+          email: u.email,
+          password_hash: passwordHash,
+          role: u.role,
+          crew_id: u.crew_id || null
+        }
+      },
+      { upsert: true, new: true }
+    );
   }
 
   // 3. Crew Profiles (Idempotent upsert)

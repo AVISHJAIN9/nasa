@@ -1,5 +1,7 @@
 import express from 'express';
+import crypto from 'crypto';
 import { z } from 'zod';
+import { Alert } from '../models/Alert.js';
 import {
   getAlertInbox,
   acknowledgeAlert,
@@ -30,6 +32,50 @@ const assignSchema = z.object({
 
 const ackSchema = z.object({
   acknowledged_by: z.string().optional()
+});
+
+// POST /api/v1/alerts (Idempotent create / write-through with client-generated ID)
+router.post(['/api/v1/alerts', '/alerts'], async (req, res, next) => {
+  try {
+    const alertId = req.body.alert_id || req.body.id || `alt-${crypto.randomBytes(4).toString('hex')}`;
+    const crewId = req.body.crew_id || req.body.crewId || 'vega';
+    const title = req.body.title || 'Clinical Alert';
+    const message = req.body.message || req.body.explanation || title;
+
+    const alertDoc = await Alert.findOneAndUpdate(
+      { alert_id: alertId },
+      {
+        $setOnInsert: {
+          alert_id: alertId,
+          created_at: req.body.timestamp ? new Date(req.body.timestamp) : new Date()
+        },
+        $set: {
+          crew_id: crewId,
+          title,
+          message,
+          severity: req.body.severity || 'WARNING',
+          source: req.body.source || 'RULE',
+          category: req.body.category || 'PHYSIOLOGY',
+          metric: req.body.metric || 'vitals',
+          status: req.body.status || 'ACTIVE',
+          value: req.body.value,
+          metadata: {
+            factors: req.body.factors,
+            confidence: req.body.confidence,
+            predictionSet: req.body.predictionSet
+          }
+        }
+      },
+      { upsert: true, new: true, runValidators: true }
+    );
+
+    res.status(201).json({
+      status: 'success',
+      data: alertDoc
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 // GET /api/v1/alerts/inbox

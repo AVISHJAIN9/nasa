@@ -1,0 +1,23 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copy root package files
+COPY package*.json ./
+COPY backend/package*.json ./backend/
+
+# Install root & backend dependencies
+RUN npm install
+
+# Copy application source
+COPY backend/ ./backend/
+
+EXPOSE 8000
+
+ENV PORT=8000 \
+    NODE_ENV=production
+
+HEALTHCHECK --interval=10s --timeout=5s --start-period=5s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:8000/health || exit 1
+
+CMD ["npm", "start"]

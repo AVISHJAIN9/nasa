@@ -12,6 +12,7 @@ import {ErrorBoundary, PageSkeleton} from './ui';
 import {DemoPanel} from './DemoPanel';
 import {ConsentModal} from './ui/ConsentModal';
 import {OnboardingWizard} from './ui/OnboardingWizard';
+import {LoginModal} from './ui/LoginModal';
 
 const Astronaut = lazy(() => import('./pages/Astronaut').then((m) => ({default: m.Astronaut})));
 const Surgeon = lazy(() => import('./pages/Surgeon').then((m) => ({default: m.Surgeon})));
@@ -62,6 +63,7 @@ export function AppShell() {
   const toasts = useStore((s) => s.toasts);
   const removeToast = useStore((s) => s.removeToast);
   const linkUp = useStore((s) => s.linkUp);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const pendingOfflineCount = useStore((s) => s.pendingOfflineCount);
   const a11yMode = useStore((s) => s.a11yMode);
   const toggleA11yMode = useStore((s) => s.toggleA11yMode);
@@ -298,6 +300,16 @@ export function AppShell() {
                 </button>
               );
             })}
+          </div>
+          <div className="flex items-center justify-between mt-1.5 px-0.5">
+            <span className="font-mono text-[10px] text-regolith/50">Unified Identity</span>
+            <button
+              type="button"
+              onClick={() => setShowLoginModal(true)}
+              className="text-[10px] font-mono text-earth hover:underline flex items-center gap-1"
+            >
+              <span>🔑</span> Sign In / Demo
+            </button>
           </div>
         </div>
 
@@ -677,6 +689,9 @@ export function AppShell() {
 
       {/* Floating Demo Simulation Lab Panel */}
       <DemoPanel />
+
+      {/* Unified Identity Sign In Modal */}
+      <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
     </div>
   );
 }

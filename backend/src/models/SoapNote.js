@@ -78,6 +78,10 @@ const SoapNoteSchema = new mongoose.Schema(
       type: Number,
       default: 1
     },
+    version: {
+      type: Number,
+      default: 1
+    },
     provenance: {
       type: String,
       enum: ['SIMULATED', 'REPLAY', 'REAL'],

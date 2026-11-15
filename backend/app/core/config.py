@@ -68,6 +68,9 @@ class Settings(BaseSettings):
     SECRET_KEY: SecretStr = Field(
         default=SecretStr("insecure_dev_secret_key_minimum_32_bytes_long_change_in_production")
     )
+    JWT_SECRET: SecretStr = Field(
+        default=SecretStr("super_secret_jwt_key_astrocare_2026_min_32_bytes")
+    )
     FIELD_ENCRYPTION_KEY: SecretStr = Field(
         default=SecretStr("MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI=")
     )
