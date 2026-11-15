@@ -7,11 +7,14 @@ import {AppShell} from './app/AppShell';
 import {useReducedMotion} from './hooks/useReducedMotion';
 import {startScroll} from './lib/scroll';
 import {useStore} from './store';
+import {LoginModal} from './app/ui/LoginModal';
 
 export default function App() {
   const view = useStore((s) => s.view);
   const setView = useStore((s) => s.setView);
   const setPage = useStore((s) => s.setPage);
+  const showLoginModal = useStore((s) => s.showLoginModal);
+  const setShowLoginModal = useStore((s) => s.setShowLoginModal);
   const reduced = useReducedMotion();
 
   useEffect(() => {
@@ -39,19 +42,22 @@ export default function App() {
     }
   }, [view, reduced]);
 
-  if (view === 'app') {
-    return <AppShell />;
-  }
-
   return (
     <>
-      <Header />
-      <main>
-        <Earthrise />
-        <Trajectory />
-        <Launch />
-      </main>
-      <Footer />
+      <LoginModal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)} />
+      {view === 'app' ? (
+        <AppShell />
+      ) : (
+        <>
+          <Header />
+          <main>
+            <Earthrise />
+            <Trajectory />
+            <Launch />
+          </main>
+          <Footer />
+        </>
+      )}
     </>
   );
 }

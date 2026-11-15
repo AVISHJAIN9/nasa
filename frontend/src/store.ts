@@ -559,7 +559,22 @@ function setStoredJson<T>(key: string, val: T): void {
   }
 }
 
+export interface AuthUser {
+  id?: string;
+  email: string;
+  username: string;
+  name?: string;
+  role: UserRole;
+  crew_id?: string;
+}
+
 export interface AppStore {
+  authUser: AuthUser | null;
+  showLoginModal: boolean;
+  setShowLoginModal: (open: boolean) => void;
+  setAuthUser: (user: AuthUser | null) => void;
+  logout: () => void;
+
   mode: MissionMode;
   role: UserRole;
   view: AppView;
@@ -963,6 +978,38 @@ export const STORY_STEPS: StoryStepDef[] = [
 ];
 
 export const useStore = create<AppStore>((set, get) => ({
+  authUser: (() => {
+    try {
+      const saved = localStorage.getItem('astrocare_user');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  })(),
+  showLoginModal: false,
+  setShowLoginModal: (open) => set({ showLoginModal: open }),
+  setAuthUser: (user) => {
+    if (user) {
+      try {
+        localStorage.setItem('astrocare_user', JSON.stringify(user));
+      } catch {}
+      set({ authUser: user, role: user.role || 'astronaut' });
+    } else {
+      try {
+        localStorage.removeItem('astrocare_user');
+      } catch {}
+      set({ authUser: null });
+    }
+  },
+  logout: () => {
+    try {
+      localStorage.removeItem('astrocare_user');
+      localStorage.removeItem('astrocare_token');
+      localStorage.removeItem('astrocare_refresh_token');
+    } catch {}
+    set({ authUser: null, role: null });
+  },
+
   mode: 'MARS',
   role: null,
   view: 'landing',
