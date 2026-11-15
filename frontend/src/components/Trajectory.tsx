@@ -2,6 +2,7 @@ import {useEffect, useRef, useState} from 'react';
 import {levels, trajectory} from '../content';
 import {clamp, easeOutCubic, pinProgress, range} from '../lib/math';
 import {onFrame} from '../lib/scroll';
+import {useStore, MODES} from '../store';
 
 /**
  * Earth → Mars, drawn as you scroll. The section pins while the four legs of
@@ -40,6 +41,12 @@ export function Trajectory() {
   const bannerRef = useRef<HTMLDivElement>(null);
   const bannerTextRef = useRef<HTMLSpanElement>(null);
   const [leg, setLeg] = useState(0);
+
+  const mode = useStore((s) => s.mode);
+  const currentDelayRTT =
+    MODES[mode].delaySec * 2 >= 60
+      ? `${Math.round((MODES[mode].delaySec * 2) / 60)}m RTT`
+      : `${MODES[mode].delaySec * 2}s RTT`;
 
   useEffect(() => {
     let lastP = -1;
@@ -103,8 +110,11 @@ export function Trajectory() {
             <h2 id="trajectory-title" className="mt-3 max-w-[20ch] font-display text-display text-white">
               {trajectory.heading}
             </h2>
-            <p className="mt-2 text-xs text-regolith/75 max-w-[50ch]">
-              AstroCare: how should a Mars crew decide when a reply takes 20 minutes? A decision-support prototype on simulated and public data. Not a medical device.
+            <p
+              title="AstroCare: how should a Mars crew decide when a reply takes 20 minutes? A decision-support prototype on simulated and public data. Not a medical device."
+              className="mt-2 text-regolith/80 whitespace-nowrap overflow-hidden text-ellipsis max-w-[80vw] sm:max-w-[70ch] text-[clamp(0.72rem,1.15vw,0.85rem)]"
+            >
+              Interplanetary clinical decision-support when replies take 20+ minutes. Simulated data · Not a medical device.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-1 font-mono text-label text-regolith/60 uppercase" aria-live="off">
@@ -123,10 +133,28 @@ export function Trajectory() {
               <clipPath id="earth-clip">
                 <circle cx={EARTH.cx} cy={EARTH.cy} r={EARTH.r} />
               </clipPath>
-              <radialGradient id="mars-shade" cx="35%" cy="35%" r="75%">
-                <stop offset="0" stopColor="#f0b08a" />
-                <stop offset="0.7" stopColor="#c4603a" />
-                <stop offset="1" stopColor="#3a1a10" />
+              <clipPath id="mars-clip">
+                <circle cx={MARS.cx} cy={MARS.cy} r={MARS.r} />
+              </clipPath>
+              {/* Mars Atmosphere Scattering Glow */}
+              <radialGradient id="mars-atmosphere" cx="50%" cy="50%" r="50%">
+                <stop offset="68%" stopColor="#e2704a" stopOpacity="0.32" />
+                <stop offset="85%" stopColor="#e2704a" stopOpacity="0.14" />
+                <stop offset="100%" stopColor="#e2704a" stopOpacity="0" />
+              </radialGradient>
+              {/* Mars 3D Spherical Base Gradient */}
+              <radialGradient id="mars-base-sphere" cx="32%" cy="30%" r="72%">
+                <stop offset="0%" stopColor="#f79c74" />
+                <stop offset="35%" stopColor="#d2582f" />
+                <stop offset="70%" stopColor="#8d2f13" />
+                <stop offset="92%" stopColor="#451206" />
+                <stop offset="100%" stopColor="#1e0602" />
+              </radialGradient>
+              {/* Soft Planetary Terminator Shadow */}
+              <radialGradient id="mars-terminator-shadow" cx="72%" cy="72%" r="68%">
+                <stop offset="0%" stopColor="#080302" stopOpacity="0.88" />
+                <stop offset="55%" stopColor="#080302" stopOpacity="0.45" />
+                <stop offset="100%" stopColor="#080302" stopOpacity="0" />
               </radialGradient>
               <radialGradient id="earth-glow">
                 <stop offset="0.8" stopColor="#6fb6ff" stopOpacity="0.35" />
@@ -151,10 +179,106 @@ export function Trajectory() {
               clipPath="url(#earth-clip)"
               preserveAspectRatio="none"
             />
-            <circle cx={MARS.cx} cy={MARS.cy} r={MARS.r} fill="url(#mars-shade)" />
-            <g fill="#7a3a22" opacity="0.5">
-              <circle cx={MARS.cx - 12} cy={MARS.cy - 10} r="6" />
-              <circle cx={MARS.cx + 16} cy={MARS.cy + 12} r="4" />
+
+            {/* Mars Outer Atmosphere Halo */}
+            <circle cx={MARS.cx} cy={MARS.cy} r={MARS.r * 1.3} fill="url(#mars-atmosphere)" pointerEvents="none" />
+
+            {/* Mars Disc Body with Clip & Subtle Rotation */}
+            <g clipPath="url(#mars-clip)">
+              {/* Base Sphere */}
+              <circle cx={MARS.cx} cy={MARS.cy} r={MARS.r} fill="url(#mars-base-sphere)" />
+
+              {/* Textured Terrain Group with Slow Rotation Animation */}
+              <g
+                className="animate-[marsRotate_90s_linear_infinite] motion-reduce:animate-none"
+                style={{transformOrigin: `${MARS.cx}px ${MARS.cy}px`}}
+                fill="#541a0b"
+                opacity="0.55"
+              >
+                <path d={`M${MARS.cx - 24} ${MARS.cy - 14} Q ${MARS.cx - 10} ${MARS.cy - 28} ${MARS.cx + 12} ${MARS.cy - 18} T ${MARS.cx + 26} ${MARS.cy + 4} Q ${MARS.cx + 8} ${MARS.cy + 18} ${MARS.cx - 16} ${MARS.cy + 10} Z`} />
+                <path d={`M${MARS.cx - 38} ${MARS.cy + 6} Q ${MARS.cx - 20} ${MARS.cy + 24} ${MARS.cx} ${MARS.cy + 22} T ${MARS.cx + 28} ${MARS.cy + 26} Q ${MARS.cx - 8} ${MARS.cy + 38} ${MARS.cx - 34} ${MARS.cy + 18} Z`} />
+                <circle cx={MARS.cx - 18} cy={MARS.cy - 12} r="5" />
+                <circle cx={MARS.cx + 22} cy={MARS.cy + 14} r="4.5" />
+                <circle cx={MARS.cx + 6} cy={MARS.cy - 18} r="3" />
+                <ellipse cx={MARS.cx - 6} cy={MARS.cy - MARS.r + 5} rx="16" ry="5" fill="#f0dcd0" opacity="0.65" />
+              </g>
+
+              {/* Soft Terminator Shadow for Realistic Spherical Volume */}
+              <circle cx={MARS.cx} cy={MARS.cy} r={MARS.r} fill="url(#mars-terminator-shadow)" />
+            </g>
+
+            {/* Orbit / Comms-Link Ring around Mars */}
+            <g pointerEvents="none" className="select-none">
+              {/* Thin dashed orbit ellipse */}
+              <ellipse
+                cx={MARS.cx}
+                cy={MARS.cy}
+                rx={MARS.r + 28}
+                ry={MARS.r + 14}
+                transform={`rotate(-18 ${MARS.cx} ${MARS.cy})`}
+                fill="none"
+                stroke="#e2704a"
+                strokeWidth="1.25"
+                strokeDasharray="4 6"
+                strokeOpacity="0.65"
+              />
+
+              {/* Moving Satellite / Signal Pulse Node */}
+              <g>
+                <path
+                  id="mars-satellite-orbit"
+                  d={`M ${MARS.cx - (MARS.r + 28)} ${MARS.cy} a ${MARS.r + 28} ${MARS.r + 14} 0 1 0 ${(MARS.r + 28) * 2} 0 a ${MARS.r + 28} ${MARS.r + 14} 0 1 0 -${(MARS.r + 28) * 2} 0`}
+                  fill="none"
+                  stroke="none"
+                  transform={`rotate(-18 ${MARS.cx} ${MARS.cy})`}
+                />
+                <circle r="3.5" fill="#ffffff" filter="url(#earth-glow)">
+                  <animateMotion
+                    dur="12s"
+                    repeatCount="indefinite"
+                    rotate="auto"
+                  >
+                    <mpath href="#mars-satellite-orbit" />
+                  </animateMotion>
+                </circle>
+                <circle r="7" fill="#6fb6ff" opacity="0.4">
+                  <animateMotion
+                    dur="12s"
+                    repeatCount="indefinite"
+                    rotate="auto"
+                  >
+                    <mpath href="#mars-satellite-orbit" />
+                  </animateMotion>
+                </circle>
+              </g>
+
+              {/* Live Delay Badge attached cleanly above Mars without overlapping text */}
+              <g transform={`translate(${MARS.cx} ${MARS.cy - MARS.r - 26})`}>
+                <rect
+                  x="-38"
+                  y="-11"
+                  width="76"
+                  height="22"
+                  rx="4"
+                  fill="#0a0605"
+                  fillOpacity="0.85"
+                  stroke="#e2704a"
+                  strokeWidth="1"
+                  strokeOpacity="0.6"
+                />
+                <text
+                  x="0"
+                  y="4"
+                  textAnchor="middle"
+                  fontFamily="IBM Plex Mono, monospace"
+                  fontSize="10"
+                  fontWeight="bold"
+                  letterSpacing="1"
+                  fill="#e2704a"
+                >
+                  {currentDelayRTT}
+                </text>
+              </g>
             </g>
 
             {/* Ghost of the full route, then the inked legs over it. */}
