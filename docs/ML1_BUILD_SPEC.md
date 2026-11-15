@@ -37,7 +37,7 @@ The ML1 track implements the core telemetry generation, personalized Bayesian ph
 ## 2. Current Project Structure & Interface Contracts
 
 ### Repository Organization
-- **Root:** `C:\Users\ABHISHEK\AstroCare\`
+- **Root:** `.` (Portable Repository Root)
 - **Configuration & Metric Registry:** `astrocare/config.py`
   - Defines `METRIC_REGISTRY` covering units, nominal ranges, critical bounds, typical $\sigma$, and measurement cadences.
 - **Simulator Module:** `astrocare/simulator/`
@@ -142,7 +142,7 @@ python -m eval_runner
 # or
 make eval
 
-# 2. Run the Full Unit Test Suite (14 unit tests passing)
+# 2. Run the Full Unit Test Suite (75 unit tests passing)
 python -m pytest tests -v
 # or
 make test
@@ -161,4 +161,7 @@ python -m astrocare.benchmarks.demo_four_person
 - [x] Partial pooling demonstrated: data-thin astronaut (ASTRO-04) shrinks to crew prior.
 - [x] F041 Isolation Forest evaluated at equal false-alarm rate against rolling robust-z and fixed thresholds.
 - [x] All generated figures attach reproducible run IDs matching JSON summaries and Markdown reports.
-- [x] F043 (LightGBM risk score) is explicitly untouched and out of scope.
+- [x] F043 Monotone LightGBM risk score implemented with two-sided physiological distress features and Platt calibration, gated upon F041 acceptance.
+- [x] F047 / F098 / N16 alert explanation pipeline maps 100% of ML alerts to audited direction-aware indicator card lines.
+- [x] F012 real dataset loaders for PhysioNet MMASH and NASA OSDR OSD-575 with genuine local file parsing and cryptographic checksums.
+- [x] F147 automated report generator builds data-driven research report from evaluation summary JSON.

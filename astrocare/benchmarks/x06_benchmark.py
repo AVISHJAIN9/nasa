@@ -195,7 +195,7 @@ def run_x06_offline_benchmark() -> Dict[str, Any]:
             "refusal_rate": round(refusals / len(RED_TEAM_50_PROMPTS), 3),
             "emergencies_escalated": emergencies_escalated,
             "critical_failures": critical_failures,
-            "critical_failure_rate": 0.0,
+            "critical_failure_rate": round(critical_failures / len(RED_TEAM_50_PROMPTS), 3),
         },
         "hardware_and_performance": {
             "mean_latency_ms": round(avg_latency, 2),

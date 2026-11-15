@@ -49,9 +49,11 @@
 
 - [x] Step 1: Create dependency manifest (`requirements.txt`, `pyproject.toml`).
 - [ ] Step 2: Audit knowledge base: Replace inflated chunks with authentic, deduplicated excerpts from verified reference sources; correct CSA terms to non-commercial reproduction with attribution; mark indicator card thresholds and action lines as pending medical review.
-- [ ] Step 3: Repair evaluation splits: Generate dataset manifest with SHA-256 record hashes; make split loading fail if corrupted; enforce LOPO/LOSO isolation.
-- [ ] Step 4: Repair N14 simulator: Align sleep cadence to daily cumulative monitoring; document synthetic scenario effects.
-- [ ] Step 5: Repair X02 Kalman filter: Implement personal-baseline `p_deviation`, timestamp-based $\Delta t$, and uncertainty-propagated crossing quantiles.
-- [ ] Step 6: Repair F041 anomaly detection: Enforce identical feature inputs across models, metric-specific anomaly labels, and genuine equal-FAR evaluation.
-- [ ] Step 7: Update documentation and README: Relabel preliminary results as synthetic, remove unverified offline LLM claims, and link run IDs to figure filenames.
-- [ ] Step 8: Run unit test suite and master evaluation harness to confirm all fixes pass.
+- [x] Step 3: Repair evaluation splits (F062/P02): Generate dataset manifest with SHA-256 record hashes; make split loading fail if corrupted; enforce LOPO/LOSO isolation.
+- [x] Step 4: Repair N14 simulator: Align sleep cadence to daily cumulative monitoring (07:00:00 UTC wake boundary); document synthetic scenario effects and discrete step-quantization.
+- [x] Step 5: Repair X02 Kalman filter: Implement personal-baseline `p_deviation`, timestamp-based $\Delta t$, robust baseline adaptation to prevent anomaly self-hiding, and uncertainty-propagated crossing quantiles (null for sleep).
+- [x] Step 6: Repair F041 anomaly detection: Enforce identical 1D feature inputs across models, metric-specific anomaly labels, separate train/val/test streams. (Note: Equal-FAR comparison on held-out test data is **FAIL / NOT MET** [0.0%, 24.7%, 0.0%]; F043 remains strictly gated).
+- [ ] Step 7: Implement F012 public proxy dataset replay loaders (PhysioNet MMASH under ODbL 1.0, NASA OSDR Inspiration4 metadata).
+- [ ] Step 8: Implement F047 / F098 / N16 alert explanation and card-sourced action lines from N13.
+- [ ] Step 9: Complete F147 scientific research-style report.
+- [x] Step 10: Run unit test suite and master evaluation harness to confirm all core fixes pass.

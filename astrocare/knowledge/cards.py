@@ -290,6 +290,68 @@ INDICATOR_CARDS: Dict[str, SourcedIndicatorCard] = {
         ],
         licence_terms="NASA Public Domain / U.S. Government Work"
     ),
+    "pulmonary_oxygenation": SourcedIndicatorCard(
+        card_id="CARD-09",
+        indicator_name="Pulmonary Oxygenation & Respiration",
+        body_region_or_system="Respiratory / Pulmonary",
+        measurement_in_spaceflight="Monitored via optical pulse oximetry (SpO2) and acoustic/piezoelectric respiration sensors during sleep and active EVAs.",
+        why_it_matters="Adequate blood oxygenation is vital for cerebral function and cellular metabolism; space habitat atmospheric changes or suit leaks can cause acute hypoxia.",
+        hazard_effects="Hypoxia in closed space modules can manifest rapidly during cabin depressurization or scrubber malfunction, with subtle cognitive impairment before dyspnea.",
+        when_to_pay_attention="Attention warranted if peripheral oxygen saturation (SpO2) falls below 94% or if respiration rate exceeds 24 breaths/min at rest.",
+        safe_next_steps="Simulation recommendation (pending flight surgeon review): Verify sensor probe fit; check cabin oxygen partial pressure; inspect for air circuit restrictions; notify Crew Medical Officer.",
+        sourced_thresholds={
+            "nominal_range": "SpO2 95 - 100%, RR 10 - 20 br/min",
+            "watch_threshold": "SpO2 < 94% or RR > 22 br/min",
+            "alert_threshold": "SpO2 < 90% or RR > 28 br/min",
+            "unit": "% / br/min",
+            "clinical_status": "Simulation guideline based on NASA-STD-3001 Vol 1; pending clinical review"
+        },
+        action_lines=[
+            "Simulation recommendation: Check pulse oximeter probe alignment and peripheral blood flow.",
+            "Simulation recommendation: Verify habitat module oxygen partial pressure (PO2 > 120 mmHg)."
+        ],
+        sources=[
+            {
+                "title": "NASA-STD-3001 Vol 1: Crew Health and Medical Operations",
+                "organization": "NASA",
+                "url": "https://www.nasa.gov/offices/ochmo/human-standards/",
+                "date_accessed": "2026-11-14",
+                "licence": "Public Domain (U.S. Government Work)"
+            }
+        ],
+        licence_terms="NASA Public Domain / U.S. Government Work"
+    ),
+    "heart_rate_variability": SourcedIndicatorCard(
+        card_id="CARD-10",
+        indicator_name="Heart Rate Variability (HRV)",
+        body_region_or_system="Autonomic Nervous System",
+        measurement_in_spaceflight="Derived from beat-to-beat RR intervals (RMSSD) captured via continuous ECG telemetry or high-sampling optical wearables.",
+        why_it_matters="HRV indexes cardiac parasympathetic tone, allostatic autonomic reserve, systemic stress recovery, and physical overtraining states.",
+        hazard_effects="Chronic microgravity unloading and high operational cognitive stress induce sympathetic dominance and reduced vagal HRV.",
+        when_to_pay_attention="Attention warranted if rolling RMSSD falls more than 40% below personal 14-day rolling baseline.",
+        safe_next_steps="Simulation recommendation (pending flight surgeon review): Review scheduled sleep and recovery windows; assess physical exercise load; practice autonomic resonance breathing.",
+        sourced_thresholds={
+            "nominal_range": "25 - 85 ms RMSSD",
+            "watch_threshold": "< 20 ms or > 30% drop from baseline",
+            "alert_threshold": "< 12 ms or > 50% drop from baseline",
+            "unit": "ms",
+            "clinical_status": "Simulation guideline based on flight literature; pending clinical review"
+        },
+        action_lines=[
+            "Simulation recommendation: Review recovery workload and schedule structured parasympathetic rest.",
+            "Simulation recommendation: Check sleep actigraphy and hydration status."
+        ],
+        sources=[
+            {
+                "title": "NASA Human Research Program Evidence Book: Risk of Cardiac Rhythm Problems in Spaceflight",
+                "organization": "NASA HRP",
+                "url": "https://humanresearchroadmap.nasa.gov/evidence/reports/Arrhythmia.pdf",
+                "date_accessed": "2026-11-14",
+                "licence": "Public Domain (U.S. Government Work)"
+            }
+        ],
+        licence_terms="NASA Public Domain / U.S. Government Work"
+    ),
 }
 
 

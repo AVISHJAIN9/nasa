@@ -119,7 +119,30 @@
       ]
     }
   ],
-  "hash_sha256": "a7ed3df13cdbd4023bf43d61f5026759108286d15645c85418063c4b2bef8bd3",
-  "dataset_manifest_hash": "6cbb7391fd17bb88c8f38127384764c6c6aa80a9f33be98fe876ec5629fffed8",
+  "hash_sha256": "0e63b704cf0a10ec203b4f5dabf94173d544d60be967a38f19dbba790e427bda",
+  "simulator_config_hash": "a232374507d52e85ccf0878e0171cfb001d7a0af4489eaf5792119cd9b64eb65",
+  "dataset_manifest_hash": "599e9dd4eabe8060202b9630a2d09c62db7c17bf6046a6aa9ca4b52e68e28357",
+  "real_data_manifest": {
+    "status": "LOCAL_REAL_DATA_FILES_INSTALLED",
+    "files": [
+      {
+        "path": "data/mmash/user_1/RR.csv",
+        "sha256": "5632dfdf41080fb335dc45153c0327178ce5f9df25b984d156aec9330c5d6b02",
+        "size_bytes": 208
+      },
+      {
+        "path": "data/mmash/user_1/sleep.csv",
+        "sha256": "ddfa12a18776eb210231e61a28f08c178da44daf2a1fb02cbf71417e1de29bd4",
+        "size_bytes": 135
+      },
+      {
+        "path": "data/osd575/osd575_vitals.csv",
+        "sha256": "b67d0f189f6b8ea51412f791aa1c5aa8e62cce66158996060d8e38058e336a23",
+        "size_bytes": 1004
+      }
+    ],
+    "source_disclaimer": "Local real public dataset fixture files detected (PhysioNet MMASH ODbL 1.0, NASA OSDR-575 Public Domain)."
+  },
+  "disclaimer": "Synthetic engineering test on simulated telemetry. Because the simulator generates both the measurements and the labels, LOPO/LOSO cross-validation prevents algorithmic data leakage across synthetic folds, but does NOT establish real-world clinical ground truth.",
   "notes": "Strict frozen split design: LOPO holds out astronauts; LOSO holds out entire scenario families. No row-level leakage."
 }

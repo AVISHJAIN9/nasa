@@ -50,8 +50,7 @@ class X02BaselineOutput(BaseModel):
                     f"Predictive interval constraint violated: lo90 ({self.lo90}) <= mean ({self.mean}) <= hi90 ({self.hi90})"
                 )
         if self.metric not in METRIC_REGISTRY:
-            # Documented in registry
-            pass
+            raise ValueError(f"Unknown metric '{self.metric}'. Supported metrics: {list(METRIC_REGISTRY.keys())}")
         return self
 
     def to_dict(self) -> Dict[str, Any]:

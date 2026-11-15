@@ -40,6 +40,8 @@ Sample payload: `artifacts/handoff/x02_sample_payload.json`
 3. Native units: `mean`, `lo90`, and `hi90` are reported in the metric's native units (bpm, mg/dL, mmHg, etc.) according to `METRIC_REGISTRY`.
 4. Causal: The prediction for timestamp `ts` is generated using information available *before* the measurement at `ts` is updated into the filter.
 5. Missing values: Missing or dropped sensor readings (`None`) do not produce fake values or alerts; the filter advances state prediction and widens predictive uncertainty ($P$).
+6. Daily metrics (`sleep_hours`): `time_to_critical_min` is strictly null (`{p10: null, p50: null, p90: null}`) because daily accumulated durations cannot project minute-scale trajectory crossings.
+7. Anomaly baseline protection: The personal baseline envelope is updated conservatively only on nominal observations. Sustained deviations are prevented from dragging the baseline to hide future anomalies. Tolerances (+/- 2 sigma) are prototype decision-support assumptions, NOT clinical standards.
 
 ## 3. Metric Registry Reference
 
@@ -76,3 +78,7 @@ payload = output.to_dict()
 - **Prototype Status:** Decision-support prototype on synthetic and public data. Not a certified medical device.
 - **Simulation Data:** Telemetry is synthetic and generated for technical evaluation; does not represent clinical ground truth.
 - **Forecasting Horizon:** `time_to_critical_min` returns `null` if the state trajectory does not project a crossing within the 120-minute horizon or if drift is away from the boundary.
+
+## 6. Shared Contract Alignment with Backend (BE1)
+- **Local Alignment:** Local telemetry schemas use `hazard_tag` to map directly to NASA's 5 official hazard families (`radiation`, `isolation`, `distance`, `gravity`, `closed_environment`), aligning with backend workbook fields (`hazard`).
+- **Repository Integration:** Versioned repository-level `/contracts` directory is pending official publication by Backend (BE1). In the interim, ML1 maintains complete schema compatibility via `artifacts/handoff/x02_contract_schema.json` and `astrocare/models/registry.py`.

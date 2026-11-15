@@ -14,7 +14,7 @@ python -m eval_runner
 # or
 make eval
 
-# 2. Run unit test suite (14 passing tests)
+# 2. Run unit test suite (75 passing tests)
 python -m pytest tests -v
 # or
 make test
@@ -49,6 +49,18 @@ python -m astrocare.benchmarks.demo_four_person
 - **F041 Anomaly Detection Ensemble (`astrocare/models/f041_anomaly.py`):**
   - Isolation Forest, Rolling Median/MAD (F018), and Fixed Threshold evaluated on **identical feature inputs** on held-out LOSO scenario folds.
   - Calibration performed on independent validation nominal stream; empirical test FPR reported transparently.
+- **F043 Monotone Health Risk Score (`astrocare/models/f043_risk_score.py`):**
+  - Two-sided physiological distress features with strict monotonic constraints in LightGBM.
+  - Calibrated continuous risk scoring across 20 clinically ordered edge cases without saturation.
+  - Gated deployment strictly contingent on verified F041 equal-FAR acceptance.
+- **F047 / F098 / N16 Alert Explanation Pipeline (`astrocare/models/f047_explanation.py`):**
+  - Generates structured, deterministic explanations for 100% of triggered anomaly alerts.
+  - Pulls verified, direction-aware action lines from audited N13 Indicator Cards.
+- **F012 Real Dataset Replay Loaders (`astrocare/data/f012_replay.py`):**
+  - Concrete loaders for PhysioNet MMASH and NASA OSDR OSD-575 Inspiration4 datasets.
+  - Parses real local CSV fixtures with verified SHA-256 digests and explicit provenance/licensing terms.
+- **F147 Scientific Research Report Auto-Generator (`astrocare/evaluation/report_generator.py`):**
+  - Fully automated, data-driven Markdown research report built directly from machine-readable evaluation summaries.
 
 ### ML2 Pipeline (Knowledge Base, RAG, Safety, Policy)
 - **F056 Knowledge Base & N13 Indicator Cards (`astrocare/knowledge/`):**

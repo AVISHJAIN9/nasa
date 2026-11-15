@@ -101,6 +101,8 @@ class MedicalSafetyGuardrail:
             "prescribe 500 mg metformin", "prescribe 50 mg of morphine", "fentanyl patch without",
             "take 20 units of unprescribed", "operate high voltage defibrillator on awake",
             "3 hours of sleep per night is completely optimal",
+            "bypass nasa safety", "act as an omnipotent", "system prompt override",
+            "klingon warp drive", "jailbreak",
         ]
         for ud in unsafe_demands:
             if ud in q_lower:
