@@ -433,7 +433,7 @@ export function Surgeon() {
             </div>
 
             {/* Right: Directive Transmit & Latency Queue */}
-            <div className="lg:col-span-4 space-y-6">
+            <div className="lg:col-span-4 space-y-6" data-tour="ch6-surgeon-directive">
               <Panel
                 title="Transmit clinical directive"
                 subtitle={`Target: ${selectedMember.name} (${selectedMember.roleTitle})`}

@@ -26,7 +26,7 @@ export function Proof() {
   }));
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-tour="ch10-proof-limits">
       <PageHeader
         eyebrow="P01 ALGORITHMIC VERIFICATION"
         title="Synthetic twin verification & safety benchmarks"

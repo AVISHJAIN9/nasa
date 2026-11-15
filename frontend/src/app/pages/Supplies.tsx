@@ -103,7 +103,7 @@ export function Supplies() {
       </div>
 
       {/* Main Grid: Inputs on Left, Ranked Plan on Right */}
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid gap-6 lg:grid-cols-3" data-tour="ch7-controls-supplies">
         {/* Left: Input Parameters */}
         <div className="lg:col-span-1 space-y-6">
           <Panel title="Scenario Parameters">

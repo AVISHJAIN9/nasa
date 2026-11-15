@@ -557,7 +557,7 @@ export function Wellness() {
       )}
 
       {/* Two-Level Tabs: Row 1 = Segmented Groups; Row 2 = Sub-Tabs */}
-      <div className="space-y-3">
+      <div className="space-y-3" data-tour="ch3-passive-wellness">
         {/* Row 1: Segmented Group Switcher */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 font-mono text-xs">
           {WELLNESS_GROUPS.map((grp) => {

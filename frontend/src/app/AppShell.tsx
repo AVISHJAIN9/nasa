@@ -8,7 +8,7 @@ import {
   type MissionMode,
   type AppPage,
 } from '../store';
-import {ErrorBoundary, PageSkeleton, Logo} from './ui';
+import {ErrorBoundary, PageSkeleton, Logo, TourEngine} from './ui';
 import {DemoPanel} from './DemoPanel';
 import {ConsentModal} from './ui/ConsentModal';
 import {OnboardingWizard} from './ui/OnboardingWizard';
@@ -71,7 +71,9 @@ export function AppShell() {
   const mlAlertsEnabled = useStore((s) => s.mlAlertsEnabled);
   const narrationCaption = useStore((s) => s.narrationCaption);
   const storyRunning = useStore((s) => s.storyRunning);
+  const startMarsStory = useStore((s) => s.startMarsStory);
   const stopMarsStory = useStore((s) => s.stopMarsStory);
+  const resetDemoState = useStore((s) => s.resetDemoState);
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showExitTourModal, setShowExitTourModal] = useState(false);
@@ -645,13 +647,29 @@ export function AppShell() {
                   );
                 })}
               </div>
+
+              {!storyRunning && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    resetDemoState();
+                    startMarsStory();
+                  }}
+                  id="start-demo-tour-button"
+                  className="rounded-lg bg-earth px-3 py-1.5 font-mono text-xs font-bold text-void uppercase hover:bg-earth/90 transition-all shadow-[0_0_12px_rgba(111,182,255,0.3)] flex items-center gap-1.5 min-h-[36px] cursor-pointer"
+                  title="Launch 8-Minute Mars Demonstration Timeline"
+                >
+                  <span>⚡</span>
+                  <span className="hidden md:inline">Mars Demo (8:00)</span>
+                </button>
+              )}
             </div>
           </div>
         </header>
 
         {/* AI Degraded Watchdog Banner */}
         {aiDegraded && (
-          <div role="status" aria-live="assertive" className="bg-[#e0b03a]/15 border-b border-[#e0b03a]/40 px-4 py-2 font-mono text-xs text-[#e0b03a] flex items-center justify-between">
+          <div role="status" aria-live="assertive" data-tour="ch9-watchdog-banner" className="bg-[#e0b03a]/15 border-b border-[#e0b03a]/40 px-4 py-2 font-mono text-xs text-[#e0b03a] flex items-center justify-between">
             <div className="flex items-center gap-2">
               <span>⚠️</span>
               <span className="font-bold">
@@ -781,6 +799,9 @@ export function AppShell() {
           </div>
         </div>
       )}
+
+      {/* 8-Minute Mars Demonstration Tour Engine */}
+      <TourEngine />
 
       {/* Floating Demo Simulation Lab Panel */}
       <DemoPanel />

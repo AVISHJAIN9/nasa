@@ -202,6 +202,45 @@ The **Roadmap** view outlines 20 architecturally scoped capabilities planned for
 
 ---
 
+## How to Run the 8-Minute Mars Demo Tour
+
+AstroCare includes an automated, data-driven 8-minute (480s) guided timeline demonstrating end-to-end clinical autonomy across a 44-minute deep-space latency loop.
+
+### Quick Start
+1. **Launch Tour in Browser**: Navigate to `http://localhost:3006/#home` and click the **"⚡ Mars Demo (8:00)"** button in the top navigation bar (or press <kbd>D</kbd> to open Demo Lab and click **"Run Mars Full Story"**).
+2. **Accelerated Dev Run (30 seconds)**: Open `http://localhost:3006/?speed=16#home` to execute the full 10-chapter demonstration at 16x speed (~30 seconds total) for fast rehearsal and automated testing.
+
+### Keyboard Shortcuts During Demo
+| Shortcut | Action | Description |
+| :--- | :--- | :--- |
+| <kbd>Space</kbd> | **Pause / Resume** | Toggles tour playback. Interacting with any page element also auto-pauses playback. |
+| <kbd>→</kbd> *(Right Arrow)* | **Next Chapter** | Advances to the next milestone immediately without waiting for chapter clock. |
+| <kbd>←</kbd> *(Left Arrow)* | **Previous Chapter** | Steps back to the previous chapter and re-executes its entry state. |
+| <kbd>P</kbd> | **Presenter Notes** | Toggles floating cue card showing upcoming chapter preview and speaker points. |
+| <kbd>Shift</kbd> + <kbd>R</kbd> | **Reset Demo** | Instantly resets all scenarios, clears injected faults, and restores baseline crew seeds in < 2s. |
+| <kbd>Esc</kbd> | **Exit Tour** | Halts the tour, clears the spotlight overlay, and returns to normal manual console usage. |
+
+### 10-Chapter Mission Timeline (480s / 8:00)
+- **0:00 Ch. 1 · Mission Setup & Latency Tier**: Mars mode at Level 3 autonomy; 44m round-trip latency overview.
+- **0:40 Ch. 2 · Astronaut Baselines & Optical rPPG**: Real vs simulated biometrics, webcam pulse with confidence gating.
+- **1:30 Ch. 3 · Multi-Modal Passive Telehealth**: Acoustic vocal fatigue, psychomotor typing latency, relative baseline drift.
+- **2:15 Ch. 4 · Cabin-to-Body Coupling**: CO2 leak + solar flux spike; pre-symptomatic vagal suppression warning.
+- **3:15 Ch. 5 · Wait-or-Act Operational Autonomy**: Delay slider 4→24m flips decision from Ask Ground to Autonomous Action.
+- **4:15 Ch. 6 · Flight Surgeon Uplink Directives**: Store-and-forward latency queue, arrival notification, and astronaut compliance ack.
+- **5:00 Ch. 7 · Medical Supply & Depletion Solver**: Kit inventory consumable depletion, shelf-life model under space radiation.
+- **5:45 Ch. 8 · Offline-First Assistant & Guardrails**: Carrier loss cable-pull, sentence-level citation verification, safety refusals.
+- **6:30 Ch. 9 · Hardware Watchdog & AI Degradation**: Sensor flatline detection triggers amber banner; fallback to deterministic rules.
+- **7:10 Ch. 10 · Verification Benchmarks & Ethics**: Digital twin proof curves, physical limits, and non-medical device notice.
+- **8:00 Complete**: "Demo Complete" dialog with Replay Tour and Back to Home options.
+
+### Rehearsal Checklist
+1. **Clean Reset**: Press <kbd>Shift</kbd> + <kbd>R</kbd> before each demo to ensure clean baseline telemetry and no residual alerts.
+2. **Webcam Permissions**: Allow camera access on `localhost:3006` for live facial optical rPPG pulse (falls back to simulated stream gracefully).
+3. **Presenter Mode**: Press <kbd>P</kbd> on any laptop display to view speaker cues and timing without obstructing audience viewing.
+4. **Speech Narration (Optional)**: Click the 🔊 speaker toggle in the HUD bar to enable Web Speech synthesis for automated voiceover.
+
+---
+
 ## Accessibility & Keyboard Shortcuts
 
 - <kbd>D</kbd>: Toggle Demo Simulation Lab drawer.

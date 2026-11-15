@@ -189,7 +189,7 @@ export function Assistant() {
   }, [assistantInitialQuery]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-tour="ch8-offline-assistant">
       <PageHeader
         eyebrow="F055, F057–F059, X06"
         title="Clinical decision support & medical intelligence"

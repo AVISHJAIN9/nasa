@@ -297,7 +297,7 @@ export function Astronaut() {
 
       {/* TAB 1: LIVE VITALS */}
       {activeTab === 'live' && (
-        <div className="space-y-6">
+        <div className="space-y-6" data-tour="ch2-vitals-pulse">
           {/* Live Vitals Grid with HUD Corner Brackets (1 of 3 places) */}
           <Panel title="Continuous biometric streams" brackets>
             <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-6 min-w-0">

@@ -667,6 +667,8 @@ export interface AppStore {
   pauseMarsStory: () => void;
   resumeMarsStory: () => void;
   skipMarsStoryStep: () => void;
+  prevMarsStoryStep: () => void;
+  jumpToStoryStep: (stepIndex: number) => void;
   stopMarsStory: () => void;
   runMoment1LivePulse: () => void;
   runMoment2PullTheCable: () => void;
@@ -772,103 +774,188 @@ export interface AppStore {
 }
 
 export interface StoryStepDef {
+  id: string;
   atSec: number;
-  label: string;
+  durationSec: number;
+  title: string;
+  route: string;
+  targetSelector: string;
+  narration: string;
+  presenterNotes: string;
   run: (s: AppStore) => void;
+  onExit?: (s: AppStore) => void;
 }
 
 export const STORY_STEPS: StoryStepDef[] = [
   {
+    id: 'ch1',
     atSec: 0,
-    label: '0:00 · Mode MARS initialized at Level 3. Mission control overview.',
+    durationSec: 40,
+    title: 'Ch. 1 · Mission Setup & Latency Tier',
+    route: '#home',
+    targetSelector: '[data-tour="ch1-mission-setup"]',
+    narration: 'AstroCare initializes Mars transit mode at Level 3 autonomy. With a 44-minute round trip latency, all clinical telemetry, life support, and radiation monitoring must operate fully autonomous.',
+    presenterNotes: 'Point out Level 3 badge, 44m round-trip delay, and DSN carrier lock. Explain that ground review is asynchronous.',
     run: (s) => {
       s.setMode('MARS');
       s.setRole('control');
       s.setPage('home');
       s.setControlHomeTab('overview');
-      s.setNarrationCaption('0:00 · Mode MARS initialized at Level 3. Round-trip comms delay is 44 minutes. Ground review is asynchronous.');
-      s.logEvent('STORY: Step 1/8 — Mode MARS initialized at Level 3. Mission control overview.', 'story', 'system');
+      s.setNarrationCaption('0:00 Ch1 · Mode MARS initialized at Level 3 autonomy. Ground review is asynchronous.');
+      s.logEvent('STORY: Ch. 1 — Mode MARS initialized at Level 3 autonomy.', 'story', 'system');
     },
   },
   {
-    atSec: 30,
-    label: '0:30 · Solar particle event: x40 radiation flux spike.',
+    id: 'ch2',
+    atSec: 40,
+    durationSec: 50,
+    title: 'Ch. 2 · Astronaut Baselines & Optical Pulse (rPPG)',
+    route: '#home',
+    targetSelector: '[data-tour="ch2-vitals-pulse"]',
+    narration: 'Astronaut home console tracks live vitals against personal baselines. Optical rPPG camera pulse is tagged REAL with adaptive confidence gating, while biometrics carry verified provenance tags.',
+    presenterNotes: 'Show Dr. Elena Vega vitals grid. Point out REAL vs SIMULATED badges and live blood pressure tile with baseline delta.',
     run: (s) => {
-      s.startSolarEvent();
-      s.setNarrationCaption('0:30 · Solar particle event: x40 flux spike. Radiation shelter alert reaches all crew in 3 seconds.');
-      s.logEvent('STORY: Step 2/8 — Solar particle event initiated. Radiation shelter alert broadcast.', 'story', 'emergency');
+      s.setRole('astronaut');
+      s.setPage('home');
+      s.setSelectedCrewId('vega');
+      s.setAstronautHomeTab('live');
+      s.setNarrationCaption('0:40 Ch2 · Vitals tracked against personal baseline; optical rPPG confidence-gated.');
+      s.logEvent('STORY: Ch. 2 — Astronaut vitals & optical rPPG stream active.', 'story', 'telemetry');
     },
   },
   {
+    id: 'ch3',
     atSec: 90,
-    label: '1:30 · Cabin CO2 leak: Early warning on Mission Control.',
+    durationSec: 45,
+    title: 'Ch. 3 · Multi-Modal Passive Telehealth & Fatigue',
+    route: '#wellness',
+    targetSelector: '[data-tour="ch3-passive-wellness"]',
+    narration: 'Passive biometric monitoring tracks vocal fatigue index, psychomotor typing latency, and sleep architecture. All indicators show relative baseline drift without making false clinical diagnoses.',
+    presenterNotes: 'Highlight vocal jitter/shimmer, keystroke interval dynamics, and sleep debt. Emphasize honest non-diagnostic limits.',
+    run: (s) => {
+      s.setRole('astronaut');
+      s.setPage('wellness');
+      s.setNarrationCaption('1:30 Ch3 · Passive monitoring: Vocal fatigue, typing latency, sleep debt relative to baseline.');
+      s.logEvent('STORY: Ch. 3 — Passive wellness telemetry evaluated.', 'story', 'wellness');
+    },
+  },
+  {
+    id: 'ch4',
+    atSec: 135,
+    durationSec: 60,
+    title: 'Ch. 4 · Cabin-to-Body Coupling & Pre-Symptomatic Early Warning',
+    route: '#home',
+    targetSelector: '[data-tour="ch4-cabin-body"]',
+    narration: 'Injecting atmospheric CO2 scrubber leak and solar particle event. Physiological cross-coupling detects vagal suppression and fires early warning before acute clinical symptoms manifest.',
+    presenterNotes: 'Notice dual-axis chart: CO2 rises while crew HRV plummets. Autonomic early warning triggers automated scrubber escalation.',
     run: (s) => {
       s.startCO2Leak();
+      s.startSolarEvent();
       s.setRole('control');
       s.setPage('home');
       s.setControlHomeTab('cabin');
-      s.setNarrationCaption('1:30 · Cabin CO2 leak: Scrubbers saturated. Cabin-to-body early warning fires on Mission Control.');
-      s.logEvent('STORY: Step 3/8 — Cabin CO2 leak active. Cabin-to-body dynamics evaluated.', 'story', 'system');
+      s.setNarrationCaption('2:15 Ch4 · Pre-symptomatic warning: Atmospheric CO2 spike triggers vagal HRV depression.');
+      s.logEvent('STORY: Ch. 4 — Environmental-physiological cross coupling early warning active.', 'story', 'emergency');
     },
   },
   {
-    atSec: 180,
-    label: '3:00 · Crew illness (Okoye): AI diagnostic alert with AI-unsure state.',
-    run: (s) => {
-      s.startIllness('okoye');
-      s.setRole('surgeon');
-      s.setPage('home');
-      s.setSelectedCrewId('okoye');
-      s.setSurgeonHomeTab('alerts');
-      s.setNarrationCaption('3:00 · Crew illness (Okoye): Pyrexia & tachycardia drift. AI alert with explanation and AI-unsure state.');
-      s.logEvent('STORY: Step 4/8 — Crew illness (Okoye). AI diagnostic alert with uncertainty flag.', 'story', 'alert');
-    },
-  },
-  {
-    atSec: 240,
-    label: '4:00 · Wait-or-Act decision frontier flips from WAIT to ACT.',
+    id: 'ch5',
+    atSec: 195,
+    durationSec: 60,
+    title: 'Ch. 5 · Wait-or-Act Operational Autonomy Frontier',
+    route: '#woa',
+    targetSelector: '[data-tour="ch5-wait-or-act"]',
+    narration: 'As Mars delay scales from 4 to 24 minutes, the Wait-or-Act engine flips from Ask Ground to Autonomous Action. The Bayesian decision uncertainty band widens as latency grows.',
+    presenterNotes: 'Hover delay slider: notice policy recommendation shifts from Ask Ground to Autonomous Action. Point out widened Bayesian uncertainty band.',
     run: (s) => {
       s.setRole('astronaut');
       s.setPage('woa');
-      s.setNarrationCaption('4:00 · Wait-or-Act decision frontier: 22-minute uplink delay flips decision from WAIT to ACT.');
-      s.logEvent('STORY: Step 5/8 — Wait-or-Act incident evaluated: Frontier flips WAIT to ACT.', 'story', 'system');
+      s.setNarrationCaption('3:15 Ch5 · Wait-or-Act decision frontier flips from Ask Ground to Autonomous Action.');
+      s.logEvent('STORY: Ch. 5 — Operational autonomy frontier evaluated under Mars delay.', 'story', 'system');
     },
   },
   {
-    atSec: 300,
-    label: '5:00 · Autonomous protocol engine starts toxic atmosphere protocol.',
+    id: 'ch6',
+    atSec: 255,
+    durationSec: 45,
+    title: 'Ch. 6 · Flight Surgeon Uplink & Asynchronous Directive',
+    route: '#home',
+    targetSelector: '[data-tour="ch6-surgeon-directive"]',
+    narration: 'Flight Surgeon Dr. Nair transmits an uplink clinical directive. The directive is tracked through deep-space transit latency, arrives at the hab, and requires astronaut compliance acknowledgment.',
+    presenterNotes: 'Watch Directive Log: shows in-flight countdown crossing Mars latency, delivering to astronaut view for verified ack.',
     run: (s) => {
-      s.setPage('protocols');
-      s.startProtocol('toxic-atmo');
-      s.setNarrationCaption('5:00 · Autonomous protocol runner started toxic atmosphere protocol. Asynchronous incident report queued to Earth.');
-      s.logEvent('STORY: Step 6/8 — Autonomous protocol activated. Store-and-forward report queued.', 'story', 'system');
+      s.setRole('surgeon');
+      s.setPage('home');
+      s.setSelectedCrewId('okoye');
+      s.setNarrationCaption('4:15 Ch6 · Flight surgeon consult dispatched through store-and-forward latency queue.');
+      s.logEvent('STORY: Ch. 6 — Clinical directive transmitted across deep-space latency.', 'story', 'surgeon');
     },
   },
   {
-    atSec: 360,
-    label: '6:00 · Optical sensor failure injected. Watchdog triggers AI-degraded banner.',
+    id: 'ch7',
+    atSec: 300,
+    durationSec: 45,
+    title: 'Ch. 7 · Autonomous Medical Supply & Resupply Planner',
+    route: '#supplies',
+    targetSelector: '[data-tour="ch7-controls-supplies"]',
+    narration: 'Deep-space medical pack inventory tracks consumable depletion, expiry, and shelf-life degradation under space radiation across the 900-day expedition trajectory.',
+    presenterNotes: 'Point out shelf-life stability model under cosmic radiation and prioritized oral vs IV rehydration optimization.',
+    run: (s) => {
+      s.setRole('surgeon');
+      s.setPage('supplies');
+      s.setNarrationCaption('5:00 Ch7 · Autonomous supply tracker: Shelf-life degradation modeled under cosmic radiation.');
+      s.logEvent('STORY: Ch. 7 — Medical kit depletion model evaluated.', 'story', 'supplies');
+    },
+  },
+  {
+    id: 'ch8',
+    atSec: 345,
+    durationSec: 45,
+    title: 'Ch. 8 · Offline-First Assistant & Red-Team Guardrails',
+    route: '#assistant',
+    targetSelector: '[data-tour="ch8-offline-assistant"]',
+    narration: 'Simulating deep-space carrier cable pull. The local radiation-hardened assistant answers clinical queries with grounded medical citations while refusing dangerous or contraindicated procedures.',
+    presenterNotes: 'Demonstrate cable-pull offline indicator. Query clinical guideline and highlight sentence-level citation verification.',
+    run: (s) => {
+      s.setRole('astronaut');
+      s.setPage('assistant');
+      s.setAssistantMode('offline');
+      s.setAssistantOffline(true);
+      s.setNarrationCaption('5:45 Ch8 · Offline-first clinical assistant: Sentence-level citation validation & refusal guardrails.');
+      s.logEvent('STORY: Ch. 8 — Local offline edge LLM assistant active.', 'story', 'assistant');
+    },
+  },
+  {
+    id: 'ch9',
+    atSec: 390,
+    durationSec: 40,
+    title: 'Ch. 9 · Hardware Watchdog & AI Degradation Banner',
+    route: '#home',
+    targetSelector: '[data-tour="ch9-watchdog-banner"]',
+    narration: 'Hardware sensor flatline triggers self-watchdog detection. The UI displays an amber AI-Degraded banner and safely reverts to deterministic failsafe clinical rules until sensor recalibration.',
+    presenterNotes: 'Notice amber banner: AI Degraded to Rules Only. Algorithmic models stop silently hallucinatory outputs.',
     run: (s) => {
       s.injectSensorFailure();
-      s.setNarrationCaption('6:00 · Sensor flatline injected on Kenji Tanaka: Watchdog triggers amber AI-degraded banner.');
-      s.logEvent('STORY: Step 7/8 — Sensor failure injected. Watchdog degrades AI to deterministic rules.', 'story', 'watchdog');
+      s.setRole('surgeon');
+      s.setPage('home');
+      s.setNarrationCaption('6:30 Ch9 · Hardware watchdog triggered: System degraded to deterministic rules.');
+      s.logEvent('STORY: Ch. 9 — Hardware watchdog tripped. AI Degraded banner active.', 'story', 'watchdog');
     },
   },
   {
-    atSec: 420,
-    label: '7:00 · Synthetic twin benchmark proof and clinical limits page.',
+    id: 'ch10',
+    atSec: 430,
+    durationSec: 50,
+    title: 'Ch. 10 · Verification Benchmarks, Physical Limits & Ethics',
+    route: '#proof',
+    targetSelector: '[data-tour="ch10-proof-limits"]',
+    narration: 'Validation benchmarks display synthetic digital twin proof curves, physical sensor boundaries, and explicit NASA operational disclaimers: decision-support prototype on synthetic and public data, not a medical device.',
+    presenterNotes: 'Walk through ROC curves, latency histograms, and the prominent prototype disclaimer.',
     run: (s) => {
+      s.setRole('surgeon');
       s.setPage('proof');
-      s.setNarrationCaption('7:00 · Synthetic twin benchmark & physical limits: Verification metrics and operational safety gates.');
-      s.logEvent('STORY: Step 8/8 — Proof metrics and operational safety limits reviewed.', 'story', 'system');
-    },
-  },
-  {
-    atSec: 480,
-    label: '8:00 · Earth answers later. The crew decides first.',
-    run: (s) => {
-      s.setNarrationCaption('8:00 · Earth answers later. The crew decides first.');
-      s.logEvent('STORY: Mars 8-minute mission timeline complete.', 'story', 'system');
-      s.stopMarsStory();
+      s.setNarrationCaption('7:10 Ch10 · Rigorous verification benchmarks, physical limits, and non-medical device ethics.');
+      s.logEvent('STORY: Ch. 10 — Proof benchmarks and non-medical device boundaries verified.', 'story', 'proof');
     },
   },
 ];
@@ -1066,6 +1153,25 @@ export const useStore = create<AppStore>((set, get) => ({
         storyElapsedSec: STORY_STEPS[nextIdx].atSec,
       });
       STORY_STEPS[nextIdx].run(get());
+    } else {
+      get().stopMarsStory();
+    }
+  },
+  prevMarsStoryStep: () => {
+    const prevIdx = Math.max(0, get().storyStepIndex - 1);
+    set({
+      storyStepIndex: prevIdx,
+      storyElapsedSec: STORY_STEPS[prevIdx].atSec,
+    });
+    STORY_STEPS[prevIdx].run(get());
+  },
+  jumpToStoryStep: (stepIndex: number) => {
+    if (stepIndex >= 0 && stepIndex < STORY_STEPS.length) {
+      set({
+        storyStepIndex: stepIndex,
+        storyElapsedSec: STORY_STEPS[stepIndex].atSec,
+      });
+      STORY_STEPS[stepIndex].run(get());
     }
   },
   stopMarsStory: () => {

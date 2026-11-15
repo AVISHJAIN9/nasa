@@ -88,7 +88,7 @@ export function Control() {
       {activeTab === 'overview' && (
         <div className="space-y-6">
           {/* Telemetry & Link Status Header */}
-          <section aria-label="Flight dynamics and link telemetry">
+          <section aria-label="Flight dynamics and link telemetry" data-tour="ch1-mission-setup">
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 font-mono">
               <div className="rounded-xl bg-void-2 p-4 border border-white/10">
                 <span className="text-[11px] text-regolith/50 uppercase block">Round-Trip Signal Latency</span>
@@ -216,7 +216,7 @@ export function Control() {
 
       {/* TAB 2: CABIN VS BODY */}
       {activeTab === 'cabin' && (
-        <div className="space-y-6">
+        <div className="space-y-6" data-tour="ch4-cabin-body">
           <Panel
             title="Cabin atmospheric vs crew autonomic response (early warning overlay)"
             subtitle="Tracking environmental CO2 against mean crew HRV to capture pre-symptomatic physiological decay"
