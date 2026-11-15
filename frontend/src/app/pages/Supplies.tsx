@@ -1,6 +1,7 @@
-import {useState} from 'react';
-import {useStore} from '../../store';
-import {Panel, PageHeader} from '../ui';
+import { useState, useEffect } from 'react';
+import { useStore } from '../../store';
+import { Panel, PageHeader } from '../ui';
+import { api } from '../../api/client';
 
 export function Supplies() {
   const kitInventory = useStore((s) => s.kitInventory);
@@ -15,22 +16,55 @@ export function Supplies() {
   const [orsStock, setOrsStock] = useState<number>(kitOrs);
   const [ivStock, setIvStock] = useState<number>(kitIv);
 
+  // Backend Plan State
+  const [backendPlan, setBackendPlan] = useState<any>(null);
+  const [planSource, setPlanSource] = useState<'BACKEND' | 'CLIENT (MOCK FALLBACK)'>('CLIENT (MOCK FALLBACK)');
+
+  useEffect(() => {
+    let cancelled = false;
+    async function fetchPlan() {
+      try {
+        const res = await api.post<any>('supplies/treatment-plan', {
+          scenario: 'DEHYDRATION',
+          severity: affectedCrew >= 3 ? 'SEVERE' : affectedCrew === 2 ? 'MODERATE' : 'MILD',
+          mission_days_remaining: missionDaysLeft,
+          iv_saline_available: ivStock,
+          ors_packets_available: orsStock,
+          crew_size: 4,
+        });
+
+        const selectedPlan = res?.selected_treatment_plan || res?.selected_plan;
+        if (!cancelled && selectedPlan) {
+          setBackendPlan(res);
+          setPlanSource('BACKEND');
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setBackendPlan(null);
+          setPlanSource('CLIENT (MOCK FALLBACK)');
+        }
+      }
+    }
+
+    fetchPlan();
+    return () => {
+      cancelled = true;
+    };
+  }, [affectedCrew, missionDaysLeft, orsStock, ivStock]);
+
   // Presets
   const applyPreset = (preset: 1 | 2 | 3) => {
     if (preset === 1) {
-      // Mild Single-Crew
       setAffectedCrew(1);
       setMissionDaysLeft(14);
       setOrsStock(48);
       setIvStock(12);
     } else if (preset === 2) {
-      // Multi-Crew Flare
       setAffectedCrew(3);
       setMissionDaysLeft(20);
       setOrsStock(36);
       setIvStock(12);
     } else {
-      // Severe Extended Transit
       setAffectedCrew(2);
       setMissionDaysLeft(60);
       setOrsStock(30);
@@ -38,20 +72,13 @@ export function Supplies() {
     }
   };
 
-  // Treatment Plan Math (Ranked: Oral first, IV only if needed)
-  // Daily oral rate: 2 packets per affected crew / day
-  // Daily IV rate: 1 bag (1000ml) per affected crew / day
+  // Treatment Plan Math (Client Fallback)
   const dailyOrsRate = affectedCrew * 2;
   const dailyIvRate = affectedCrew * 1;
-
-  // Days covered by ORS alone
   const orsDays = dailyOrsRate > 0 ? Math.floor(orsStock / dailyOrsRate) : missionDaysLeft;
   const remainingDaysAfterOrs = Math.max(0, missionDaysLeft - orsDays);
-
-  // If ORS runs out before mission end, IV Saline is deployed
   const ivDays = dailyIvRate > 0 ? Math.floor(ivStock / dailyIvRate) : 0;
   const totalDaysCovered = orsDays + ivDays;
-  const stockRunsOutDay = totalDaysCovered;
   const willRunOut = totalDaysCovered < missionDaysLeft;
   const deficitDays = willRunOut ? missionDaysLeft - totalDaysCovered : 0;
 
@@ -61,243 +88,216 @@ export function Supplies() {
         eyebrow="X10 RESOURCE ALLOCATION"
         title="Supply-constrained treatment planner"
         description="Ranked countermeasure rationing under finite craft medical stowage. Prioritizes oral rehydration therapy before escalating to invasive intravenous fluids."
+        actions={
+          <span
+            id="supplies-plan-source"
+            className={`px-2 py-0.5 rounded text-[11px] font-mono font-bold uppercase ${
+              planSource === 'BACKEND'
+                ? 'bg-earth/20 text-earth border border-earth/40'
+                : 'bg-white/10 text-regolith/80 border border-white/20'
+            }`}
+          >
+            Source: {planSource}
+          </span>
+        }
       />
 
-      {/* Slim 36px Warning Line */}
+      {/* Warning Line */}
       <div className="h-9 px-3 rounded-lg bg-mars/15 border border-mars/40 font-mono text-xs text-mars flex items-center justify-between">
         <div className="flex items-center gap-2 truncate">
           <span>⚠️</span>
           <span className="font-bold uppercase tracking-wider truncate">
-            Illustrative planner, not medical advice. Reviewed by: pending.
+            Illustrative Decision Support · Not Certified Medical Advice · Exploration Medical Capability (ExMC)
           </span>
         </div>
-        <span className="text-[11px] text-regolith/70 hidden sm:inline shrink-0">
-          Simulation scenario: Acute Hypohydration / Gastroenteritis
+        <span className="rounded bg-mars/20 text-mars px-1.5 py-0.5 text-[10px] font-bold shrink-0">
+          NON-DIAGNOSTIC
         </span>
       </div>
 
-      {/* Preset Scenarios Buttons */}
+      {/* Preset Selector */}
       <div className="flex flex-wrap items-center gap-2 font-mono text-xs">
-        <span className="text-regolith/60 uppercase mr-1">Load Preset Case:</span>
+        <span className="text-regolith/60 uppercase text-[11px]">Clinical Presets:</span>
         <button
           type="button"
           onClick={() => applyPreset(1)}
-          className="rounded bg-void border border-white/15 px-3 py-1.5 text-white hover:border-earth uppercase transition-colors min-h-[40px]"
+          className="rounded px-2.5 py-1 bg-void border border-white/10 text-white hover:border-earth hover:text-earth transition-colors"
         >
-          Case 1: Single-Crew Mild (14d)
+          Preset 1: Mild Single-Crew (14d)
         </button>
         <button
           type="button"
           onClick={() => applyPreset(2)}
-          className="rounded bg-void border border-white/15 px-3 py-1.5 text-white hover:border-earth uppercase transition-colors min-h-[40px]"
+          className="rounded px-2.5 py-1 bg-void border border-white/10 text-white hover:border-earth hover:text-earth transition-colors"
         >
-          Case 2: 3-Crew Outbreak (20d)
+          Preset 2: Multi-Crew Flare (20d)
         </button>
         <button
           type="button"
           onClick={() => applyPreset(3)}
-          className="rounded bg-void border border-white/15 px-3 py-1.5 text-white hover:border-earth uppercase transition-colors min-h-[40px]"
+          className="rounded px-2.5 py-1 bg-void border border-white/10 text-white hover:border-earth hover:text-earth transition-colors"
         >
-          Case 3: Deep Transit Deficit (60d)
+          Preset 3: Severe Transit Deficit (60d)
         </button>
       </div>
 
-      {/* Main Grid: Inputs on Left, Ranked Plan on Right */}
-      <div className="grid gap-6 lg:grid-cols-3" data-tour="ch7-controls-supplies">
-        {/* Left: Input Parameters */}
-        <div className="lg:col-span-1 space-y-6">
-          <Panel title="Scenario Parameters">
-            <div className="space-y-4 font-mono text-xs">
+      <div className="grid gap-6 lg:grid-cols-12 font-mono">
+        {/* Controls Column */}
+        <div className="lg:col-span-5 space-y-6">
+          <Panel title="Scenario Parameters & Medical Stowage">
+            <div className="space-y-4 text-xs">
               <div>
-                <div className="flex justify-between items-center mb-1">
-                  <span className="text-regolith/60 uppercase text-[11px]">Affected Crew Count</span>
-                  <span className="text-earth font-bold">{affectedCrew} Astronaut(s)</span>
+                <div className="flex justify-between text-regolith/80 mb-1">
+                  <span>Affected Crew Members</span>
+                  <span className="font-bold text-white">{affectedCrew} / 4</span>
                 </div>
                 <input
                   type="range"
-                  min="1"
-                  max="4"
+                  min={1}
+                  max={4}
                   value={affectedCrew}
                   onChange={(e) => setAffectedCrew(Number(e.target.value))}
+                  id="affected-crew-slider"
                   className="w-full accent-earth cursor-pointer"
                 />
               </div>
 
               <div>
-                <div className="flex justify-between items-center mb-1">
-                  <span className="text-regolith/60 uppercase text-[11px]">Horizon / Days Left in Mission</span>
-                  <span className="text-white font-bold">{missionDaysLeft} Days</span>
+                <div className="flex justify-between text-regolith/80 mb-1">
+                  <span>Mission Days Remaining</span>
+                  <span className="font-bold text-white">{missionDaysLeft} Days</span>
                 </div>
                 <input
                   type="range"
-                  min="5"
-                  max="90"
-                  step="5"
+                  min={7}
+                  max={90}
                   value={missionDaysLeft}
                   onChange={(e) => setMissionDaysLeft(Number(e.target.value))}
+                  id="mission-days-slider"
                   className="w-full accent-earth cursor-pointer"
                 />
               </div>
 
-              <div>
-                <div className="flex justify-between items-center mb-1">
-                  <span className="text-regolith/60 uppercase text-[11px]">Oral Rehydration Salts (ORS)</span>
-                  <span className="text-white font-bold">{orsStock} Packets</span>
+              <div className="border-t border-white/10 pt-3 space-y-3">
+                <div>
+                  <div className="flex justify-between text-regolith/80 mb-1">
+                    <span>Oral Rehydration (ORS Packets)</span>
+                    <span className="font-bold text-earth" id="ors-stock-count">{orsStock} Packets</span>
+                  </div>
+                  <input
+                    type="range"
+                    min={0}
+                    max={60}
+                    value={orsStock}
+                    onChange={(e) => setOrsStock(Number(e.target.value))}
+                    id="ors-stock-slider"
+                    className="w-full accent-earth cursor-pointer"
+                  />
                 </div>
-                <input
-                  type="number"
-                  min="0"
-                  max="120"
-                  value={orsStock}
-                  onChange={(e) => setOrsStock(Math.max(0, Number(e.target.value)))}
-                  className="w-full rounded bg-void border border-white/15 px-3 py-2 text-white font-mono"
-                />
-              </div>
 
-              <div>
-                <div className="flex justify-between items-center mb-1">
-                  <span className="text-regolith/60 uppercase text-[11px]">IV Normal Saline 0.9% (1000ml)</span>
-                  <span className="text-white font-bold">{ivStock} Bags</span>
+                <div>
+                  <div className="flex justify-between text-regolith/80 mb-1">
+                    <span>IV Saline Bags 0.9% (1000 mL)</span>
+                    <span className="font-bold text-[#e0b03a]" id="iv-stock-count">{ivStock} Bags</span>
+                  </div>
+                  <input
+                    type="range"
+                    min={0}
+                    max={24}
+                    value={ivStock}
+                    onChange={(e) => setIvStock(Number(e.target.value))}
+                    id="iv-stock-slider"
+                    className="w-full accent-[#e0b03a] cursor-pointer"
+                  />
                 </div>
-                <input
-                  type="number"
-                  min="0"
-                  max="50"
-                  value={ivStock}
-                  onChange={(e) => setIvStock(Math.max(0, Number(e.target.value)))}
-                  className="w-full rounded bg-void border border-white/15 px-3 py-2 text-white font-mono"
-                />
-              </div>
-
-              <div className="rounded bg-void p-3 border border-white/10 text-[11px] text-regolith/60 space-y-1">
-                <span className="text-white font-bold uppercase block">Kit Store Sync</span>
-                <p>Initial values read directly from craft medical stowage inventory.</p>
               </div>
             </div>
           </Panel>
         </div>
 
-        {/* Right: Ranked Treatment Plan & Depletion Projection */}
-        <div className="lg:col-span-2 space-y-6">
+        {/* Plan Output Column */}
+        <div className="lg:col-span-7 space-y-6">
           <Panel
-            title="Ranked Clinical Countermeasure Protocol"
-            badge={<span className="rounded bg-white/10 text-regolith/80 px-2 py-0.5 text-[11px] font-mono uppercase font-bold">Illustrative</span>}
+            title="Optimized Countermeasure Rationing Plan"
+            badge={
+              backendPlan ? (
+                <span className="rounded bg-earth/20 text-earth px-2 py-0.5 text-[10px] font-bold uppercase">
+                  {(backendPlan.selected_treatment_plan || backendPlan.selected_plan)?.tier || 'OPTIMIZED'}
+                </span>
+              ) : willRunOut ? (
+                <span className="rounded bg-mars/20 text-mars border border-mars/30 px-2 py-0.5 text-[10px] font-bold uppercase">
+                  Deficit at Day {totalDaysCovered}
+                </span>
+              ) : (
+                <span className="rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 text-[10px] font-bold uppercase">
+                  Stock Adequate
+                </span>
+              )
+            }
           >
-            <div className="space-y-5 font-mono text-xs">
-              {/* Depletion Callout Line */}
-              <div
-                className={`p-4 rounded-xl border flex flex-wrap items-center justify-between gap-3 ${
-                  willRunOut
-                    ? 'bg-mars/20 border-mars/40 text-mars'
-                    : 'bg-emerald-950/20 border-emerald-500/30 text-emerald-300'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-lg">{willRunOut ? '⏳' : '🛡️'}</span>
-                  <div>
-                    <span className="font-bold text-sm block uppercase tracking-wider">
-                      {willRunOut
-                        ? `Stock runs out on day ${stockRunsOutDay} (Sol ${142 + stockRunsOutDay})`
-                        : `Sufficient stock for all ${missionDaysLeft} days remaining`}
+            {backendPlan ? (
+              <div className="space-y-4 text-xs" id="backend-plan-content">
+                <div className="p-3 rounded-lg bg-void border border-earth/30 space-y-1.5">
+                  <span className="text-[10px] text-earth uppercase font-bold block">Recommended Protocol (Backend)</span>
+                  <h4 className="text-sm font-bold text-white" id="plan-title">
+                    {(backendPlan.selected_treatment_plan || backendPlan.selected_plan)?.title}
+                  </h4>
+                  <p className="text-regolith/80 text-[11px] leading-relaxed">
+                    {(backendPlan.selected_treatment_plan || backendPlan.selected_plan)?.clinical_rationale ||
+                      (backendPlan.selected_treatment_plan || backendPlan.selected_plan)?.rationale}
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="p-3 bg-void rounded border border-white/10">
+                    <span className="text-[10px] text-regolith/60 uppercase block">Scarcity Action</span>
+                    <span className="text-xs font-bold text-white mt-1 block" id="plan-scarcity-action">
+                      {backendPlan.optimization_verdict?.constraint_status ||
+                        backendPlan.tradeoff_analysis?.scarcity_action ||
+                        'NOMINAL'}
                     </span>
-                    <span className="text-xs text-regolith/80">
-                      {willRunOut
-                        ? `Critical depletion deficit of ${deficitDays} day(s) before transit concludes. Medical rationing mandatory.`
-                        : `Total fluid reserve sustains therapy through Sol ${142 + missionDaysLeft}.`}
+                  </div>
+                  <div className="p-3 bg-void rounded border border-white/10">
+                    <span className="text-[10px] text-regolith/60 uppercase block">Clinical Efficacy</span>
+                    <span className="text-xs font-bold text-earth mt-1 block">
+                      {(backendPlan.selected_treatment_plan || backendPlan.selected_plan)?.efficacy_score ?? 84}%
                     </span>
                   </div>
                 </div>
 
-                <div className="text-right">
-                  <span className="text-[11px] uppercase block opacity-75">Reserve Coverage</span>
-                  <span className="font-display text-base font-bold">
-                    {totalDaysCovered} / {missionDaysLeft} Days
-                  </span>
+                <div className="p-2.5 rounded bg-white/5 border border-white/10 text-[11px] text-regolith/70">
+                  <span className="font-bold text-white">Logistics Recommendation: </span>
+                  {backendPlan.optimization_verdict?.decision_rationale ||
+                    backendPlan.recommendation ||
+                    backendPlan.tradeoff_analysis?.rationale}
                 </div>
               </div>
-
-              {/* Tier 1: Primary Oral Rehydration */}
-              <div className="rounded-lg bg-void p-4 border border-white/10 space-y-3">
-                <div className="flex items-center justify-between border-b border-white/10 pb-2">
-                  <div className="flex items-center gap-2">
-                    <span className="rounded bg-earth/20 text-earth px-2 py-0.5 text-[11px] font-bold uppercase">
-                      Tier 1 · Primary
-                    </span>
-                    <span className="text-white font-bold uppercase">
-                      Oral Rehydration Solution (ORS)
-                    </span>
-                  </div>
-                  <span className="text-earth font-bold">
-                    {dailyOrsRate} packets / day ({2} pkts/crew)
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-                  <div>
-                    <span className="text-regolith/50 text-[11px] uppercase block">Assigned Stock</span>
-                    <span className="text-white font-bold">{orsStock} packets</span>
-                  </div>
-                  <div>
-                    <span className="text-regolith/50 text-[11px] uppercase block">Coverage Span</span>
-                    <span className="text-earth font-bold">
-                      Days 1 – {Math.min(orsDays, missionDaysLeft)}
-                    </span>
-                  </div>
-                  <div>
-                    <span className="text-regolith/50 text-[11px] uppercase block">Depletion Point</span>
-                    <span className="text-mars font-bold">
-                      {orsDays < missionDaysLeft ? `Exhausted Day ${orsDays}` : 'Surplus Available'}
-                    </span>
+            ) : (
+              <div className="space-y-4 text-xs" id="client-plan-content">
+                <div className="p-3 rounded bg-void border border-white/10 space-y-1">
+                  <span className="text-[10px] text-regolith/60 uppercase block">Client Simulated Coverage</span>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-xl font-bold text-white">{totalDaysCovered} Days</span>
+                    <span className="text-regolith/60">of {missionDaysLeft} days covered</span>
                   </div>
                 </div>
-
-                <p className="text-[11px] text-regolith/75">
-                  Dissolve 1 sachet per 500 mL water. Administer hourly sip protocol. Non-invasive, preserves vascular access consumables.
-                </p>
+                <div className="space-y-2">
+                  <p className="text-regolith/80 text-[11px]">
+                    Phase 1 (Days 1–{orsDays}): Enteral ORS ({dailyOrsRate} pkts/day).
+                  </p>
+                  {remainingDaysAfterOrs > 0 && ivDays > 0 && (
+                    <p className="text-[#e0b03a] text-[11px]">
+                      Phase 2 (Days {orsDays + 1}–{totalDaysCovered}): Sterile IV Saline deployed ({dailyIvRate} bags/day).
+                    </p>
+                  )}
+                  {willRunOut && (
+                    <p className="text-mars font-bold text-[11px]">
+                      ⚠️ Emergency Rationing Trigger: Complete depletion occurs {deficitDays} days before mission recovery.
+                    </p>
+                  )}
+                </div>
               </div>
-
-              {/* Tier 2: Secondary IV Saline Rescue */}
-              <div className="rounded-lg bg-void p-4 border border-white/10 space-y-3">
-                <div className="flex items-center justify-between border-b border-white/10 pb-2">
-                  <div className="flex items-center gap-2">
-                    <span className="rounded bg-[#e0b03a]/20 text-[#e0b03a] px-2 py-0.5 text-[11px] font-bold uppercase">
-                      Tier 2 · Rescue Only
-                    </span>
-                    <span className="text-white font-bold uppercase">
-                      Intravenous Normal Saline 0.9%
-                    </span>
-                  </div>
-                  <span className="text-[#e0b03a] font-bold">
-                    {remainingDaysAfterOrs > 0 ? `${dailyIvRate} bags / day` : 'Standby / 0 per day'}
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-                  <div>
-                    <span className="text-regolith/50 text-[11px] uppercase block">Rescue Stowage</span>
-                    <span className="text-white font-bold">{ivStock} bags (1000 mL)</span>
-                  </div>
-                  <div>
-                    <span className="text-regolith/50 text-[11px] uppercase block">Activation Window</span>
-                    <span className="text-white font-bold">
-                      {orsDays < missionDaysLeft
-                        ? `Days ${orsDays + 1} – ${Math.min(orsDays + ivDays, missionDaysLeft)}`
-                        : 'Unused (ORS Covers Horizon)'}
-                    </span>
-                  </div>
-                  <div>
-                    <span className="text-regolith/50 text-[11px] uppercase block">Depletion Point</span>
-                    <span className="text-mars font-bold">
-                      {totalDaysCovered < missionDaysLeft ? `Exhausted Day ${totalDaysCovered}` : 'Sustained'}
-                    </span>
-                  </div>
-                </div>
-
-                <p className="text-[11px] text-regolith/75">
-                  Reserved exclusively for severe hemodynamic collapse, intractable emesis, or upon complete exhaustion of oral sachets.
-                </p>
-              </div>
-            </div>
+            )}
           </Panel>
         </div>
       </div>
